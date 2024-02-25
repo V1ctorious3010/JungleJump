@@ -2,11 +2,8 @@
 using namespace std;
 #include<SDL.h>
 #include<SDL_image.h>
-#include"LTexture.h"
+#include"global.h"
 
-LTexture Character_Texture;
-LTexture Background_Texture;
-const int deadY=650;
 bool init()
 {
     if(SDL_Init(SDL_INIT_EVERYTHING)!=0)   cout<<"Can't init"<<endl;
@@ -62,9 +59,9 @@ int main(int argc,char * argv[])
     SDL_Event  EV;
     bool running=1;
     int lastUpd=0;
+    SDL_Rect box={PosX,PosY,30,30};
     while(running)
     {
-        bool moveL=0,moveR=0;
         while(SDL_PollEvent(&EV))
         {
             if(EV.type==SDL_QUIT)
@@ -72,29 +69,11 @@ int main(int argc,char * argv[])
                 running=0;
                 break;
             }
-            else if(EV.type=SDL_KEYDOWN)
-            {
-                if(EV.key.keysym.sym==SDLK_LEFT) moveL=1;
-                if(EV.key.keysym.sym==SDLK_RIGHT) moveR=1;
-            }
-
-            Uint32 cur=SDL_GetTicks();
-            float dT = (cur - lastUpd) / 1000.0f;
-            int framesToUpdate = floor(dT / (1.0f / FPS));
-            if (framesToUpdate > 0)
-            {
-
-
-                SDL_RenderClear(gRenderer);
-                Background_Texture.render(0,0);
-                Character_Texture.render(PosX,PosY);
-                SDL_RenderPresent( gRenderer );
-            }
-            lastUpd=cur;
-
-
-            //SDL_Delay(1000.0/60);
         }
+        SDL_RenderClear(gRenderer);
+        Background_Texture.render(0,0);
+        Character_Texture.render(PosX,PosY);
+        SDL_RenderPresent( gRenderer );
     }
 
     close();
