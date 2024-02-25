@@ -109,8 +109,9 @@ int main(int argc,char * argv[])
         }
         PosY=min(PosY,deadY+87);
         SDL_Rect nextHitbox= {PosX,PosY,58,87};
-        if(checkCollision(nextHitbox,san))   V0=-547;
-        ;
+        if(checkCollision(nextHitbox,san))   V0=-547,lastCollide=cur;
+        //////
+        //can chia 2 giai doan
 
 
         /////////////////////////
