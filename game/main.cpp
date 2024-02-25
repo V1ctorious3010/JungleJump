@@ -2,66 +2,11 @@
 using namespace std;
 #include<SDL.h>
 #include<SDL_image.h>
-const int Dai=559;
-const int Rong=689;
-SDL_Window *gWindow;
-SDL_Renderer *gRenderer;
-int PosX,PosY;
-const int Acceleration=30;
-const int gravity=10;
-const int FPS=60;
-class LTexture
-{
-private:
-    SDL_Texture *mTexture;
-    int mWidth;
-    int mHeight;
-public:
-    LTexture()
-    {
-        mTexture=NULL;
-        mWidth=0;
-        mHeight=0;
-    }
-    void free()
-    {
-        if(mTexture!=NULL)
-        {
-            SDL_DestroyTexture(mTexture);
-            mTexture=NULL;
-            mWidth=mHeight=0;
-        }
-    }
-    void render(int x,int y)
-    {
-        SDL_Rect tmp= {x,y,mWidth,mHeight};
-        SDL_RenderCopy(gRenderer,mTexture,NULL,&tmp);
-    }
-    int getWidth()
-    {
-        return mWidth;
-    }
-    int getHeight()
-    {
-        return mHeight;
-    }
-    bool LoadImage(string file_path)
-    {
-        free();
-        SDL_Surface* Sur=IMG_Load(file_path.c_str());
-        if(Sur==NULL)   return 0;
+#include"LTexture.h"
 
-        SDL_SetColorKey( Sur, SDL_TRUE, SDL_MapRGB( Sur->format, 239, 228, 176 ) );
-        SDL_Texture *newTexture=SDL_CreateTextureFromSurface(gRenderer,Sur);
-        if(newTexture==NULL) return 0;
-        mWidth=Sur->w;
-        mHeight=Sur->h;
-        mTexture=newTexture;
-        return (mTexture!=NULL);
-    }
-};
 LTexture Character_Texture;
 LTexture Background_Texture;
+const int deadY=650;
 bool init()
 {
     if(SDL_Init(SDL_INIT_EVERYTHING)!=0)   cout<<"Can't init"<<endl;
@@ -100,7 +45,7 @@ int main(int argc,char * argv[])
         return 0;
     }
     PosX=250;
-    PosY=250;
+    PosY=deadY;
     if(!Character_Texture.LoadImage("character.png"))
     {
         cout<<"Q1";
