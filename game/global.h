@@ -4,21 +4,21 @@ mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 #include<SDL.h>
 #include<SDL_image.h>
 #include"LTexture.h"
-#include"character.h"
-vector<int>TYPE={0,0,0,1,2};
-
+vector<int>TYPE= {0,0,0,1,2};
+int VelX=0;
 int rnd(int l,int r)
 {
     return l+rng()%(r-l+1);
 }
 const int deadY=650;
-const int Dai=600;
-const int Rong=800;
+SDL_Rect san={0,650,800,10};
+const int Width=600;
+const int Height=800;
 SDL_Window *gWindow;
 SDL_Renderer *gRenderer;
 int PosX,PosY;
-const int Acceleration=30;
-const int gravity=10;
+int V0=-547;
+const int gravity=500;
 const int FPS=60;
 LTexture Character_Texture;
 LTexture Background_Texture;
@@ -41,16 +41,23 @@ bool LTexture ::  LoadImage(string file_path)
     mTexture=newTexture;
     return (mTexture!=NULL);
 }
-
-void Char::render()
+bool checkCollision( SDL_Rect a, SDL_Rect b )
 {
-    Character_Texture.render( mPosX, mPosY );
+    int leftA, leftB;
+    int rightA, rightB;
+    int topA, topB;
+    int bottomA, bottomB;
+    leftA = a.x;
+    rightA = a.x + a.w;
+    topA = a.y;
+    bottomA = a.y + a.h;
+    leftB = b.x;
+    rightB = b.x + b.w;
+    topB = b.y;
+    bottomB = b.y + b.h;
+    if( bottomA <= topB ) return false;
+    if( topA >= bottomB ) return false;
+    if( rightA <= leftB ) return false;
+    if( leftA >= rightB ) return false;
+    return true;
 }
-void Char::move()
-{
-    mPosX += mVelX;
-    if( ( mPosX < 0 ) || ( mPosX + Char_WIDTH > Dai ) ) mPosX -= mVelX;
-    mPosY += mVelY;
-    if( ( mPosY < 0 ) || ( mPosY + Char_HEIGHT > Rong ) ) mPosY -= mVelY;
-}
-

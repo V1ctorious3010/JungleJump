@@ -1,3 +1,4 @@
+#pragma once
 
 #include<bits/stdc++.h>
 #include<SDL.h>
@@ -7,41 +8,37 @@ using namespace std;
 class Char
 {
 public:
-    static const int Char_WIDTH = 58;
-    static const int Char_HEIGHT = 87;
-    static const int Char_VEL = 10;
-    Char();
+    int Char_VEL = 30;
+    Char(int x,int y,int w,int h);
     void handleEvent( SDL_Event& e );
-    void move();
+    void move(SDL_Rect &a);
     void render();
-
 private:
     int mPosX, mPosY;
     int mVelX, mVelY;
-    SDL_Rect
+    SDL_Rect box;
 };
-Char::Char()
+Char::Char(int x,int y,int w,int h)
 {
-    mPosX = 0;
-    mPosY = 0;
+    mPosX=x;
+    mPosY=y;
+    box = {x,y,w,h};
     mVelX = 0;
-    mVelY = 0;
+    mVelY = 250;
 }
 
 void Char::handleEvent( SDL_Event& e )
 {
     if( e.type == SDL_KEYDOWN && e.key.repeat == 0 )
     {
+        //Adjust the velocity
         switch( e.key.keysym.sym )
         {
-        case SDLK_UP:
-            mVelY -= Char_VEL;
-            break;
         case SDLK_LEFT:
-            mVelX -= Char_VEL;
+            mVelX -= DOT_VEL;
             break;
         case SDLK_RIGHT:
-            mVelX += Char_VEL;
+            mVelX += DOT_VEL;
             break;
         }
     }
@@ -49,14 +46,11 @@ void Char::handleEvent( SDL_Event& e )
     {
         switch( e.key.keysym.sym )
         {
-        case SDLK_UP:
-            mVelY += Char_VEL;
-            break;
         case SDLK_LEFT:
-            mVelX += Char_VEL;
+            mVelX += DOT_VEL;
             break;
         case SDLK_RIGHT:
-            mVelX -= Char_VEL;
+            mVelX -= DOT_VEL;
             break;
         }
     }
