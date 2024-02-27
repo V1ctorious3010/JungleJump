@@ -42,7 +42,7 @@ int main(int argc,char * argv[])
         return 0;
     }
     PosX=250;
-    PosY=deadY+87;
+    PosY=deadY+88;
     if(!Character_Texture.LoadImage("character.png"))
     {
         cout<<"Q1";
@@ -53,13 +53,17 @@ int main(int argc,char * argv[])
         cout<<"Q2";
         return 0;
     }
+    int NumberOfBar=15;
+
     ///////////////////
-    SDL_SetRenderDrawColor(gRenderer,0xFF,0xFF,0xFF,0xFF);
+    SDL_SetRenderDrawColor(gRenderer,0,255,0,0xFF);
     SDL_RenderClear(gRenderer);
     SDL_Event  EV;
     bool running=1;
     int lastCollide=0;
     int lastUpd=0;
+    bool up=1,down=0;
+    int VELOCITY_DOWN=2,VELOCITY_UP=2;
     while(running)
     {
         while(SDL_PollEvent(&EV))
@@ -69,58 +73,29 @@ int main(int argc,char * argv[])
                 running=0;
                 break;
             }
-            if( EV.type == SDL_KEYDOWN && EV.key.repeat == 0 )
-            {
-                //Adjust the velocity
-                switch( EV.key.keysym.sym )
-                {
-                case SDLK_LEFT:
-                    VelX -= 30;
-                    break;
-                case SDLK_RIGHT:
-                    VelX += 30;
-                    break;
-                }
-            }
-            else if( EV.type == SDL_KEYUP && EV.key.repeat == 0 )
-            {
-                switch( EV.key.keysym.sym )
-                {
-                case SDLK_LEFT:
-                    VelX += 1;
-                    break;
-                case SDLK_RIGHT:
-                    VelX -= 1;
-                    break;
-                }
-            }
+
         }
         SDL_Rect hitbox= {PosX,PosY,58,87};
-        int cur=SDL_GetTicks();
-
-        bool jump=0;
-        double dT=1.0*(cur-lastUpd)/1000.0f;
-        double dT2=1.0*(cur-lastCollide)/1000.0f;
-        PosY=650+V0*dT2-(gravity*dT2*dT2)/2;
-        PosX+=VelX;
-        if( ( PosX < 0 ) || ( PosX + 58 > Width ) )
-        {
-            PosX -= VelX;
-        }
-        PosY=min(PosY,deadY+87);
+        PosY=min(PosY,deadY+85);
         SDL_Rect nextHitbox= {PosX,PosY,58,87};
-        if(checkCollision(nextHitbox,san))   V0=-547,lastCollide=cur;
         //////
+
         //can chia 2 giai doan
-
-
+        if(PosY>=500&&down)    VELOCITY_DOWN=2;
+        if(PosY>=500&&up)      VELOCITY_UP=2;
+        if(PosY<=500&&up)      VELOCITY_UP=1;
+        if(PosY<=500&&down)    VELOCITY_UP=1;
+        if(PosY<=355)  down=1,up=0;
+        if(PosY>=352&&up)   PosY-=VELOCITY_UP;
+        else PosY+=VELOCITY_DOWN;
+        if(PosY>=deadY+85&&down)   up=1,down=0;
         /////////////////////////
         SDL_RenderClear(gRenderer);
         Background_Texture.render(0,0);
         Character_Texture.render(PosX,PosY);
         SDL_RenderPresent( gRenderer );
         ///////////
-        lastUpd=cur;
+        SDL_Delay(4);
     }
     close();
     return 0;

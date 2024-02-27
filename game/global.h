@@ -61,3 +61,24 @@ bool checkCollision( SDL_Rect a, SDL_Rect b )
     if( leftA >= rightB ) return false;
     return true;
 }
+struct bar
+{
+    SDL_Texture *mBar;
+    int type;
+    int mWidth,mHeight;
+    int x,y;
+    SDL_Rect getbox()
+    {
+        return {x,y,x-mWidth,y-mHeight};
+    }
+    void render()
+    {
+        SDL_RenderCopy(gRenderer,mBar,NULL,NULL);
+    }
+    void reuse(int dist)
+    {
+        y-=dist;
+        if(y<=deadY+30)     y=rnd(0,300);
+    }
+};
+bar Bar[20];

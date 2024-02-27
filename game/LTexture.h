@@ -11,6 +11,7 @@ private:
     SDL_Texture *mTexture;
     int mWidth;
     int mHeight;
+    int type;
 public:
     LTexture()
     {
@@ -37,4 +38,5 @@ public:
         return mHeight;
     }
     bool LoadImage(string file_path);
+
 };

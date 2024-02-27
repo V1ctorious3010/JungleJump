@@ -403,19 +403,19 @@
 	"begin_code.h"
 	"close_code.h"
 
-1708885829 source:e:\doodlejump\game\main.cpp
+1708966733 source:e:\doodlejump\game\main.cpp
 	<bits/stdc++.h>
 	<SDL.h>
 	<SDL_image.h>
 	"global.h"
 	"LTexture.h"
 
-1708878778 e:\doodlejump\game\ltexture.h
+1708967648 e:\doodlejump\game\ltexture.h
 	<bits/stdc++.h>
 	<SDL.h>
 	<SDL_image.h>
 
-1708885555 e:\doodlejump\game\global.h
+1708967636 e:\doodlejump\game\global.h
 	<bits/stdc++.h>
 	<SDL.h>
 	<SDL_image.h>

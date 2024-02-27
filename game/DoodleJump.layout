@@ -7,24 +7,24 @@
 			<Cursor1 position="692" topLine="35" />
 		</Cursor>
 	</File>
-	<File name="bar.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="bar.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="310" topLine="8" />
+			<Cursor1 position="465" topLine="5" />
 		</Cursor>
 	</File>
-	<File name="LTexture.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="LTexture.h" open="1" top="1" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="511" topLine="12" />
+			<Cursor1 position="446" topLine="20" />
 		</Cursor>
 	</File>
-	<File name="global.h" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="global.h" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="1" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="452" topLine="6" />
+			<Cursor1 position="1726" topLine="64" />
 		</Cursor>
 	</File>
-	<File name="main.cpp" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="1" zoom_2="0">
+	<File name="main.cpp" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="1" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="3214" topLine="98" />
+			<Cursor1 position="2655" topLine="75" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>
