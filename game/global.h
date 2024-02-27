@@ -4,8 +4,14 @@ mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 #include<SDL.h>
 #include<SDL_image.h>
 #include"LTexture.h"
-vector<int>TYPE= {0,0,0,1,2};
+vector<int>TYPE= {0,0,1};
 int VelX=0;
+LTexture BAR[20];
+/*void Game_Over()
+{
+    cout<<"GAME OVER";
+    return 0;
+}*/
 int rnd(int l,int r)
 {
     return l+rng()%(r-l+1);
@@ -20,6 +26,7 @@ int PosX,PosY;
 int V0=-547;
 const int gravity=500;
 const int FPS=60;
+int Bar_Num=8;
 LTexture Character_Texture;
 LTexture Background_Texture;
 void LTexture ::  render(int x,int y)
@@ -63,22 +70,25 @@ bool checkCollision( SDL_Rect a, SDL_Rect b )
 }
 struct bar
 {
-    SDL_Texture *mBar;
-    int type;
-    int mWidth,mHeight;
+    int t;
     int x,y;
-    SDL_Rect getbox()
+    bar(){}
+    bar(int bor1,int bor2)//
     {
-        return {x,y,x-mWidth,y-mHeight};
-    }
-    void render()
-    {
-        SDL_RenderCopy(gRenderer,mBar,NULL,NULL);
-    }
-    void reuse(int dist)
-    {
-        y-=dist;
-        if(y<=deadY+30)     y=rnd(0,300);
+         t=TYPE[rnd(0,2)];
+         x=rnd(0,Width-100);
+         y=rnd(bor1,bor2);
     }
 };
-bar Bar[20];
+void push(bar &X,int dist)
+{
+    if(X.y+dist<=deadY+55)      X.y+=dist;
+    else
+    {
+        X.y=rnd(100,350);
+    }
+}
+SDL_Rect get(bar X)
+{
+    return {X.x,X.y,132,21};
+}
