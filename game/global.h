@@ -32,7 +32,7 @@ int Bar_Num=7;
 LTexture Character_Texture;
 LTexture Background_Texture;
 LTexture Bar[20];
-
+bool dd[20];
 int gd1=deadY-100;
 int gd2=gd1-100;
 int gd3=gd2-100;
@@ -96,11 +96,12 @@ void push(int idx,bar &X,int dist)
 }
 int Calc(int x)
 {
-    if(A[x].y==gd[1])    return 0;
-    if(A[x].y==gd[2])    return VELOCITY;
-    if(A[x].y==gd[3])    return VELOCITY*4;
+    if(A[x].y>=gd[1])    return 0;
+    if(A[x].y>=gd[2])    return 1;
+    return 3;
+
 }
 SDL_Rect get(bar X)
 {
-    return {X.x,X.y,132,21};
+    return {X.x,X.y,120,20};
 }
