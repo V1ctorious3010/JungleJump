@@ -4,8 +4,7 @@ using namespace std;
 #include<SDL_image.h>
 #include"global.h"
 #include"LTexture.h"
-bar A[20];
-LTexture Bar[20];
+
 bool init()
 {
     if(SDL_Init(SDL_INIT_EVERYTHING)!=0)   cout<<"Can't init"<<endl;
@@ -44,7 +43,7 @@ int main(int argc,char * argv[])
         return 0;
     }
     PosX=250;
-    PosY=deadY+88;
+    PosY=660;
     if(!Character_Texture.LoadImage("character.png"))
     {
         cout<<"Q1";
@@ -61,12 +60,13 @@ int main(int argc,char * argv[])
     SDL_RenderClear(gRenderer);
     SDL_Event  EV;
     bool running=1;
-    int lastCollide=0;
-    int lastUpd=0;
     bool up=1,down=0;
-    int VELOCITY_DOWN=3,VELOCITY_UP=3;
-    for(int i=1; i<=Bar_Num/2; i++)     A[i]=bar(100,350);
-    for(int i=Bar_Num/2+1; i<=Bar_Num; i++)     A[i]=bar(400,700);
+    for(int i=1; i<=Bar_Num; i++)
+    {
+        A[i]=bar(i);
+        cout<<A[i].x<<" "<<A[i].y<<endl;
+    }
+    A[1].x=200;
     for(int i=1; i<=Bar_Num; i++)
     {
         if(A[i].t==0&&!Bar[i].LoadImage("bar.png"))
@@ -90,10 +90,8 @@ int main(int argc,char * argv[])
             }
             if( EV.type == SDL_KEYDOWN && EV.key.repeat == 0 )
             {
-                //Adjust the velocity
                 switch( EV.key.keysym.sym )
                 {
-
                 case SDLK_LEFT:
                     mVelX -= 2;
                     break;
@@ -102,13 +100,10 @@ int main(int argc,char * argv[])
                     break;
                 }
             }
-            //If a key was released
             else if( EV.type == SDL_KEYUP && EV.key.repeat == 0 )
             {
-                //Adjust the velocity
                 switch( EV.key.keysym.sym )
                 {
-
                 case SDLK_LEFT:
                     mVelX += 2;
                     break;
@@ -120,48 +115,35 @@ int main(int argc,char * argv[])
         }
         PosX+=mVelX;
         SDL_Rect hitbox= {PosX+10,PosY+10,24,41};
-        PosY=min(PosY,deadY+55);
         //////
         //can chia 2 giai doan
-        if(PosY>=500&&down)    VELOCITY_DOWN=5;
-        if(PosY>=500&&up)      VELOCITY_UP=5;
-        if(PosY<=500&&up)      VELOCITY_UP=3;
-        if(PosY<=500&&down)    VELOCITY_UP=3;
-        if(PosY<=355)  down=1,up=0;
-        if(PosY>=352&&up)   PosY-=VELOCITY_UP;
-        else PosY+=VELOCITY_DOWN;
-        if(PosY>=deadY+85&&down)   up=1,down=0;
-        int YCollision=800;
-        if(down)
-        {
-            for(int i=1; i<=Bar_Num; i++)
+        if(PosY>=gd[2])    VELOCITY=3;
+        if(PosY>=gd[3]&&PosY<=gd[2])   VELOCITY=2;
+        if(PosY<=gd[3]-50)   VELOCITY=1;
+        for(int i=1; i<=Bar_Num; i++)   if(down)
             {
-                if(checkCollision(hitbox,get(A[i]))&&A[i].t==0)  YCollision=min(YCollision,get(A[i]).y);
-                if(checkCollision(hitbox,get(A[i]))&&A[i].t==1)
+                if(checkCollision(hitbox,get(A[i])))
                 {
-                    //Game_Over();
-                    //cout<<"GAME OVER";
-                  //  return 0;
+                    up=1,down=0;
+                    Move_down=Calc(i);
+                    down_bar=i;
+                    break;
                 }
             }
-        }/*
-        if(YCollision!=800)
+        if(PosY<=gd[3]-50-21)     down=1,up=0;
+        if(up)   PosY-=VELOCITY;
+        else PosY+=VELOCITY;
+        for(int i=1; i<=Bar_Num; i++)      push(i,A[i],Move_down);
+        for(int i=1; i<=Bar_Num; i++)      if(A[i].y>700)
         {
-            SDL_Delay(150);
-            for(int i=1; i<=Bar_Num; i++)
+            A[i].y=gd[7];
+            A[i].x=rnd(0,300);
+            if(i==down_bar)
             {
-                push(A[i],deadY-YCollision);
+                Move_down=0;
+                down_bar=0;
             }
-            up=1;
-            down=0;
         }
-
-        if(PosX>=deadY+30)
-        {
-            //Game_Over();
-            cout<<"GAME OVER";
-            return 0;
-        }*/
         /////////////////////////
         SDL_RenderClear(gRenderer);
         Background_Texture.render(0,0);
@@ -169,7 +151,7 @@ int main(int argc,char * argv[])
         for(int i=1; i<=Bar_Num; i++)    Bar[i].render(A[i].x,A[i].y);
         SDL_RenderPresent( gRenderer );
         ///////////
-        SDL_Delay(6);
+        SDL_Delay(10);
     }
     close();
     return 0;

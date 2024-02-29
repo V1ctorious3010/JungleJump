@@ -12,13 +12,15 @@ LTexture BAR[20];
     cout<<"GAME OVER";
     return 0;
 }*/
+int down_bar=0;
+int Move_down=0;
 int rnd(int l,int r)
 {
     return l+rng()%(r-l+1);
 }
-const int deadY=650;
-SDL_Rect san={0,650,800,10};
-const int Width=600;
+const int deadY=700;
+SDL_Rect san= {0,600,800,10};
+const int Width=500;
 const int Height=800;
 SDL_Window *gWindow;
 SDL_Renderer *gRenderer;
@@ -26,9 +28,16 @@ int PosX,PosY;
 int V0=-547;
 const int gravity=500;
 const int FPS=60;
-int Bar_Num=8;
+int Bar_Num=7;
 LTexture Character_Texture;
 LTexture Background_Texture;
+LTexture Bar[20];
+
+int gd1=deadY-100;
+int gd2=gd1-100;
+int gd3=gd2-100;
+int VELOCITY=5;
+const int gd[]={0,700,600,500,400,300,200,100};
 void LTexture ::  render(int x,int y)
 {
     SDL_Rect tmp= {x,y,mWidth,mHeight};
@@ -72,21 +81,24 @@ struct bar
 {
     int t;
     int x,y;
-    bar(){}
-    bar(int bor1,int bor2)//
+    bar() {}
+    bar(int X)//
     {
-         t=TYPE[rnd(0,2)];
-         x=rnd(0,Width-100);
-         y=rnd(bor1,bor2);
+        t=TYPE[rnd(0,2)];
+        x=rnd(0,Width-100);
+        y=gd[X];
     }
 };
-void push(bar &X,int dist)
+bar A[20];
+void push(int idx,bar &X,int dist)
 {
-    if(X.y+dist<=deadY+55)      X.y+=dist;
-    else
-    {
-        X.y=rnd(100,350);
-    }
+      X.y+=dist;
+}
+int Calc(int x)
+{
+    if(A[x].y==gd[1])    return 0;
+    if(A[x].y==gd[2])    return VELOCITY;
+    if(A[x].y==gd[3])    return VELOCITY*4;
 }
 SDL_Rect get(bar X)
 {
