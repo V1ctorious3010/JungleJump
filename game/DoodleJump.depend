@@ -403,33 +403,31 @@
 	"begin_code.h"
 	"close_code.h"
 
-1709217029 source:e:\doodlejump\game\main.cpp
+1709289249 source:e:\doodlejump\game\main.cpp
 	<bits/stdc++.h>
 	<SDL.h>
 	<SDL_image.h>
 	"global.h"
 	"LTexture.h"
 
-1709041951 e:\doodlejump\game\ltexture.h
+1709283331 e:\doodlejump\game\ltexture.h
 	<bits/stdc++.h>
 	<SDL.h>
 	<SDL_image.h>
 
-1709217417 e:\doodlejump\game\global.h
+1709290010 e:\doodlejump\game\global.h
 	<bits/stdc++.h>
 	<SDL.h>
 	<SDL_image.h>
 	"LTexture.h"
+	"character.h"
 
 1708868357 e:\doodlejump\game\bar.h
 	<bits/stdc++.h>
 	<SDL.h>
 	<SDL_image.h>
 
-1708878881 e:\doodlejump\game\character.h
-	<bits/stdc++.h>
-	<SDL.h>
-	<SDL_image.h>
+1709289859 e:\doodlejump\game\character.h
 
 1708878837 source:e:\doodlejump\game\test.cpp
 	"character.h"

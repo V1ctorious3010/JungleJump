@@ -1,29 +1,69 @@
-class Dot
+class nhanvat
 {
-    public:
-		//The dimensions of the dot
-		static const int DOT_WIDTH = 20;
-		static const int DOT_HEIGHT = 20;
+public:
+    const int character_WIDTH = 40;
+    const int character_HEIGHT = 51;
+    const int character_speed = 20;
+    nhanvat()
+    {
+        mPosX=200,x_vel=0;
+        mPosY=250,y_vel=0;
+        jump_pressed=0;
+        left_pressed=0;
+        right_pressed=0;
+        can_jump=0;
+        on_ground=0;
+    }
+    void handleEvent( SDL_Event EV)
+    {
+        if(EV.type== SDL_KEYDOWN)
+        {
+            switch (EV.key.keysym.scancode)
+            {
+            case SDL_SCANCODE_W:
+                jump_pressed = true;
+                break;
+            case SDL_SCANCODE_A:
+                left_pressed = true;
+                direction=0;
+                break;
+            case SDL_SCANCODE_D:
+                right_pressed = true;
+                direction=1;
+                break;
+            default:
+                break;
+            }
+        }
+        if(EV.type== SDL_KEYUP)
+        {
+            switch (EV.key.keysym.scancode)
+            {
+            case SDL_SCANCODE_W:
+                jump_pressed = false;
+                break;
+            case SDL_SCANCODE_A:
+                left_pressed = false;
+                break;
+            case SDL_SCANCODE_D:
+                right_pressed = false;
+                break;
+            default:
+                break;
+            }
+        }
 
-		//Maximum axis velocity of the dot
-		static const int DOT_VEL = 10;
+    }
+    void move();
+    void render();
 
-		//Initializes the variables
-		Dot();
-
-		//Takes key presses and adjusts the dot's velocity
-		void handleEvent( SDL_Event& e );
-
-		//Moves the dot
-		void move();
-
-		//Shows the dot on the screen
-		void render();
-
-    private:
-		//The X and Y offsets of the dot
-		int mPosX, mPosY;
-
-		//The velocity of the dot
-		int mVelX, mVelY;
+private:
+    double mPosX, mPosY;
+    double x_vel,y_vel;
+    int direction;
+    bool jump_pressed;
+    bool left_pressed;
+    bool right_pressed;
+    bool can_jump;
+    bool on_ground;
 };
