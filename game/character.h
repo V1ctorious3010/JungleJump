@@ -1,8 +1,8 @@
 class nhanvat
 {
 public:
-    const int character_WIDTH = 40;
-    const int character_HEIGHT = 51;
+    const int character_WIDTH = 43;
+    const int character_HEIGHT = 60;
     const int character_speed = 20;
     nhanvat()
     {

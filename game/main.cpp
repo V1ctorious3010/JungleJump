@@ -59,13 +59,9 @@ int main(int argc,char * argv[])
     A[1].x=200;
     for(int i=1; i<=Bar_Num; i++)
     {
-        if(A[i].t==0&&!Bar[i].LoadImage("bar.png"))
+        if(!Bar[i].LoadImage("bar.png"))
         {
             cout<<"Can't load bar"<<endl;
-        }
-        if(A[i].t==1&&!Bar[i].LoadImage("trap.png"))
-        {
-            cout<<"Can't load image"<<endl;
         }
     }
     while(running)
@@ -80,13 +76,19 @@ int main(int argc,char * argv[])
             wizard.handleEvent(EV);
         }
         wizard.move();
+        for(int i=1;i<=Bar_Num;i++)   push(A[i]);
         /////////////////////////
         SDL_RenderClear(gRenderer);
         Background_Texture.render(0,0);
         for(int i=1; i<=Bar_Num; i++)    Bar[i].render(A[i].x,A[i].y);
+
         wizard.render();
+
         SDL_RenderPresent( gRenderer );
         ///////////
+        int cur=SDL_GetTicks();
+        if(cur%1800==0)   down_speed+=1,SPEED+=1;
+        if(down_speed>=243)    down_speed=243;
         SDL_Delay(1000/60.0f);
     }
     close();

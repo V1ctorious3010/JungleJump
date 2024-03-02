@@ -16,22 +16,23 @@ int rnd(int l,int r)
 }
 const int deadY=700;
 SDL_Rect san= {0,600,800,10};
-const int Width=500;
+const int Width=600;
 const int Height=800;
 SDL_Window *gWindow;
 SDL_Renderer *gRenderer;
-int Bar_Num=7;
+int Bar_Num=8;
 LTexture Character_Texture;
 LTexture Background_Texture;
 LTexture Bar[20];
 ////
+double down_speed=1;
 int VELOCITY=0;
-const int GRAVITY=10;
-const int SPEED=240;
+double GRAVITY=12;
+double SPEED=240;
 const int FPS=60;
 ////
 nhanvat wizard;
-const int gd[]= {0,700,575,450,325,200,85};
+const int gd[]= {0,700,600,500,400,300,200,100};
 void LTexture ::  render(int x,int y)
 {
     SDL_Rect tmp= {x,y,mWidth,mHeight};
@@ -43,7 +44,7 @@ bool LTexture ::  LoadImage(string file_path)
     SDL_Surface* Sur=IMG_Load(file_path.c_str());
     if(Sur==NULL)   return 0;
 
-    SDL_SetColorKey( Sur, SDL_TRUE, SDL_MapRGB( Sur->format, 36, 121, 126 ) );
+    SDL_SetColorKey( Sur, SDL_TRUE, SDL_MapRGB( Sur->format, 255, 255, 255 ) );
     SDL_Texture *newTexture=SDL_CreateTextureFromSurface(gRenderer,Sur);
     if(newTexture==NULL) return 0;
     mWidth=Sur->w;
@@ -73,29 +74,29 @@ bool checkCollision( SDL_Rect a, SDL_Rect b )
 }
 struct bar
 {
-    int t;
     int x,y;
     bar() {}
     bar(int X)//
     {
-        t=TYPE[rnd(0,2)];
-        x=rnd(0,Width/2-65);
+        x=rnd(0,Width-250);
         y=gd[X];
     }
 };
 bar A[20];
-void push(bar &X,int dist)
+void push(bar &X)
 {
-    X.y+=dist;
-    if(X.y>700)  X.y=gd[6];
+    X.y+=down_speed;
+    if(X.y>700)  X.y=gd[7]-50;
 }
 SDL_Rect get(bar X)
 {
-    return {X.x,X.y,50,8};
+    return {X.x,X.y,145,26};
 }
 void nhanvat::move()
 {
+
     x_vel = (right_pressed - left_pressed)*SPEED;
+    mPosY+=down_speed;
     if(!on_ground)  y_vel += GRAVITY;
     if (jump_pressed && can_jump)
     {
@@ -105,23 +106,25 @@ void nhanvat::move()
     }
     mPosX += x_vel / 60;
     if ( mPosX+x_vel/60 <= 0)    mPosX = 0;
-    if ( mPosX+x_vel/60 >= Width - character_WIDTH)   mPosX = Width - character_WIDTH;
-    double foot=mPosY+50;
-    double nxtfoot=mPosY+y_vel/60+50;
+    if ( mPosX+x_vel/60 >= Width-character_WIDTH)   mPosX = Width - character_WIDTH;
+    double foot=mPosY+59;
+    double nxtfoot=mPosY+y_vel/60+60;
     for(int i=1; i<=Bar_Num; i++)
     {
-        if(foot<A[i].y&&nxtfoot>=A[i].y&&A[i].x<=mPosX+character_WIDTH&&A[i].x+50>=mPosX)
+        if(foot<A[i].y&&nxtfoot>=A[i].y&&A[i].x<=mPosX+character_WIDTH&&A[i].x+145>=mPosX)
         {
             mPosY=A[i].y-character_HEIGHT;
             y_vel=0;
             can_jump=1;
             on_ground=1;
-            return ;
+            //cout<<y_vel<<" "<<on_ground<<" "<<mPosY<<endl;
+            break;
         }
         else on_ground=0,can_jump=0;
     }
     mPosY+= y_vel / 60;
 }
+
 void nhanvat::render()
 {
     if(!direction&&!Character_Texture.LoadImage("character_left.png"))
