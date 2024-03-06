@@ -26,6 +26,7 @@ void close()
     //Free loaded images
     Character_Texture.free();
     Background_Texture.free();
+    for(int i=1;i<=Bar_Num;i++)     Bar[i].free();
     //Destroy window
     SDL_DestroyRenderer( gRenderer );
     SDL_DestroyWindow( gWindow );
@@ -42,7 +43,7 @@ int main(int argc,char * argv[])
         cout<<"Can't init"<<endl;
         return 0;
     }
-    if(!Background_Texture.LoadImage("background.png"))
+    if(!Background_Texture.LoadImage("bg.png"))
     {
         cout<<"Q2";
         return 0;
@@ -52,18 +53,7 @@ int main(int argc,char * argv[])
     SDL_RenderClear(gRenderer);
     SDL_Event  EV;
     bool running=1;
-    for(int i=1; i<=Bar_Num; i++)
-    {
-        A[i]=bar(i);
-    }
-    A[1].x=200;
-    for(int i=1; i<=Bar_Num; i++)
-    {
-        if(!Bar[i].LoadImage("bar.png"))
-        {
-            cout<<"Can't load bar"<<endl;
-        }
-    }
+
     while(running)
     {
         while(SDL_PollEvent(&EV))
@@ -76,19 +66,12 @@ int main(int argc,char * argv[])
             wizard.handleEvent(EV);
         }
         wizard.move();
-        for(int i=1;i<=Bar_Num;i++)   push(A[i]);
         /////////////////////////
         SDL_RenderClear(gRenderer);
         Background_Texture.render(0,0);
-        for(int i=1; i<=Bar_Num; i++)    Bar[i].render(A[i].x,A[i].y);
-
         wizard.render();
-
         SDL_RenderPresent( gRenderer );
-        ///////////
-        int cur=SDL_GetTicks();
-        if(cur%1800==0)   down_speed+=1,SPEED+=1;
-        if(down_speed>=243)    down_speed=243;
+        /////////////////////////
         SDL_Delay(1000/60.0f);
     }
     close();

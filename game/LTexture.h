@@ -36,5 +36,6 @@ public:
     {
         return mHeight;
     }
+
     bool LoadImage(string file_path);
 };

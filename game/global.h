@@ -14,10 +14,10 @@ int rnd(int l,int r)
 {
     return l+rng()%(r-l+1);
 }
-const int deadY=700;
+const int deadY=620;
 SDL_Rect san= {0,600,800,10};
-const int Width=600;
-const int Height=800;
+const int Width=1280;
+const int Height=824;
 SDL_Window *gWindow;
 SDL_Renderer *gRenderer;
 int Bar_Num=8;
@@ -25,9 +25,9 @@ LTexture Character_Texture;
 LTexture Background_Texture;
 LTexture Bar[20];
 ////
-double down_speed=1;
+double down_speed=1.5;
 int VELOCITY=0;
-double GRAVITY=12;
+double GRAVITY=18;
 double SPEED=240;
 const int FPS=60;
 ////
@@ -83,57 +83,46 @@ struct bar
     }
 };
 bar A[20];
-void push(bar &X)
-{
-    X.y+=down_speed;
-    if(X.y>700)  X.y=gd[7]-50;
-}
 SDL_Rect get(bar X)
 {
     return {X.x,X.y,145,26};
 }
 void nhanvat::move()
 {
-
-    x_vel = (right_pressed - left_pressed)*SPEED;
-    mPosY+=down_speed;
     if(!on_ground)  y_vel += GRAVITY;
     if (jump_pressed && can_jump)
     {
         on_ground=0;
         can_jump = false;
-        y_vel = -480;
+        y_vel = -700;
     }
-    mPosX += x_vel / 60;
-    if ( mPosX+x_vel/60 <= 0)    mPosX = 0;
-    if ( mPosX+x_vel/60 >= Width-character_WIDTH)   mPosX = Width - character_WIDTH;
-    double foot=mPosY+59;
-    double nxtfoot=mPosY+y_vel/60+60;
-    for(int i=1; i<=Bar_Num; i++)
+    double foot=mPosY+129;
+    double nxtfoot=mPosY+y_vel/60+130;
+
+    if(foot<deadY&&nxtfoot>=deadY)
     {
-        if(foot<A[i].y&&nxtfoot>=A[i].y&&A[i].x<=mPosX+character_WIDTH&&A[i].x+145>=mPosX)
-        {
-            mPosY=A[i].y-character_HEIGHT;
-            y_vel=0;
-            can_jump=1;
-            on_ground=1;
-            //cout<<y_vel<<" "<<on_ground<<" "<<mPosY<<endl;
-            break;
-        }
-        else on_ground=0,can_jump=0;
+        mPosY=deadY-character_HEIGHT;
+        y_vel=0;
+        can_jump=1;
+        on_ground=1;
     }
-    mPosY+= y_vel / 60;
+    else on_ground=0,can_jump=0;
+    mPosY+= y_vel/60;
 }
 
 void nhanvat::render()
 {
-    if(!direction&&!Character_Texture.LoadImage("character_left.png"))
-    {
-        cout<<"Q1";
-    }
-    if(direction&&!Character_Texture.LoadImage("character_right.png"))
-    {
-        cout<<"Q1";
-    }
-    Character_Texture.render(mPosX,mPosY);
+    add+=1;
+    if(add==5)   add=0,status=(status+1)%8;
+    if(!status)       status++;
+    if(status==1)     Character_Texture.LoadImage("run1.png");
+    if(status==2)     Character_Texture.LoadImage("run2.png");
+    if(status==3)     Character_Texture.LoadImage("run3.png");
+    if(status==4)     Character_Texture.LoadImage("run4.png");
+    if(status==5)     Character_Texture.LoadImage("run5.png");
+    if(status==6)     Character_Texture.LoadImage("run6.png");
+    if(status==7)     Character_Texture.LoadImage("run7.png");
+    if(!on_ground)    Character_Texture.LoadImage("run0.png");
+    Character_Texture.render(300,mPosY);
+   // SDL_Delay(100);
 }
