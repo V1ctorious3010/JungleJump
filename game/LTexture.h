@@ -18,6 +18,10 @@ public:
         mWidth=0;
         mHeight=0;
     }
+    ~LTexture()
+    {
+        free();
+    }
     void free()
     {
         if(mTexture!=NULL)
@@ -36,6 +40,5 @@ public:
     {
         return mHeight;
     }
-
     bool LoadImage(string file_path);
 };

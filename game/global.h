@@ -7,8 +7,8 @@ mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 #include"character.h"
 vector<int>TYPE= {0,0,1};
 int VelX=0;
-LTexture BAR[20];
-int down_bar=0;
+LTexture obs[20];
+int down_obs=0;
 int Move_down=0;
 int rnd(int l,int r)
 {
@@ -16,18 +16,19 @@ int rnd(int l,int r)
 }
 const int deadY=620;
 SDL_Rect san= {0,600,800,10};
-const int Width=1280;
+const int Width=1200;
 const int Height=824;
 SDL_Window *gWindow;
 SDL_Renderer *gRenderer;
-int Bar_Num=8;
+int obs_Num=8;
 LTexture Character_Texture;
 LTexture Background_Texture;
-LTexture Bar[20];
+LTexture bullet;
+
 ////
+
 double down_speed=1.5;
 int VELOCITY=0;
-double GRAVITY=18;
 double SPEED=240;
 const int FPS=60;
 ////
@@ -72,21 +73,6 @@ bool checkCollision( SDL_Rect a, SDL_Rect b )
     if( leftA >= rightB ) return false;
     return true;
 }
-struct bar
-{
-    int x,y;
-    bar() {}
-    bar(int X)//
-    {
-        x=rnd(0,Width-250);
-        y=gd[X];
-    }
-};
-bar A[20];
-SDL_Rect get(bar X)
-{
-    return {X.x,X.y,145,26};
-}
 void nhanvat::move()
 {
     if(!on_ground)  y_vel += GRAVITY;
@@ -98,7 +84,6 @@ void nhanvat::move()
     }
     double foot=mPosY+129;
     double nxtfoot=mPosY+y_vel/60+130;
-
     if(foot<deadY&&nxtfoot>=deadY)
     {
         mPosY=deadY-character_HEIGHT;
@@ -113,16 +98,63 @@ void nhanvat::move()
 void nhanvat::render()
 {
     add+=1;
-    if(add==5)   add=0,status=(status+1)%8;
+    if(add==5)        add=0,status=(status+1)%8;
     if(!status)       status++;
-    if(status==1)     Character_Texture.LoadImage("run1.png");
-    if(status==2)     Character_Texture.LoadImage("run2.png");
-    if(status==3)     Character_Texture.LoadImage("run3.png");
-    if(status==4)     Character_Texture.LoadImage("run4.png");
-    if(status==5)     Character_Texture.LoadImage("run5.png");
-    if(status==6)     Character_Texture.LoadImage("run6.png");
-    if(status==7)     Character_Texture.LoadImage("run7.png");
-    if(!on_ground)    Character_Texture.LoadImage("run0.png");
-    Character_Texture.render(300,mPosY);
-   // SDL_Delay(100);
+    if(status==1)     Character_Texture.LoadImage("run/run1.png");
+    if(status==2)     Character_Texture.LoadImage("run/run2.png");
+    if(status==3)     Character_Texture.LoadImage("run/run3.png");
+    if(status==4)     Character_Texture.LoadImage("run/run4.png");
+    if(status==5)     Character_Texture.LoadImage("run/run5.png");
+    if(status==6)     Character_Texture.LoadImage("run/run6.png");
+    if(status==7)     Character_Texture.LoadImage("run/run7.png");
+    if(!on_ground)    Character_Texture.LoadImage("run/run0.png");
+    /*else
+    {
+        add2++;
+        if(add2==7)        add2=0,status2=(status2+1)%7;
+        if(!status2)       status2++;
+        if(status2==0)     Character_Texture.LoadImage("attack/fire0.png");
+        if(status2==1)     Character_Texture.LoadImage("attack/fire1.png");
+        if(status2==2)     Character_Texture.LoadImage("attack/fire2.png");
+        if(status2==3)     Character_Texture.LoadImage("attack/fire3.png");
+        if(status2==4)     Character_Texture.LoadImage("attack/fire4.png");
+        if(status2==5)     Character_Texture.LoadImage("attack/fire5.png");
+        if(status2==6)     Character_Texture.LoadImage("attack/fire6.png"),attack=0,status2=0;
+    }*/
+    Character_Texture.render(250,mPosY);
+    // SDL_Delay(100);
 }
+///////ball;
+struct ball
+{
+    double x;
+    double y;
+    const double x_vel=600;
+    ball()
+    {
+        x=Width-100;
+        int t=rnd(0,1);
+        if(t)y=deadY-200;
+        else y=deadY-80;
+    }
+    void render()
+    {
+        bullet.render(x,y);
+    }
+    void move()
+    {
+        x-=x_vel/60;
+    }
+    void reset()
+    {
+        x=Width-100;
+        int t=rnd(0,1);
+        if(t)y=deadY-200;
+        else y=deadY-80;
+    }
+    SDL_Rect get()
+    {
+        return {(int)x,(int)y,50,50};
+    }
+
+}A;
