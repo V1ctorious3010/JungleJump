@@ -7,8 +7,6 @@ mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 #include"character.h"
 vector<int>TYPE= {0,0,1};
 int VelX=0;
-LTexture obs[20];
-int down_obs=0;
 int Move_down=0;
 int rnd(int l,int r)
 {
@@ -20,10 +18,11 @@ const int Width=1200;
 const int Height=824;
 SDL_Window *gWindow;
 SDL_Renderer *gRenderer;
-int obs_Num=8;
 LTexture Character_Texture;
 LTexture Background_Texture;
 LTexture bullet;
+LTexture st1,st2;
+bool running=1;
 
 ////
 
@@ -121,7 +120,7 @@ void nhanvat::render()
         if(status2==5)     Character_Texture.LoadImage("attack/fire5.png");
         if(status2==6)     Character_Texture.LoadImage("attack/fire6.png"),attack=0,status2=0;
     }*/
-    Character_Texture.render(250,mPosY);
+    Character_Texture.render(240,mPosY);
     // SDL_Delay(100);
 }
 ///////ball;
@@ -129,7 +128,7 @@ struct ball
 {
     double x;
     double y;
-    const double x_vel=600;
+    const double x_vel=900;
     ball()
     {
         x=Width-100;
@@ -157,4 +156,44 @@ struct ball
         return {(int)x,(int)y,50,50};
     }
 
-}A;
+} A;
+struct CucDa
+{
+    double x;
+    double y;
+    const double x_vel=480;
+    LTexture stone;
+    CucDa(){}
+    CucDa(int t)
+    {
+        x=t;
+        y=deadY-73;
+        if(!stone.LoadImage("stone.png"))
+        {
+        }
+    }
+    void render()
+    {
+        stone.render(x,y);
+    }
+    void move()
+    {
+        x-=x_vel/60;
+        if(x<0)
+        {
+            int t=rnd(0,2);
+            if(!t)     x=Width+700;
+            if(t==1)   x=Width+100;
+            if(t==2)   x=Width+1300;
+        }
+    }
+    SDL_Rect get()
+    {
+        return {(int)x,(int)y,120,60};
+    }
+
+};
+CucDa Da1(Width+20);
+CucDa Da2(Width+500);
+
+

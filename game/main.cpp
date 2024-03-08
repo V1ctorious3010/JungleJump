@@ -44,7 +44,7 @@ int main(int argc,char * argv[])
     }
     if(!Background_Texture.LoadImage("bg.png"))
     {
-        cout<<"Q2";
+        cout<<"can't load bg";
         return 0;
     }
     if(!bullet.LoadImage("bullet.png"))
@@ -52,6 +52,8 @@ int main(int argc,char * argv[])
         cout<<"can't load bullet";
         return 0;
     }
+    CucDa Da1(Width+20);
+    CucDa Da2(Width+500);
     ///////////////////
     SDL_SetRenderDrawColor(gRenderer,36,121,126,0xFF);
     SDL_RenderClear(gRenderer);
@@ -70,7 +72,7 @@ int main(int argc,char * argv[])
             }
             wizard.handleEvent(EV);
         }
-        scrollingOffset-=5;
+        scrollingOffset-=8;
         if( scrollingOffset <- Background_Texture.getWidth() )
         {
             scrollingOffset = 0;
@@ -82,11 +84,13 @@ int main(int argc,char * argv[])
         Background_Texture.render( scrollingOffset, 0 );
         Background_Texture.render( scrollingOffset + Background_Texture.getWidth()-3, 0 );
         wizard.render();
-        SDL_Rect hitbox={230,wizard.getY(),1,110};
+        Da1.render();
+        Da2.render();
+        SDL_Rect hitbox= {230,wizard.getY(),1,110};
         if(!bullet_on_screen)
         {
-            int n=rnd(1,10);
-            if(n>1)     A.reset(),bullet_on_screen=1;
+            int n=rnd(1,1000);
+            if(n>995)     A.reset(),bullet_on_screen=1;
         }
         if(bullet_on_screen)
         {
@@ -97,20 +101,14 @@ int main(int argc,char * argv[])
                 return 0;
             }
             if(A.x<0)   bullet_on_screen=0;
-
         }
-        /*8for(int i=1;i<=Stones;i++)
+        Da1.move();
+        Da2.move();
+        if(checkCollision(hitbox,Da1.get())||checkCollision(hitbox,Da2.get()))
         {
-            St[i].move;
-            St[i].render();
-            if(checkCollision(hitbox,St[i].get()))
-            {
-                return 0;
-            }
-        }*/
-        //cout<<bullet_on_screen<< " ";
+            return 0;
+        }
         SDL_RenderPresent( gRenderer );
-        /////////////////////////
         SDL_Delay(1000/60.0f);
     }
     close();
