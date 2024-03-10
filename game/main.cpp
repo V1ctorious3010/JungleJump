@@ -88,7 +88,7 @@ int main(int argc,char * argv[])
             }
             wizard.handleEvent(EV);
         }
-        scrollingOffset-=8;
+        scrollingOffset-=ScrollSpeed;
         if( scrollingOffset <- Background_Texture.getWidth() )
         {
             scrollingOffset = 0;
@@ -152,6 +152,11 @@ int main(int argc,char * argv[])
         //////////
         SDL_RenderPresent( gRenderer );
         SDL_Delay(1000/60.0f);
+
+        ////tang toc do game
+        int cur=SDL_GetTicks();
+        if(cur%500==0)      ScrollSpeed++;
+        //////
     }
     close();
     return 0;

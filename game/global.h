@@ -36,6 +36,7 @@ int VELOCITY=0;
 double SPEED=240;
 const int FPS=60;
 int Score=0;
+int ScrollSpeed=5;
 ////
 
 void LTexture ::  render(int x,int y)
@@ -156,7 +157,7 @@ struct ball
 {
     double x;
     double y;
-    const double x_vel=900;
+    const double x_vel=1000;
     ball()
     {
         x=Width-100;
@@ -189,7 +190,6 @@ struct CucDa
 {
     double x;
     double y;
-    const double x_vel=480;
     LTexture stone;
     CucDa() {}
     CucDa(int t)
@@ -206,7 +206,7 @@ struct CucDa
     }
     void move()
     {
-        x-=x_vel/60;
+        x-=ScrollSpeed;
         if(x<0)
         {
             int t=rnd(0,2);
