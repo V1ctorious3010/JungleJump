@@ -41,5 +41,7 @@ public:
         return mHeight;
     }
     bool LoadImage(string file_path);
+    bool loadFromRenderedText( std::string textureText, SDL_Color textColor );
+
 };
 

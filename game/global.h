@@ -3,6 +3,7 @@ using namespace std;
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 #include<SDL.h>
 #include<SDL_image.h>
+#include<SDL_ttf.h>
 #include"LTexture.h"
 #include"character.h"
 #include"fireball.h"
@@ -26,12 +27,15 @@ LTexture st1,st2;
 nhanvat wizard;
 fireball Fire;
 bool running=1;
+TTF_Font *gFont;
 ////
 LTexture FireBall;
+LTexture ScoreText;
 double down_speed=1.5;
 int VELOCITY=0;
 double SPEED=240;
 const int FPS=60;
+int Score=0;
 ////
 
 void LTexture ::  render(int x,int y)
@@ -44,7 +48,6 @@ bool LTexture ::  LoadImage(string file_path)
     free();
     SDL_Surface* Sur=IMG_Load(file_path.c_str());
     if(Sur==NULL)   return 0;
-
     SDL_SetColorKey( Sur, SDL_TRUE, SDL_MapRGB( Sur->format, 255, 255, 255 ) );
     SDL_Texture *newTexture=SDL_CreateTextureFromSurface(gRenderer,Sur);
     if(newTexture==NULL) return 0;
@@ -52,6 +55,30 @@ bool LTexture ::  LoadImage(string file_path)
     mHeight=Sur->h;
     mTexture=newTexture;
     return (mTexture!=NULL);
+}
+bool LTexture::loadFromRenderedText( std::string textureText, SDL_Color textColor )
+{
+    free();
+    SDL_Surface* textSurface=TTF_RenderText_Solid(gFont,textureText.c_str(),textColor );
+    if(textSurface==NULL)
+    {
+        printf("Unable to render text surface! SDL_ttf Error: %s\n",TTF_GetError());
+    }
+    else
+    {
+        mTexture=SDL_CreateTextureFromSurface(gRenderer,textSurface);
+        if(mTexture==NULL)
+        {
+            printf("Unable to create texture from rendered text! SDL Error: %s\n",SDL_GetError());
+        }
+        else
+        {
+            mWidth=textSurface->w;
+            mHeight=textSurface->h;
+        }
+        SDL_FreeSurface(textSurface);
+    }
+    return mTexture!=NULL;
 }
 bool checkCollision( SDL_Rect a, SDL_Rect b )
 {

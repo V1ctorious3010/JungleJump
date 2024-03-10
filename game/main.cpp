@@ -4,19 +4,30 @@ using namespace std;
 #include<SDL_image.h>
 #include"global.h"
 #include"LTexture.h"
-
+#include<SDL_ttf.h>
 bool init()
 {
     if(SDL_Init(SDL_INIT_EVERYTHING)!=0)   cout<<"Can't init"<<endl;
     gWindow = SDL_CreateWindow( "Game_nhay_nhay", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, Width, Height, SDL_WINDOW_SHOWN );
     if(gWindow==NULL)    return 0;
-    gRenderer=SDL_CreateRenderer(gWindow,-1,SDL_RENDERER_ACCELERATED);
+    gRenderer = SDL_CreateRenderer( gWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
     if(gRenderer==NULL)   return 0;
     SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
     int imgFlags = IMG_INIT_PNG;
     if( !( IMG_Init( imgFlags ) & imgFlags ) )
     {
         printf( "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError() );
+        return 0;
+    }
+    if( TTF_Init() == -1 )
+    {
+        printf( "SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError() );
+        return 0;
+    }
+    gFont = TTF_OpenFont( "lazy.ttf", 28);
+    if( gFont == NULL )
+    {
+        printf( "Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError() );
         return 0;
     }
     return 1;
@@ -103,7 +114,7 @@ int main(int argc,char * argv[])
             A.render();
             if(checkCollision(hitbox,A.get()))
             {
-              //  return 0;
+                //  return 0;
             }
             if(A.x<0)   bullet_on_screen=0;
         }
@@ -111,7 +122,7 @@ int main(int argc,char * argv[])
         Da2.move();
         if(checkCollision(hitbox,Da1.get())||checkCollision(hitbox,Da2.get()))
         {
-           // return 0;
+            // return 0;
         }
         if(wizard.get_attack())
         {
@@ -123,6 +134,22 @@ int main(int argc,char * argv[])
                 wizard.cooldown();
             }
         }
+        ////////
+        //hien thi diem
+        //SDL_Rect ScoreRect={600,50,200,50};
+        //SDL_SetRenderDrawColor(gRenderer, 255, 0, 0, 255);
+        //SDL_RenderFillRect(gRenderer, &ScoreRect);
+        string tmp="Score: ";
+        Score++;
+        tmp+=to_string(Score);
+        SDL_Color textColor = {0,0,0};
+        if(!ScoreText.loadFromRenderedText(tmp,textColor))
+        {
+            printf( "Failed to render text texture!\n" );
+        }
+        ScoreText.render(Width-200,50);
+
+        //////////
         SDL_RenderPresent( gRenderer );
         SDL_Delay(1000/60.0f);
     }
