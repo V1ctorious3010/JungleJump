@@ -5,6 +5,7 @@ mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 #include<SDL_image.h>
 #include"LTexture.h"
 #include"character.h"
+#include"fireball.h"
 vector<int>TYPE= {0,0,1};
 int VelX=0;
 int Move_down=0;
@@ -22,17 +23,17 @@ LTexture Character_Texture;
 LTexture Background_Texture;
 LTexture bullet;
 LTexture st1,st2;
+nhanvat wizard;
+fireball Fire;
 bool running=1;
-
 ////
-
+LTexture FireBall;
 double down_speed=1.5;
 int VELOCITY=0;
 double SPEED=240;
 const int FPS=60;
 ////
-nhanvat wizard;
-const int gd[]= {0,700,600,500,400,300,200,100};
+
 void LTexture ::  render(int x,int y)
 {
     SDL_Rect tmp= {x,y,mWidth,mHeight};
@@ -163,7 +164,7 @@ struct CucDa
     double y;
     const double x_vel=480;
     LTexture stone;
-    CucDa(){}
+    CucDa() {}
     CucDa(int t)
     {
         x=t;
@@ -195,5 +196,16 @@ struct CucDa
 };
 CucDa Da1(Width+20);
 CucDa Da2(Width+500);
+void fireball::render()
+{
 
+    if(x<Width) FireBall.render(x,y);
+    else
+    {
+        wizard.cooldown();
+        x=250;
+        y=525;
+    }
+
+}
 

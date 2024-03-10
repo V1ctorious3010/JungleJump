@@ -1,3 +1,5 @@
+
+
 double GRAVITY=18;
 class nhanvat
 {
@@ -26,10 +28,10 @@ public:
             case SDL_SCANCODE_S:
                 GRAVITY=300;
                 break;
-            case SDL_SCANCODE_SPACE:
-                 attack=1;
-                 break;
-            default:
+            case SDL_SCANCODE_J:
+                attack=1;
+                break;
+             default:
                 break;
             }
         }
@@ -47,7 +49,6 @@ public:
                 break;
             }
         }
-
     }
     void move();
     void render();
@@ -55,16 +56,21 @@ public:
     {
         return mPosY;
     }
-
+    void cooldown()
+    {
+        attack=0;
+    }
+    int get_attack()
+    {
+        return attack;
+    }
 private:
     double mPosY;
     double y_vel;
-    int direction;
     bool jump_pressed;
     bool can_jump;
     bool on_ground;
-    int add,add2;
-    int status;
-    int status2;
+    short add,add2;
+    short status;
     bool attack=0;
 };

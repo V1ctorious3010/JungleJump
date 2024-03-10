@@ -42,3 +42,4 @@ public:
     }
     bool LoadImage(string file_path);
 };
+

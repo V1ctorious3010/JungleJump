@@ -52,6 +52,11 @@ int main(int argc,char * argv[])
         cout<<"can't load bullet";
         return 0;
     }
+    if(!FireBall.LoadImage("fire/fire2.png"))
+    {
+        cout<<"can't load fire";
+        return 0;
+    }
     CucDa Da1(Width+20);
     CucDa Da2(Width+500);
     ///////////////////
@@ -98,7 +103,7 @@ int main(int argc,char * argv[])
             A.render();
             if(checkCollision(hitbox,A.get()))
             {
-                return 0;
+              //  return 0;
             }
             if(A.x<0)   bullet_on_screen=0;
         }
@@ -106,7 +111,17 @@ int main(int argc,char * argv[])
         Da2.move();
         if(checkCollision(hitbox,Da1.get())||checkCollision(hitbox,Da2.get()))
         {
-            return 0;
+           // return 0;
+        }
+        if(wizard.get_attack())
+        {
+            FIRE.move();
+            FIRE.render();
+            if(bullet_on_screen&&checkCollision(FIRE.get(),A.get()))
+            {
+                A.reset(),bullet_on_screen=0;
+                wizard.cooldown();
+            }
         }
         SDL_RenderPresent( gRenderer );
         SDL_Delay(1000/60.0f);
