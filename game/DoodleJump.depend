@@ -403,7 +403,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1710082895 source:e:\doodlejump\game\main.cpp
+1710153680 source:e:\doodlejump\game\main.cpp
 	<bits/stdc++.h>
 	<SDL.h>
 	<SDL_image.h>
@@ -416,28 +416,29 @@
 	<SDL.h>
 	<SDL_image.h>
 
-1710083072 e:\doodlejump\game\global.h
+1710154116 e:\doodlejump\game\global.h
 	<bits/stdc++.h>
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_ttf.h>
 	"LTexture.h"
 	"character.h"
-	"fireball.h"
 
 1708868357 e:\doodlejump\game\bar.h
 	<bits/stdc++.h>
 	<SDL.h>
 	<SDL_image.h>
 
-1710066827 e:\doodlejump\game\character.h
+1710154419 e:\doodlejump\game\character.h
+	<bits/stdc++.h>
+	<SDL.h>
 
 1709649319 source:e:\doodlejump\game\test.cpp
 	<SDL.h>
 	<vector>
 	<bits/stdc++.h>
 
-1710064926 e:\doodlejump\game\fireball.h
+1710152338 e:\doodlejump\game\fireball.h
 
 1708441659 e:\sdl_lib\sdl2_ttf-2.22.0\i686-w64-mingw32\include\sdl2\sdl_ttf.h
 	"SDL.h"

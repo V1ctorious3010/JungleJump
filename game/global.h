@@ -6,7 +6,6 @@ mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 #include<SDL_ttf.h>
 #include"LTexture.h"
 #include"character.h"
-#include"fireball.h"
 vector<int>TYPE= {0,0,1};
 int VelX=0;
 int Move_down=0;
@@ -17,7 +16,7 @@ int rnd(int l,int r)
 const int deadY=620;
 SDL_Rect san= {0,600,800,10};
 const int Width=1200;
-const int Height=824;
+const int Height=800;
 SDL_Window *gWindow;
 SDL_Renderer *gRenderer;
 LTexture Character_Texture;
@@ -31,6 +30,7 @@ TTF_Font *gFont;
 ////
 LTexture FireBall;
 LTexture ScoreText;
+LTexture Ammo[4];
 double down_speed=1.5;
 int VELOCITY=0;
 double SPEED=240;
@@ -80,6 +80,28 @@ bool LTexture::loadFromRenderedText( std::string textureText, SDL_Color textColo
         SDL_FreeSurface(textSurface);
     }
     return mTexture!=NULL;
+}
+void LoadTexture()
+{
+    if(!Background_Texture.LoadImage("bg.png"))
+    {
+        cout<<"can't load bg";
+        return ;
+    }
+    if(!bullet.LoadImage("bullet.png"))
+    {
+        cout<<"can't load bullet";
+        return ;
+    }
+    if(!FireBall.LoadImage("fire/fire2.png"))
+    {
+        cout<<"can't load fire";
+        return ;
+    }
+    for(int i=1;i<=4;i++)
+    {
+        if(!Ammo[i].LoadImage("ammo.png"))   cout<<"Can't load ammo";
+    }
 }
 bool checkCollision( SDL_Rect a, SDL_Rect b )
 {
@@ -157,7 +179,7 @@ struct ball
 {
     double x;
     double y;
-    const double x_vel=1000;
+    const double x_vel=1200;
     ball()
     {
         x=Width-100;
@@ -230,7 +252,7 @@ void fireball::render()
     else
     {
         wizard.cooldown();
-        x=250;
+        x=255;
         y=525;
     }
 

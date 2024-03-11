@@ -42,10 +42,8 @@
 		</Linker>
 		<Unit filename="LTexture.h" />
 		<Unit filename="character.h" />
-		<Unit filename="fireball.h" />
 		<Unit filename="global.h" />
 		<Unit filename="main.cpp" />
-		<Unit filename="text.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

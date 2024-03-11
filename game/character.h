@@ -1,6 +1,33 @@
-
-
+#include<bits/stdc++.h>
+using namespace std;
+#include<SDL.h>
 double GRAVITY=18;
+class fireball
+{
+    double x;
+    double y;
+    const int speed=600;
+public:
+    fireball()
+    {
+        x=250;
+        y=525;
+    }
+    void  move()
+    {
+        x+=speed/60;
+    }
+    SDL_Rect get()
+    {
+        return {(int)x,(int)y,30,50};
+    }
+    void render();
+    void set_y(int T)
+    {
+        y=T;
+    }
+} FIRE;
+
 class nhanvat
 {
 public:
@@ -15,6 +42,7 @@ public:
         on_ground=0;
         add=0;
         status=1;
+        ammo=3;
     }
     void handleEvent( SDL_Event EV)
     {
@@ -29,9 +57,9 @@ public:
                 GRAVITY=300;
                 break;
             case SDL_SCANCODE_J:
-                attack=1;
+                if(ammo>0)    attack=1,ammo--,FIRE.set_y(mPosY+20);
                 break;
-             default:
+            default:
                 break;
             }
         }
@@ -64,6 +92,15 @@ public:
     {
         return attack;
     }
+    int get_ammo()
+    {
+        return ammo;
+    }
+    void add_ammo()
+    {
+        ammo++;
+        if(ammo>3)   ammo=3;
+    }
 private:
     double mPosY;
     double y_vel;
@@ -73,4 +110,5 @@ private:
     short add,add2;
     short status;
     bool attack=0;
+    short ammo;
 };

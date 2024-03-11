@@ -5,6 +5,7 @@ using namespace std;
 #include"global.h"
 #include"LTexture.h"
 #include<SDL_ttf.h>
+int reload=0;
 bool init()
 {
     if(SDL_Init(SDL_INIT_EVERYTHING)!=0)   cout<<"Can't init"<<endl;
@@ -24,7 +25,7 @@ bool init()
         printf( "SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError() );
         return 0;
     }
-    gFont = TTF_OpenFont( "lazy.ttf", 28);
+    gFont = TTF_OpenFont( "dot_to_dot.ttf", 50);
     if( gFont == NULL )
     {
         printf( "Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError() );
@@ -37,6 +38,10 @@ void close()
     //Free loaded images
     Character_Texture.free();
     Background_Texture.free();
+    bullet.free();
+    for(int i=1;i<=4;i++)    Ammo[i].free();
+    ScoreText.free();
+    FireBall.free();
     //Destroy window
     SDL_DestroyRenderer( gRenderer );
     SDL_DestroyWindow( gWindow );
@@ -45,6 +50,7 @@ void close()
     //Quit SDL subsystems
     IMG_Quit();
     SDL_Quit();
+    TTF_Quit();
 }
 int main(int argc,char * argv[])
 {
@@ -53,21 +59,7 @@ int main(int argc,char * argv[])
         cout<<"Can't init"<<endl;
         return 0;
     }
-    if(!Background_Texture.LoadImage("bg.png"))
-    {
-        cout<<"can't load bg";
-        return 0;
-    }
-    if(!bullet.LoadImage("bullet.png"))
-    {
-        cout<<"can't load bullet";
-        return 0;
-    }
-    if(!FireBall.LoadImage("fire/fire2.png"))
-    {
-        cout<<"can't load fire";
-        return 0;
-    }
+    LoadTexture();
     CucDa Da1(Width+20);
     CucDa Da2(Width+500);
     ///////////////////
@@ -132,13 +124,12 @@ int main(int argc,char * argv[])
             {
                 A.reset(),bullet_on_screen=0;
                 wizard.cooldown();
+                Score+=100;
             }
         }
+        for(int i=1;i<=wizard.get_ammo();i++)    Ammo[i].render(10+(i-1)*70,10);
         ////////
         //hien thi diem
-        //SDL_Rect ScoreRect={600,50,200,50};
-        //SDL_SetRenderDrawColor(gRenderer, 255, 0, 0, 255);
-        //SDL_RenderFillRect(gRenderer, &ScoreRect);
         string tmp="Score: ";
         Score++;
         tmp+=to_string(Score);
@@ -148,14 +139,15 @@ int main(int argc,char * argv[])
             printf( "Failed to render text texture!\n" );
         }
         ScoreText.render(Width-200,50);
-
         //////////
         SDL_RenderPresent( gRenderer );
         SDL_Delay(1000/60.0f);
-
         ////tang toc do game
         int cur=SDL_GetTicks();
         if(cur%500==0)      ScrollSpeed++;
+        reload++;
+        if(reload>500) wizard.add_ammo(),reload=0;
+        if(ScrollSpeed>16)   ScrollSpeed=16;
         //////
     }
     close();
