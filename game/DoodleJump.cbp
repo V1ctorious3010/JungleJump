@@ -41,6 +41,7 @@
 			<Add directory="../../SDL_lib/SDL2_ttf-2.22.0/i686-w64-mingw32/lib" />
 		</Linker>
 		<Unit filename="LTexture.h" />
+		<Unit filename="button.h" />
 		<Unit filename="character.h" />
 		<Unit filename="global.h" />
 		<Unit filename="main.cpp" />

@@ -44,7 +44,7 @@ public:
         status=1;
         ammo=3;
     }
-    void handleEvent( SDL_Event EV)
+    void handleEvent( SDL_Event &EV)
     {
         if(EV.type== SDL_KEYDOWN)
         {

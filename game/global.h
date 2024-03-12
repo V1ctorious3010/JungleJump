@@ -4,8 +4,9 @@ mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 #include<SDL.h>
 #include<SDL_image.h>
 #include<SDL_ttf.h>
-#include"LTexture.h"
+
 #include"character.h"
+#include"button.h"
 vector<int>TYPE= {0,0,1};
 int VelX=0;
 int Move_down=0;
@@ -30,6 +31,7 @@ TTF_Font *gFont;
 ////
 LTexture FireBall;
 LTexture ScoreText;
+LTexture MenuBackground;
 LTexture Ammo[4];
 double down_speed=1.5;
 int VELOCITY=0;
@@ -37,7 +39,13 @@ double SPEED=240;
 const int FPS=60;
 int Score=0;
 int ScrollSpeed=5;
-////
+int scrollingOffset=0;
+bool bullet_on_screen=1;
+bool VaoGame=0;
+////button color
+SDL_Color BGColor { 255, 50, 50, 255 };
+SDL_Color HoverColor { 50, 50, 255, 255 };
+///
 
 void LTexture ::  render(int x,int y)
 {
@@ -88,6 +96,11 @@ void LoadTexture()
         cout<<"can't load bg";
         return ;
     }
+    if(!MenuBackground.LoadImage("menu_background.png"))
+    {
+        cout<<"can't load menu bg";
+        return ;
+    }
     if(!bullet.LoadImage("bullet.png"))
     {
         cout<<"can't load bullet";
@@ -98,7 +111,7 @@ void LoadTexture()
         cout<<"can't load fire";
         return ;
     }
-    for(int i=1;i<=4;i++)
+    for(int i=1; i<=4; i++)
     {
         if(!Ammo[i].LoadImage("ammo.png"))   cout<<"Can't load ammo";
     }
@@ -247,7 +260,6 @@ CucDa Da1(Width+20);
 CucDa Da2(Width+500);
 void fireball::render()
 {
-
     if(x<Width) FireBall.render(x,y);
     else
     {
@@ -255,6 +267,20 @@ void fireball::render()
         x=255;
         y=525;
     }
-
+}
+void Button::render()
+{
+    SDL_Color tmp= isHovered ? HoverColor:BGColor;
+    int r=tmp.r;
+    int g=tmp.g;
+    int b=tmp.b;
+    int a=tmp.a;
+    SDL_SetRenderDrawColor(gRenderer,r,g,b,a);
+    SDL_RenderFillRect(gRenderer,&Rect);
 }
 
+void Button::Upd()
+{
+    if(type==1)      VaoGame=1;
+    else if(type==0) running=0;
+}

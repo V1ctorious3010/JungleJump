@@ -39,7 +39,7 @@ void close()
     Character_Texture.free();
     Background_Texture.free();
     bullet.free();
-    for(int i=1;i<=4;i++)    Ammo[i].free();
+    for(int i=1; i<=4; i++)    Ammo[i].free();
     ScoreText.free();
     FireBall.free();
     //Destroy window
@@ -66,88 +66,99 @@ int main(int argc,char * argv[])
     SDL_SetRenderDrawColor(gRenderer,36,121,126,0xFF);
     SDL_RenderClear(gRenderer);
     SDL_Event  EV;
-    bool running=1;
-    int scrollingOffset=0;
-    bool bullet_on_screen=1;
+    Button Play={1,600,400,300,75};
+    Button Exit={0,100,600,300,75};
     while(running)
     {
         while(SDL_PollEvent(&EV))
         {
             if(EV.type==SDL_QUIT)
             {
-                running=0;
-                break;
+                return 0;
             }
-            wizard.handleEvent(EV);
-        }
-        scrollingOffset-=ScrollSpeed;
-        if( scrollingOffset <- Background_Texture.getWidth() )
-        {
-            scrollingOffset = 0;
-        }
-        wizard.move();
-        /////////////////////////
-        SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
-        SDL_RenderClear(gRenderer);
-        Background_Texture.render( scrollingOffset, 0 );
-        Background_Texture.render( scrollingOffset + Background_Texture.getWidth()-3, 0 );
-        wizard.render();
-        Da1.render();
-        Da2.render();
-        SDL_Rect hitbox= {230,wizard.getY(),1,110};
-        if(!bullet_on_screen)
-        {
-            int n=rnd(1,1000);
-            if(n>995)     A.reset(),bullet_on_screen=1;
-        }
-        if(bullet_on_screen)
-        {
-            A.move();
-            A.render();
-            if(checkCollision(hitbox,A.get()))
+            if(!VaoGame)
             {
-                //  return 0;
+                SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+                SDL_RenderClear(gRenderer);
+                MenuBackground.render(0,0);
+                Play.render();
+                Play.HandleEvent(EV);
+                Exit.render();
+                Exit.HandleEvent(EV);
             }
-            if(A.x<0)   bullet_on_screen=0;
+            else wizard.handleEvent(EV);
         }
-        Da1.move();
-        Da2.move();
-        if(checkCollision(hitbox,Da1.get())||checkCollision(hitbox,Da2.get()))
+        if(VaoGame)
         {
-            // return 0;
-        }
-        if(wizard.get_attack())
-        {
-            FIRE.move();
-            FIRE.render();
-            if(bullet_on_screen&&checkCollision(FIRE.get(),A.get()))
+            scrollingOffset-=ScrollSpeed;
+            if( scrollingOffset <- Background_Texture.getWidth() )
             {
-                A.reset(),bullet_on_screen=0;
-                wizard.cooldown();
-                Score+=100;
+                scrollingOffset = 0;
             }
+            wizard.move();
+            /////////////////////////
+            SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+            SDL_RenderClear(gRenderer);
+            Background_Texture.render( scrollingOffset, 0 );
+            Background_Texture.render( scrollingOffset + Background_Texture.getWidth()-3, 0 );
+            wizard.render();
+            Da1.render();
+            Da2.render();
+            SDL_Rect hitbox= {230,wizard.getY(),1,110};
+            if(!bullet_on_screen)
+            {
+                int n=rnd(1,1000);
+                if(n>995)     A.reset(),bullet_on_screen=1;
+            }
+            if(bullet_on_screen)
+            {
+                A.move();
+                A.render();
+                if(checkCollision(hitbox,A.get()))
+                {
+                    //  return 0;
+                }
+                if(A.x<0)   bullet_on_screen=0;
+            }
+            Da1.move();
+            Da2.move();
+            if(checkCollision(hitbox,Da1.get())||checkCollision(hitbox,Da2.get()))
+            {
+                // return 0;
+            }
+            if(wizard.get_attack())
+            {
+                FIRE.move();
+                FIRE.render();
+                if(bullet_on_screen&&checkCollision(FIRE.get(),A.get()))
+                {
+                    A.reset(),bullet_on_screen=0;
+                    wizard.cooldown();
+                    Score+=100;
+                }
+            }
+            for(int i=1; i<=wizard.get_ammo(); i++)    Ammo[i].render(10+(i-1)*70,10);
+            ////////
+            //hien thi diem
+            string tmp="Score: ";
+            Score++;
+            tmp+=to_string(Score);
+            SDL_Color textColor = {0,0,0};
+            if(!ScoreText.loadFromRenderedText(tmp,textColor))
+            {
+                printf( "Failed to render text texture!\n");
+            }
+            ScoreText.render(Width-200,50);
+            //////////
+            SDL_Delay(1000/60.0f);
+            ////tang toc do game
+            int cur=SDL_GetTicks();
+            if(cur%300==0)      ScrollSpeed++;
+            reload++;
+            if(reload>500) wizard.add_ammo(),reload=0;
+            if(ScrollSpeed>16)   ScrollSpeed=16;
         }
-        for(int i=1;i<=wizard.get_ammo();i++)    Ammo[i].render(10+(i-1)*70,10);
-        ////////
-        //hien thi diem
-        string tmp="Score: ";
-        Score++;
-        tmp+=to_string(Score);
-        SDL_Color textColor = {0,0,0};
-        if(!ScoreText.loadFromRenderedText(tmp,textColor))
-        {
-            printf( "Failed to render text texture!\n" );
-        }
-        ScoreText.render(Width-200,50);
-        //////////
         SDL_RenderPresent( gRenderer );
-        SDL_Delay(1000/60.0f);
-        ////tang toc do game
-        int cur=SDL_GetTicks();
-        if(cur%500==0)      ScrollSpeed++;
-        reload++;
-        if(reload>500) wizard.add_ammo(),reload=0;
-        if(ScrollSpeed>16)   ScrollSpeed=16;
         //////
     }
     close();
