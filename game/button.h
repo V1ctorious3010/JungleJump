@@ -30,6 +30,12 @@ public:
     }
     void Upd();
     void render();
+    void RePos(int a,int b)
+    {
+        int w=Rect.w;
+        int h=Rect.h;
+        Rect={a,b,w,h};
+    }
 private:
     bool IsWithinBounds(int x, int y)
     {

@@ -61,13 +61,16 @@ int main(int argc,char * argv[])
     }
     LoadTexture();
     CucDa Da1(Width+20);
-    CucDa Da2(Width+500);
+    CucDa Da2(Width+400);
     ///////////////////
     SDL_SetRenderDrawColor(gRenderer,36,121,126,0xFF);
     SDL_RenderClear(gRenderer);
     SDL_Event  EV;
-    Button Play={1,600,400,300,75};
-    Button Exit={0,100,600,300,75};
+    Button Play= {1,500,400,300,75};
+    Button Exit= {0,500,600,300,75};
+    Button Pause= {3,Width-60,10,50,50};
+    Button LoadGame= {4,500,500,300,75};
+    Button Menu={5,500,400,300,75};
     while(running)
     {
         while(SDL_PollEvent(&EV))
@@ -85,23 +88,28 @@ int main(int argc,char * argv[])
                 Play.HandleEvent(EV);
                 Exit.render();
                 Exit.HandleEvent(EV);
+                LoadGame.render();
+                LoadGame.HandleEvent(EV);
             }
-            else wizard.handleEvent(EV);
-        }
-        if(VaoGame)
-        {
-            scrollingOffset-=ScrollSpeed;
-            if( scrollingOffset <- Background_Texture.getWidth() )
+            else
             {
-                scrollingOffset = 0;
+                wizard.handleEvent(EV);
+                Pause.HandleEvent(EV);
             }
-            wizard.move();
-            /////////////////////////
+        }
+        if(VaoGame&&!PauseGame)
+        {
+            Pause.RePos(Width-60,10);
             SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
             SDL_RenderClear(gRenderer);
+            scrollingOffset-=ScrollSpeed;
+            if( scrollingOffset <- Background_Texture.getWidth() )    scrollingOffset = 0;
+            wizard.move();
+            ////////////////////////
             Background_Texture.render( scrollingOffset, 0 );
             Background_Texture.render( scrollingOffset + Background_Texture.getWidth()-3, 0 );
             wizard.render();
+            Pause.render();
             Da1.render();
             Da2.render();
             SDL_Rect hitbox= {230,wizard.getY(),1,110};
@@ -148,7 +156,7 @@ int main(int argc,char * argv[])
             {
                 printf( "Failed to render text texture!\n");
             }
-            ScoreText.render(Width-200,50);
+            ScoreText.render(550,20);
             //////////
             SDL_Delay(1000/60.0f);
             ////tang toc do game
@@ -157,6 +165,21 @@ int main(int argc,char * argv[])
             reload++;
             if(reload>500) wizard.add_ammo(),reload=0;
             if(ScrollSpeed>16)   ScrollSpeed=16;
+        }
+        if(PauseGame)
+        {
+            Pause.RePos(500,600);
+            SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+            SDL_RenderClear(gRenderer);
+            Background_Texture.render( scrollingOffset, 0 );
+            Background_Texture.render( scrollingOffset + Background_Texture.getWidth()-3, 0 );
+            wizard.render();
+            Da1.render();
+            Da2.render();
+            if(bullet_on_screen)  A.render();
+
+            Pause.render();
+
         }
         SDL_RenderPresent( gRenderer );
         //////

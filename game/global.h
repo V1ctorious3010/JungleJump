@@ -28,6 +28,7 @@ nhanvat wizard;
 fireball Fire;
 bool running=1;
 TTF_Font *gFont;
+bool PauseGame=0;
 ////
 LTexture FireBall;
 LTexture ScoreText;
@@ -282,5 +283,6 @@ void Button::render()
 void Button::Upd()
 {
     if(type==1)      VaoGame=1;
-    else if(type==0) running=0;
+    if(type==0)      running=0;
+    if(type==3)      PauseGame^=1;
 }
