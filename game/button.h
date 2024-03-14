@@ -1,6 +1,6 @@
 #pragma once
 #include <SDL.h>
-
+#include<bits/stdc++.h>
 #include"LTexture.h"
 class Button
 {
@@ -12,12 +12,73 @@ public:
         isHovered=0;
         render();
         type=t;
+        if(type==1)
+        {
+            if(!nHTexture.LoadImage("new_game_button.png"))
+            {
+                cout<<"cant load play button";
+            }
+            if(!HTexture.LoadImage("new_game_button1.png"))
+            {
+                cout<<"cant load play button2";
+            }
+        }
+        if(type==0)
+        {
+            if(!nHTexture.LoadImage("exit_button.png"))
+            {
+                cout<<"cant load exit button";
+            }
+            if(!HTexture.LoadImage("exit_button1.png"))
+            {
+                cout<<"cant load exit button2";
+            }
+        }
+        if(type==4)
+        {
+            if(!nHTexture.LoadImage("last_game_button.png"))
+            {
+                cout<<"cant load last button";
+            }
+            if(!HTexture.LoadImage("last_game_button1.png"))
+            {
+                cout<<"cant load last button2";
+            }
+        }
+        if(type==3)
+        {
+            if(!nHTexture.LoadImage("pause_button.png"))
+            {
+                cout<<"cant load pause button";
+            }
+            if(!HTexture.LoadImage("pause_button1.png"))
+            {
+                cout<<"cant load pause button2";
+            }
+        }
+        if(type==6)
+        {
+            if(!nHTexture.LoadImage("resume_button.png"))
+            {
+                cout<<"cant load resume button";
+            }
+            if(!HTexture.LoadImage("resume_button1.png"))
+            {
+                cout<<"cant load resume button2";
+            }
+        }
     }
     void HandleEvent(const SDL_Event Event)
     {
+        bool press=0;
         if (Event.type == SDL_MOUSEBUTTONDOWN &&Event.button.button == SDL_BUTTON_LEFT &&isHovered)
         {
-            Upd();
+            //cout<<"BAO";
+            press=1;
+        }
+        else if(Event.type == SDL_MOUSEBUTTONUP )
+        {
+
         }
         else if (Event.type==SDL_MOUSEMOTION)
         {
@@ -27,6 +88,7 @@ public:
                 render();
             }
         }
+        if(press)    Upd();
     }
     void Upd();
     void render();
@@ -34,7 +96,7 @@ public:
     {
         int w=Rect.w;
         int h=Rect.h;
-        Rect={a,b,w,h};
+        Rect= {a,b,w,h};
     }
 private:
     bool IsWithinBounds(int x, int y)
@@ -48,4 +110,6 @@ private:
     bool isHovered;
     SDL_Rect Rect;
     int type;
+    LTexture nHTexture;
+    LTexture HTexture;
 };

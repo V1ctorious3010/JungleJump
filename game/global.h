@@ -43,9 +43,9 @@ int ScrollSpeed=5;
 int scrollingOffset=0;
 bool bullet_on_screen=1;
 bool VaoGame=0;
+LTexture Board;
 ////button color
-SDL_Color BGColor { 255, 50, 50, 255 };
-SDL_Color HoverColor { 50, 50, 255, 255 };
+
 ///
 
 void LTexture ::  render(int x,int y)
@@ -93,6 +93,11 @@ bool LTexture::loadFromRenderedText( std::string textureText, SDL_Color textColo
 void LoadTexture()
 {
     if(!Background_Texture.LoadImage("bg.png"))
+    {
+        cout<<"can't load bg";
+        return ;
+    }
+    if(!Board.LoadImage("bang.png"))
     {
         cout<<"can't load bg";
         return ;
@@ -271,18 +276,16 @@ void fireball::render()
 }
 void Button::render()
 {
-    SDL_Color tmp= isHovered ? HoverColor:BGColor;
-    int r=tmp.r;
-    int g=tmp.g;
-    int b=tmp.b;
-    int a=tmp.a;
-    SDL_SetRenderDrawColor(gRenderer,r,g,b,a);
-    SDL_RenderFillRect(gRenderer,&Rect);
+    if(isHovered)     HTexture.render(Rect.x,Rect.y);
+    else nHTexture.render(Rect.x,Rect.y);
 }
-
 void Button::Upd()
 {
     if(type==1)      VaoGame=1;
     if(type==0)      running=0;
-    if(type==3)      PauseGame^=1;
+    if(type==3||type==6)
+    {
+        PauseGame^=1;
+        cout<<PauseGame<<endl;
+    }
 }

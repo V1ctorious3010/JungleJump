@@ -66,13 +66,15 @@ int main(int argc,char * argv[])
     SDL_SetRenderDrawColor(gRenderer,36,121,126,0xFF);
     SDL_RenderClear(gRenderer);
     SDL_Event  EV;
-    Button Play= {1,500,400,300,75};
-    Button Exit= {0,500,600,300,75};
+    Button Play= {1,500,373,300,75};
+    Button Exit= {0,500,575,300,75};
     Button Pause= {3,Width-60,10,50,50};
-    Button LoadGame= {4,500,500,300,75};
-    Button Menu={5,500,400,300,75};
+    Button LoadGame= {4,500,475,300,75};
+    Button Menu= {5,500,400,300,75};
+    Button Resume= {6,575,400,100,100};
     while(running)
     {
+
         while(SDL_PollEvent(&EV))
         {
             if(EV.type==SDL_QUIT)
@@ -91,11 +93,19 @@ int main(int argc,char * argv[])
                 LoadGame.render();
                 LoadGame.HandleEvent(EV);
             }
-            else
+            if(VaoGame&&!PauseGame)
             {
                 wizard.handleEvent(EV);
                 Pause.HandleEvent(EV);
             }
+            else if(PauseGame)
+            {
+                Resume.HandleEvent(EV);
+            }
+            //if(Died)
+            //{
+              //  Replay.HandleEvent(EV);
+           // }
         }
         if(VaoGame&&!PauseGame)
         {
@@ -166,9 +176,8 @@ int main(int argc,char * argv[])
             if(reload>500) wizard.add_ammo(),reload=0;
             if(ScrollSpeed>16)   ScrollSpeed=16;
         }
-        if(PauseGame)
+        else if(PauseGame)
         {
-            Pause.RePos(500,600);
             SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
             SDL_RenderClear(gRenderer);
             Background_Texture.render( scrollingOffset, 0 );
@@ -177,9 +186,16 @@ int main(int argc,char * argv[])
             Da1.render();
             Da2.render();
             if(bullet_on_screen)  A.render();
-
-            Pause.render();
-
+            Board.render(400,100);
+            Resume.render();
+            string tmp="Score: ";
+            tmp+=to_string(Score);
+            SDL_Color textColor = {0,0,0};
+            if(!ScoreText.loadFromRenderedText(tmp,textColor))
+            {
+                printf( "Failed to render text texture!\n");
+            }
+            ScoreText.render(550,300);
         }
         SDL_RenderPresent( gRenderer );
         //////
