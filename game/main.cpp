@@ -62,26 +62,27 @@ int main(int argc,char * argv[])
     LoadTexture();
     CucDa Da1(Width+20);
     CucDa Da2(Width+400);
+    Died=0;
     ///////////////////
     SDL_SetRenderDrawColor(gRenderer,36,121,126,0xFF);
     SDL_RenderClear(gRenderer);
     SDL_Event  EV;
-    Button Play= {1,500,373,300,75};
-    Button Exit= {0,500,575,300,75};
+    Button Play= {1,450,273,300,75};
+    Button Exit= {0,450,475,300,75};
     Button Pause= {3,Width-60,10,50,50};
-    Button LoadGame= {4,500,475,300,75};
-    Button Menu= {5,500,400,300,75};
-    Button Resume= {6,575,400,100,100};
+    Button LoadGame= {4,450,375,300,75};
+    Button Menu= {5,450,400,300,75};
+    Button Resume= {6,570,400,100,100};
+    Button Replay= {7,570,400,100,100};
     while(running)
     {
-
         while(SDL_PollEvent(&EV))
         {
             if(EV.type==SDL_QUIT)
             {
                 return 0;
             }
-            if(!VaoGame)
+            if(!VaoGame)           //o menu
             {
                 SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
                 SDL_RenderClear(gRenderer);
@@ -93,7 +94,7 @@ int main(int argc,char * argv[])
                 LoadGame.render();
                 LoadGame.HandleEvent(EV);
             }
-            if(VaoGame&&!PauseGame)
+            if(VaoGame&&!PauseGame&&!Died)         //dang choi
             {
                 wizard.handleEvent(EV);
                 Pause.HandleEvent(EV);
@@ -102,12 +103,12 @@ int main(int argc,char * argv[])
             {
                 Resume.HandleEvent(EV);
             }
-            //if(Died)
-            //{
-              //  Replay.HandleEvent(EV);
-           // }
+            if(Died)
+            {
+                Replay.HandleEvent(EV);
+            }
         }
-        if(VaoGame&&!PauseGame)
+        if(VaoGame&&!PauseGame&&!Died)
         {
             Pause.RePos(Width-60,10);
             SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
@@ -134,7 +135,7 @@ int main(int argc,char * argv[])
                 A.render();
                 if(checkCollision(hitbox,A.get()))
                 {
-                    //  return 0;
+                    Died=1;
                 }
                 if(A.x<0)   bullet_on_screen=0;
             }
@@ -142,11 +143,12 @@ int main(int argc,char * argv[])
             Da2.move();
             if(checkCollision(hitbox,Da1.get())||checkCollision(hitbox,Da2.get()))
             {
-                // return 0;
+                Died=1;
             }
             if(wizard.get_attack())
             {
                 FIRE.move();
+
                 FIRE.render();
                 if(bullet_on_screen&&checkCollision(FIRE.get(),A.get()))
                 {
@@ -176,18 +178,19 @@ int main(int argc,char * argv[])
             if(reload>500) wizard.add_ammo(),reload=0;
             if(ScrollSpeed>16)   ScrollSpeed=16;
         }
-        else if(PauseGame)
+        else if(PauseGame||Died)
         {
             SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
             SDL_RenderClear(gRenderer);
             Background_Texture.render( scrollingOffset, 0 );
             Background_Texture.render( scrollingOffset + Background_Texture.getWidth()-3, 0 );
-            wizard.render();
+            //wizard.render();
             Da1.render();
             Da2.render();
             if(bullet_on_screen)  A.render();
             Board.render(400,100);
-            Resume.render();
+            if(Died)       Replay.render();
+            else if(PauseGame) Resume.render();
             string tmp="Score: ";
             tmp+=to_string(Score);
             SDL_Color textColor = {0,0,0};
@@ -195,7 +198,18 @@ int main(int argc,char * argv[])
             {
                 printf( "Failed to render text texture!\n");
             }
-            ScoreText.render(550,300);
+            ScoreText.render(545,300);
+            if(Died)
+            {
+                HighScore=max(HighScore,Score);
+                string tmp2="HighScore: ";
+                tmp2+=to_string(HighScore);
+                if(!HighScoreText.loadFromRenderedText(tmp2,textColor))
+                {
+                    printf( "Failed to render text texture!\n");
+                }
+                HighScoreText.render(510,230);
+            }
         }
         SDL_RenderPresent( gRenderer );
         //////

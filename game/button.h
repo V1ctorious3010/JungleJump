@@ -67,6 +67,18 @@ public:
                 cout<<"cant load resume button2";
             }
         }
+        if(type==7)
+        {
+            if(!nHTexture.LoadImage("replay_button.png"))
+            {
+                cout<<"cant load replay button";
+            }
+            if(!HTexture.LoadImage("replay_button1.png"))
+            {
+                cout<<"cant load replay button2";
+            }
+        }
+
     }
     void HandleEvent(const SDL_Event Event)
     {

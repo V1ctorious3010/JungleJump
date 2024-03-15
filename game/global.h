@@ -17,7 +17,7 @@ int rnd(int l,int r)
 const int deadY=620;
 SDL_Rect san= {0,600,800,10};
 const int Width=1200;
-const int Height=800;
+const int Height=740;
 SDL_Window *gWindow;
 SDL_Renderer *gRenderer;
 LTexture Character_Texture;
@@ -29,9 +29,12 @@ fireball Fire;
 bool running=1;
 TTF_Font *gFont;
 bool PauseGame=0;
+bool Died=0;
+bool Replay;
 ////
 LTexture FireBall;
 LTexture ScoreText;
+LTexture HighScoreText;
 LTexture MenuBackground;
 LTexture Ammo[4];
 double down_speed=1.5;
@@ -44,6 +47,7 @@ int scrollingOffset=0;
 bool bullet_on_screen=1;
 bool VaoGame=0;
 LTexture Board;
+int HighScore=0;
 ////button color
 
 ///
@@ -102,7 +106,7 @@ void LoadTexture()
         cout<<"can't load bg";
         return ;
     }
-    if(!MenuBackground.LoadImage("menu_background.png"))
+    if(!MenuBackground.LoadImage("background.png"))
     {
         cout<<"can't load menu bg";
         return ;
@@ -283,9 +287,6 @@ void Button::Upd()
 {
     if(type==1)      VaoGame=1;
     if(type==0)      running=0;
-    if(type==3||type==6)
-    {
-        PauseGame^=1;
-        cout<<PauseGame<<endl;
-    }
+    if(type==3||type==6)   PauseGame^=1;
+    if(type==7)       Died=0,Replay=1;
 }
