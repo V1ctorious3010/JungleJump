@@ -9,7 +9,7 @@ int reload=0;
 bool init()
 {
     if(SDL_Init(SDL_INIT_EVERYTHING)!=0)   cout<<"Can't init"<<endl;
-    gWindow = SDL_CreateWindow( "Game_nhay_nhay", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, Width, Height, SDL_WINDOW_SHOWN );
+    gWindow = SDL_CreateWindow( "JungleJump", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, Width, Height, SDL_WINDOW_SHOWN );
     if(gWindow==NULL)    return 0;
     gRenderer = SDL_CreateRenderer( gWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
     if(gRenderer==NULL)   return 0;
@@ -67,10 +67,10 @@ int main(int argc,char * argv[])
     SDL_SetRenderDrawColor(gRenderer,36,121,126,0xFF);
     SDL_RenderClear(gRenderer);
     SDL_Event  EV;
-    Button Play= {1,450,273,300,75};
-    Button Exit= {0,450,475,300,75};
+    Button Play= {1,450,293,300,75};
+    Button Exit= {0,450,495,300,75};
     Button Pause= {3,Width-60,10,50,50};
-    Button LoadGame= {4,450,375,300,75};
+    Button LoadGame= {4,450,395,300,75};
     Button Menu= {5,450,400,300,75};
     Button Resume= {6,570,400,100,100};
     Button Replay= {7,570,400,100,100};
@@ -87,6 +87,7 @@ int main(int argc,char * argv[])
                 SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
                 SDL_RenderClear(gRenderer);
                 MenuBackground.render(0,0);
+                Title.render(150,50);
                 Play.render();
                 Play.HandleEvent(EV);
                 Exit.render();

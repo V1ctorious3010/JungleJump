@@ -37,6 +37,7 @@ LTexture ScoreText;
 LTexture HighScoreText;
 LTexture MenuBackground;
 LTexture Ammo[4];
+LTexture Title;
 double down_speed=1.5;
 int VELOCITY=0;
 double SPEED=240;
@@ -124,6 +125,11 @@ void LoadTexture()
     for(int i=1; i<=4; i++)
     {
         if(!Ammo[i].LoadImage("ammo.png"))   cout<<"Can't load ammo";
+    }
+    if(!Title.LoadImage("title.png"))
+    {
+        cout<<"can't load title";
+        return ;
     }
 }
 bool checkCollision( SDL_Rect a, SDL_Rect b )
