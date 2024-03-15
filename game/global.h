@@ -30,7 +30,7 @@ bool running=1;
 TTF_Font *gFont;
 bool PauseGame=0;
 bool Died=0;
-bool Replay;
+bool Rep;
 ////
 LTexture FireBall;
 LTexture ScoreText;
@@ -288,5 +288,5 @@ void Button::Upd()
     if(type==1)      VaoGame=1;
     if(type==0)      running=0;
     if(type==3||type==6)   PauseGame^=1;
-    if(type==7)       Died=0,Replay=1;
+    if(type==7)       Died=0,Rep=1;
 }

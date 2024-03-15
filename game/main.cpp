@@ -107,6 +107,10 @@ int main(int argc,char * argv[])
             {
                 Replay.HandleEvent(EV);
             }
+            if(Rep)
+            {
+
+            }
         }
         if(VaoGame&&!PauseGame&&!Died)
         {
