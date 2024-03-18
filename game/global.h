@@ -20,7 +20,7 @@ const int Width=1200;
 const int Height=740;
 SDL_Window *gWindow;
 SDL_Renderer *gRenderer;
-LTexture Character_Texture;
+LTexture Character_Texture[9];
 LTexture Background_Texture;
 LTexture bullet;
 LTexture st1,st2;
@@ -131,6 +131,14 @@ void LoadTexture()
         cout<<"can't load title";
         return ;
     }
+    Character_Texture[1].LoadImage("run/run1.png");
+    Character_Texture[2].LoadImage("run/run2.png");
+    Character_Texture[3].LoadImage("run/run3.png");
+    Character_Texture[4].LoadImage("run/run4.png");
+    Character_Texture[5].LoadImage("run/run5.png");
+    Character_Texture[6].LoadImage("run/run6.png");
+    Character_Texture[7].LoadImage("run/run7.png");
+    Character_Texture[0] .LoadImage("run/run0.png");
 }
 bool checkCollision( SDL_Rect a, SDL_Rect b )
 {
@@ -179,29 +187,8 @@ void nhanvat::render()
     add+=1;
     if(add==5)        add=0,status=(status+1)%8;
     if(!status)       status++;
-    if(status==1)     Character_Texture.LoadImage("run/run1.png");
-    if(status==2)     Character_Texture.LoadImage("run/run2.png");
-    if(status==3)     Character_Texture.LoadImage("run/run3.png");
-    if(status==4)     Character_Texture.LoadImage("run/run4.png");
-    if(status==5)     Character_Texture.LoadImage("run/run5.png");
-    if(status==6)     Character_Texture.LoadImage("run/run6.png");
-    if(status==7)     Character_Texture.LoadImage("run/run7.png");
-    if(!on_ground)    Character_Texture.LoadImage("run/run0.png");
-    /*else
-    {
-        add2++;
-        if(add2==7)        add2=0,status2=(status2+1)%7;
-        if(!status2)       status2++;
-        if(status2==0)     Character_Texture.LoadImage("attack/fire0.png");
-        if(status2==1)     Character_Texture.LoadImage("attack/fire1.png");
-        if(status2==2)     Character_Texture.LoadImage("attack/fire2.png");
-        if(status2==3)     Character_Texture.LoadImage("attack/fire3.png");
-        if(status2==4)     Character_Texture.LoadImage("attack/fire4.png");
-        if(status2==5)     Character_Texture.LoadImage("attack/fire5.png");
-        if(status2==6)     Character_Texture.LoadImage("attack/fire6.png"),attack=0,status2=0;
-    }*/
-    Character_Texture.render(240,mPosY);
-    // SDL_Delay(100);
+    if(on_ground)     Character_Texture[status].render(240,mPosY);
+    else    Character_Texture[0].render(240,mPosY);
 }
 ///////ball;
 struct ball
@@ -247,9 +234,7 @@ struct CucDa
     {
         x=t;
         y=deadY-73;
-        if(!stone.LoadImage("stone.png"))
-        {
-        }
+        !stone.LoadImage("stone.png");
     }
     void render()
     {
@@ -269,6 +254,11 @@ struct CucDa
     SDL_Rect get()
     {
         return {(int)x,(int)y,120,60};
+    }
+    void reset(int t)
+    {
+        x=t;
+        y=deadY-73;
     }
 
 };

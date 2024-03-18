@@ -6,6 +6,19 @@ using namespace std;
 #include"LTexture.h"
 #include<SDL_ttf.h>
 int reload=0;
+string ScoreStr="Score :";
+string HighScoreStr="HighScore :";
+void RenderText(string &s,int &score,int x,int y)
+{
+    string tmp=s;
+    tmp+=to_string(score);
+    SDL_Color textColor = {0,0,0};
+    if(!ScoreText.loadFromRenderedText(tmp,textColor))
+    {
+        printf( "Failed to render text texture!\n");
+    }
+    ScoreText.render(x,y);
+}
 bool init()
 {
     if(SDL_Init(SDL_INIT_EVERYTHING)!=0)   cout<<"Can't init"<<endl;
@@ -36,7 +49,7 @@ bool init()
 void close()
 {
     //Free loaded images
-    Character_Texture.free();
+    for(int i=0;i<=7;i++)  Character_Texture[i].free();
     Background_Texture.free();
     bullet.free();
     for(int i=1; i<=4; i++)    Ammo[i].free();
@@ -108,10 +121,18 @@ int main(int argc,char * argv[])
             {
                 Replay.HandleEvent(EV);
             }
-            if(Rep)
-            {
-
-            }
+        }
+        if(Rep)
+        {
+            Score=0;
+            VaoGame=1;
+            ScrollSpeed=5;
+            scrollingOffset=0;
+            bullet_on_screen=0;
+            Da1.reset(Width+20),Da2.reset(Width+400);
+            wizard.reset();
+            GRAVITY=18;
+            Rep=0;
         }
         if(VaoGame&&!PauseGame&&!Died)
         {
@@ -140,7 +161,7 @@ int main(int argc,char * argv[])
                 A.render();
                 if(checkCollision(hitbox,A.get()))
                 {
-                    Died=1;
+                     Died=1;
                 }
                 if(A.x<0)   bullet_on_screen=0;
             }
@@ -153,7 +174,6 @@ int main(int argc,char * argv[])
             if(wizard.get_attack())
             {
                 FIRE.move();
-
                 FIRE.render();
                 if(bullet_on_screen&&checkCollision(FIRE.get(),A.get()))
                 {
@@ -163,17 +183,9 @@ int main(int argc,char * argv[])
                 }
             }
             for(int i=1; i<=wizard.get_ammo(); i++)    Ammo[i].render(10+(i-1)*70,10);
-            ////////
             //hien thi diem
-            string tmp="Score: ";
             Score++;
-            tmp+=to_string(Score);
-            SDL_Color textColor = {0,0,0};
-            if(!ScoreText.loadFromRenderedText(tmp,textColor))
-            {
-                printf( "Failed to render text texture!\n");
-            }
-            ScoreText.render(550,20);
+            RenderText(ScoreStr,Score,550,20);
             //////////
             SDL_Delay(1000/60.0f);
             ////tang toc do game
@@ -189,32 +201,15 @@ int main(int argc,char * argv[])
             SDL_RenderClear(gRenderer);
             Background_Texture.render( scrollingOffset, 0 );
             Background_Texture.render( scrollingOffset + Background_Texture.getWidth()-3, 0 );
-            //wizard.render();
             Da1.render();
             Da2.render();
             if(bullet_on_screen)  A.render();
             Board.render(400,100);
+            HighScore=max(HighScore,Score);
             if(Died)       Replay.render();
             else if(PauseGame) Resume.render();
-            string tmp="Score: ";
-            tmp+=to_string(Score);
-            SDL_Color textColor = {0,0,0};
-            if(!ScoreText.loadFromRenderedText(tmp,textColor))
-            {
-                printf( "Failed to render text texture!\n");
-            }
-            ScoreText.render(545,300);
-            if(Died)
-            {
-                HighScore=max(HighScore,Score);
-                string tmp2="HighScore: ";
-                tmp2+=to_string(HighScore);
-                if(!HighScoreText.loadFromRenderedText(tmp2,textColor))
-                {
-                    printf( "Failed to render text texture!\n");
-                }
-                HighScoreText.render(510,230);
-            }
+            RenderText(ScoreStr,Score,545,300);
+            RenderText(HighScoreStr,HighScore,520,230);
         }
         SDL_RenderPresent( gRenderer );
         //////

@@ -101,6 +101,14 @@ public:
         ammo++;
         if(ammo>3)   ammo=3;
     }
+    void reset()
+    {
+        mPosY=250,y_vel=0;
+        ammo=3;
+        can_jump=0;
+        jump_pressed=0;
+        on_ground=0;
+    }
 private:
     double mPosY;
     double y_vel;
