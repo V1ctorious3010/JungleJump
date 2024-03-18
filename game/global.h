@@ -4,7 +4,6 @@ mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 #include<SDL.h>
 #include<SDL_image.h>
 #include<SDL_ttf.h>
-
 #include"character.h"
 #include"button.h"
 vector<int>TYPE= {0,0,1};
@@ -14,7 +13,7 @@ int rnd(int l,int r)
 {
     return l+rng()%(r-l+1);
 }
-const int deadY=620;
+const int deadY=660;
 SDL_Rect san= {0,600,800,10};
 const int Width=1200;
 const int Height=740;
@@ -36,6 +35,7 @@ LTexture FireBall;
 LTexture ScoreText;
 LTexture HighScoreText;
 LTexture MenuBackground;
+LTexture Ground_Texture;
 LTexture Ammo[4];
 LTexture Title;
 double down_speed=1.5;
@@ -44,21 +44,22 @@ double SPEED=240;
 const int FPS=60;
 int Score=0;
 int ScrollSpeed=5;
-int scrollingOffset=0;
+int scrollingOffset=5;
 bool bullet_on_screen=1;
 bool VaoGame=0;
 LTexture Board;
 int HighScore=0;
+
 ////button color
 
 ///
 
-void LTexture ::  render(int x,int y)
+void LTexture ::render(int x,int y)
 {
     SDL_Rect tmp= {x,y,mWidth,mHeight};
     SDL_RenderCopy(gRenderer,mTexture,NULL,&tmp);
 }
-bool LTexture ::  LoadImage(string file_path)
+bool LTexture ::LoadImage(string file_path)
 {
     free();
     SDL_Surface* Sur=IMG_Load(file_path.c_str());
@@ -97,7 +98,7 @@ bool LTexture::loadFromRenderedText( std::string textureText, SDL_Color textColo
 }
 void LoadTexture()
 {
-    if(!Background_Texture.LoadImage("bg.png"))
+    if(!Background_Texture.LoadImage("bg2.png"))
     {
         cout<<"can't load bg";
         return ;
@@ -107,7 +108,7 @@ void LoadTexture()
         cout<<"can't load bg";
         return ;
     }
-    if(!MenuBackground.LoadImage("background.png"))
+    if(!MenuBackground.LoadImage("background2.png"))
     {
         cout<<"can't load menu bg";
         return ;
@@ -120,6 +121,11 @@ void LoadTexture()
     if(!FireBall.LoadImage("fire/fire2.png"))
     {
         cout<<"can't load fire";
+        return ;
+    }
+    if(!Ground_Texture.LoadImage("ground.png"))
+    {
+        cout<<"can't load ground";
         return ;
     }
     for(int i=1; i<=4; i++)
@@ -233,7 +239,7 @@ struct CucDa
     CucDa(int t)
     {
         x=t;
-        y=deadY-73;
+        y=deadY-78;
         !stone.LoadImage("stone.png");
     }
     void render()

@@ -5,6 +5,7 @@ using namespace std;
 #include"global.h"
 #include"LTexture.h"
 #include<SDL_ttf.h>
+#include<SDL_mixer.h>
 int reload=0;
 string ScoreStr="Score :";
 string HighScoreStr="HighScore :";
@@ -30,18 +31,24 @@ bool init()
     int imgFlags = IMG_INIT_PNG;
     if( !( IMG_Init( imgFlags ) & imgFlags ) )
     {
-        printf( "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError() );
+        cout<<"SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError() ;
         return 0;
     }
     if( TTF_Init() == -1 )
     {
-        printf( "SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError() );
+        cout<< "SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError() ;
         return 0;
     }
     gFont = TTF_OpenFont( "dot_to_dot.ttf", 50);
     if( gFont == NULL )
     {
-        printf( "Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError() );
+        cout<< "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError() ;
+        return 0;
+    }
+    Mix_Init(MIX_INIT_MP3);
+    if(Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048))
+    {
+        cout<<"Failed to load mixer"<<endl;
         return 0;
     }
     return 1;
@@ -49,7 +56,7 @@ bool init()
 void close()
 {
     //Free loaded images
-    for(int i=0;i<=7;i++)  Character_Texture[i].free();
+    for(int i=0; i<=7; i++)  Character_Texture[i].free();
     Background_Texture.free();
     bullet.free();
     for(int i=1; i<=4; i++)    Ammo[i].free();
@@ -64,6 +71,8 @@ void close()
     IMG_Quit();
     SDL_Quit();
     TTF_Quit();
+    Mix_Quit();
+
 }
 int main(int argc,char * argv[])
 {
@@ -127,7 +136,7 @@ int main(int argc,char * argv[])
             Score=0;
             VaoGame=1;
             ScrollSpeed=5;
-            scrollingOffset=0;
+            scrollingOffset=5;
             bullet_on_screen=0;
             Da1.reset(Width+20),Da2.reset(Width+400);
             wizard.reset();
@@ -142,14 +151,15 @@ int main(int argc,char * argv[])
             scrollingOffset-=ScrollSpeed;
             if( scrollingOffset <- Background_Texture.getWidth() )    scrollingOffset = 0;
             wizard.move();
-            ////////////////////////
             Background_Texture.render( scrollingOffset, 0 );
             Background_Texture.render( scrollingOffset + Background_Texture.getWidth()-3, 0 );
-            wizard.render();
-            Pause.render();
             Da1.render();
             Da2.render();
-            SDL_Rect hitbox= {230,wizard.getY(),1,110};
+            Ground_Texture.render(scrollingOffset,deadY-22);
+            Ground_Texture.render( scrollingOffset + Background_Texture.getWidth()-3, deadY-22 );
+            wizard.render();
+            Pause.render();
+            SDL_Rect hitbox= {233,wizard.getY(),1,110};
             if(!bullet_on_screen)
             {
                 int n=rnd(1,1000);
@@ -161,7 +171,7 @@ int main(int argc,char * argv[])
                 A.render();
                 if(checkCollision(hitbox,A.get()))
                 {
-                     Died=1;
+                    // Died=1;
                 }
                 if(A.x<0)   bullet_on_screen=0;
             }
@@ -169,7 +179,7 @@ int main(int argc,char * argv[])
             Da2.move();
             if(checkCollision(hitbox,Da1.get())||checkCollision(hitbox,Da2.get()))
             {
-                Died=1;
+                //  Died=1;
             }
             if(wizard.get_attack())
             {
@@ -190,7 +200,7 @@ int main(int argc,char * argv[])
             SDL_Delay(1000/60.0f);
             ////tang toc do game
             int cur=SDL_GetTicks();
-            if(cur%300==0)      ScrollSpeed++;
+            if(cur%500==0)      ScrollSpeed++;
             reload++;
             if(reload>500) wizard.add_ammo(),reload=0;
             if(ScrollSpeed>16)   ScrollSpeed=16;
@@ -203,6 +213,8 @@ int main(int argc,char * argv[])
             Background_Texture.render( scrollingOffset + Background_Texture.getWidth()-3, 0 );
             Da1.render();
             Da2.render();
+            Ground_Texture.render(scrollingOffset,deadY-22);
+            Ground_Texture.render( scrollingOffset + Background_Texture.getWidth()-3, deadY-22 );
             if(bullet_on_screen)  A.render();
             Board.render(400,100);
             HighScore=max(HighScore,Score);

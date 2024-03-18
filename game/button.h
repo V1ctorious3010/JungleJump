@@ -85,7 +85,6 @@ public:
         bool press=0;
         if (Event.type == SDL_MOUSEBUTTONDOWN &&Event.button.button == SDL_BUTTON_LEFT &&isHovered)
         {
-            //cout<<"BAO";
             press=1;
         }
         else if(Event.type == SDL_MOUSEBUTTONUP )
