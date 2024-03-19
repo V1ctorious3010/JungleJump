@@ -45,12 +45,12 @@ bool init()
         cout<< "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError() ;
         return 0;
     }
-    Mix_Init(MIX_INIT_MP3);
+    /*Mix_Init(MIX_INIT_MP3);
     if(Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048))
     {
         cout<<"Failed to load mixer"<<endl;
         return 0;
-    }
+    }*/
     return 1;
 }
 void close()
@@ -109,7 +109,7 @@ int main(int argc,char * argv[])
                 SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
                 SDL_RenderClear(gRenderer);
                 MenuBackground.render(0,0);
-                Title.render(150,50);
+                Title.render(190,50);
                 Play.render();
                 Play.HandleEvent(EV);
                 Exit.render();
@@ -147,16 +147,15 @@ int main(int argc,char * argv[])
         {
             Pause.RePos(Width-60,10);
             SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
-            SDL_RenderClear(gRenderer);
+            SDL_RenderClear(gRenderer);Da2.move();    Da1.move();
             scrollingOffset-=ScrollSpeed;
             if( scrollingOffset <- Background_Texture.getWidth() )    scrollingOffset = 0;
             wizard.move();
+
             Background_Texture.render( scrollingOffset, 0 );
-            Background_Texture.render( scrollingOffset + Background_Texture.getWidth()-3, 0 );
+            Background_Texture.render( scrollingOffset + Background_Texture.getWidth(), 0 );
             Da1.render();
             Da2.render();
-            Ground_Texture.render(scrollingOffset,deadY-22);
-            Ground_Texture.render( scrollingOffset + Background_Texture.getWidth()-3, deadY-22 );
             wizard.render();
             Pause.render();
             SDL_Rect hitbox= {233,wizard.getY(),1,110};
@@ -175,8 +174,6 @@ int main(int argc,char * argv[])
                 }
                 if(A.x<0)   bullet_on_screen=0;
             }
-            Da1.move();
-            Da2.move();
             if(checkCollision(hitbox,Da1.get())||checkCollision(hitbox,Da2.get()))
             {
                 //  Died=1;
@@ -200,10 +197,11 @@ int main(int argc,char * argv[])
             SDL_Delay(1000/60.0f);
             ////tang toc do game
             int cur=SDL_GetTicks();
-            if(cur%500==0)      ScrollSpeed++;
+
+            if(cur%400==0)    ScrollSpeed+=5;
             reload++;
-            if(reload>500) wizard.add_ammo(),reload=0;
-            if(ScrollSpeed>16)   ScrollSpeed=16;
+            if(reload>500)       wizard.add_ammo(),reload=0;
+            if(ScrollSpeed>12)   ScrollSpeed=16;
         }
         else if(PauseGame||Died)
         {
@@ -213,8 +211,6 @@ int main(int argc,char * argv[])
             Background_Texture.render( scrollingOffset + Background_Texture.getWidth()-3, 0 );
             Da1.render();
             Da2.render();
-            Ground_Texture.render(scrollingOffset,deadY-22);
-            Ground_Texture.render( scrollingOffset + Background_Texture.getWidth()-3, deadY-22 );
             if(bullet_on_screen)  A.render();
             Board.render(400,100);
             HighScore=max(HighScore,Score);

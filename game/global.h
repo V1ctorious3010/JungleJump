@@ -19,10 +19,7 @@ const int Width=1200;
 const int Height=740;
 SDL_Window *gWindow;
 SDL_Renderer *gRenderer;
-LTexture Character_Texture[9];
-LTexture Background_Texture;
-LTexture bullet;
-LTexture st1,st2;
+
 nhanvat wizard;
 fireball Fire;
 bool running=1;
@@ -30,12 +27,15 @@ TTF_Font *gFont;
 bool PauseGame=0;
 bool Died=0;
 bool Rep;
-////
+///
+LTexture Character_Texture[9];
+LTexture Background_Texture;
+LTexture bullet;
+LTexture st1,st2;
 LTexture FireBall;
 LTexture ScoreText;
 LTexture HighScoreText;
 LTexture MenuBackground;
-LTexture Ground_Texture;
 LTexture Ammo[4];
 LTexture Title;
 double down_speed=1.5;
@@ -43,7 +43,7 @@ int VELOCITY=0;
 double SPEED=240;
 const int FPS=60;
 int Score=0;
-int ScrollSpeed=5;
+double ScrollSpeed=5;
 int scrollingOffset=5;
 bool bullet_on_screen=1;
 bool VaoGame=0;
@@ -123,16 +123,11 @@ void LoadTexture()
         cout<<"can't load fire";
         return ;
     }
-    if(!Ground_Texture.LoadImage("ground.png"))
-    {
-        cout<<"can't load ground";
-        return ;
-    }
     for(int i=1; i<=4; i++)
     {
         if(!Ammo[i].LoadImage("ammo.png"))   cout<<"Can't load ammo";
     }
-    if(!Title.LoadImage("title.png"))
+    if(!Title.LoadImage("new_title.png"))
     {
         cout<<"can't load title";
         return ;
@@ -239,7 +234,7 @@ struct CucDa
     CucDa(int t)
     {
         x=t;
-        y=deadY-78;
+        y=deadY-80;
         !stone.LoadImage("stone.png");
     }
     void render()
@@ -270,6 +265,7 @@ struct CucDa
 };
 CucDa Da1(Width+20);
 CucDa Da2(Width+500);
+
 void fireball::render()
 {
     if(x<Width) FireBall.render(x,y);
