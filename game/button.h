@@ -78,7 +78,29 @@ public:
                 cout<<"cant load replay button2";
             }
         }
-
+        if(type==8)
+        {
+            if(!nHTexture.LoadImage("tutorial_button.png"))
+            {
+                cout<<"Can't load tutorial button";
+            }
+            if(!HTexture.LoadImage("tutorial_button2.png"))
+            {
+                cout<<"can't load tutorial button";
+            }
+        }
+        if(type==9)
+        {
+            cout<<x<< " "<<y<<endl;
+            if(!nHTexture.LoadImage("home_button.png"))
+            {
+                cout<<"Can't load home button";
+            }
+            if(!HTexture.LoadImage("home_button2.png"))
+            {
+                cout<<"can't load home button";
+            }
+        }
     }
     void HandleEvent(const SDL_Event Event)
     {

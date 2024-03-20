@@ -29,6 +29,7 @@ bool Died=0;
 bool Rep;
 ///
 LTexture Character_Texture[9];
+LTexture Tutorial_Texture;
 LTexture Background_Texture;
 LTexture bullet;
 LTexture st1,st2;
@@ -49,6 +50,8 @@ bool bullet_on_screen=1;
 bool VaoGame=0;
 LTexture Board;
 int HighScore=0;
+bool HuongDan=0;
+bool ShowMenu=1;
 
 ////button color
 
@@ -132,6 +135,11 @@ void LoadTexture()
         cout<<"can't load title";
         return ;
     }
+    if(!Tutorial_Texture.LoadImage("tutorial.png"))
+    {
+        cout<<"can't load tutor";
+        return ;
+    }
     Character_Texture[1].LoadImage("run/run1.png");
     Character_Texture[2].LoadImage("run/run2.png");
     Character_Texture[3].LoadImage("run/run3.png");
@@ -196,7 +204,7 @@ struct ball
 {
     double x;
     double y;
-    const double x_vel=1200;
+    double x_vel=1200;
     ball()
     {
         x=Width-100;
@@ -283,8 +291,10 @@ void Button::render()
 }
 void Button::Upd()
 {
-    if(type==1)      VaoGame=1;
-    if(type==0)      running=0;
-    if(type==3||type==6)   PauseGame^=1;
-    if(type==7)       Died=0,Rep=1;
+    if(type==1)           VaoGame=1;
+    if(type==0)           running=0;
+    if(type==3||type==6)  PauseGame^=1;
+    if(type==7)           Died=0,Rep=1;
+    if(type==9)           HuongDan=0,ShowMenu=1;
+    if(type==8)           HuongDan=1;
 }

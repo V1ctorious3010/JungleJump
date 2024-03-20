@@ -45,12 +45,12 @@ bool init()
         cout<< "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError() ;
         return 0;
     }
-    /*Mix_Init(MIX_INIT_MP3);
+    Mix_Init(MIX_INIT_MP3);
     if(Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048))
     {
         cout<<"Failed to load mixer"<<endl;
         return 0;
-    }*/
+    }
     return 1;
 }
 void close()
@@ -90,12 +90,16 @@ int main(int argc,char * argv[])
     SDL_RenderClear(gRenderer);
     SDL_Event  EV;
     Button Play= {1,450,293,300,75};
-    Button Exit= {0,450,495,300,75};
-    Button Pause= {3,Width-60,10,50,50};
-    Button LoadGame= {4,450,395,300,75};
+    Button LoadGame= {4,450,393,300,75};
+    Button Tutorial= {8,453,493,300,75};
+    Button Exit= {0,450,593,300,75};
+
+    Button Pause= {3,Width-200,10,50,50};
     Button Menu= {5,450,400,300,75};
     Button Resume= {6,570,400,100,100};
     Button Replay= {7,570,400,100,100};
+
+    Button Close= {9,Width-60,10,50,50};
     while(running)
     {
         while(SDL_PollEvent(&EV))
@@ -104,7 +108,11 @@ int main(int argc,char * argv[])
             {
                 return 0;
             }
-            if(!VaoGame)           //o menu
+            if(HuongDan)
+            {
+                Close.HandleEvent(EV);
+            }
+            if(ShowMenu)           //o menu
             {
                 SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
                 SDL_RenderClear(gRenderer);
@@ -114,6 +122,8 @@ int main(int argc,char * argv[])
                 Play.HandleEvent(EV);
                 Exit.render();
                 Exit.HandleEvent(EV);
+                Tutorial.render();
+                Tutorial.HandleEvent(EV);
                 LoadGame.render();
                 LoadGame.HandleEvent(EV);
             }
@@ -121,8 +131,9 @@ int main(int argc,char * argv[])
             {
                 wizard.handleEvent(EV);
                 Pause.HandleEvent(EV);
+                Close.HandleEvent(EV);
             }
-            else if(PauseGame)
+            if(PauseGame)
             {
                 Resume.HandleEvent(EV);
             }
@@ -130,6 +141,14 @@ int main(int argc,char * argv[])
             {
                 Replay.HandleEvent(EV);
             }
+        }
+        if(HuongDan)
+        {
+            SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+            SDL_RenderClear(gRenderer);
+            Background_Texture.render(0,0);
+            Tutorial_Texture.render(200,90);
+            Close.render();
         }
         if(Rep)
         {
@@ -145,19 +164,20 @@ int main(int argc,char * argv[])
         }
         if(VaoGame&&!PauseGame&&!Died)
         {
-            Pause.RePos(Width-60,10);
             SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
-            SDL_RenderClear(gRenderer);Da2.move();    Da1.move();
+            SDL_RenderClear(gRenderer);
+            Da2.move();
+            Da1.move();
             scrollingOffset-=ScrollSpeed;
             if( scrollingOffset <- Background_Texture.getWidth() )    scrollingOffset = 0;
             wizard.move();
-
             Background_Texture.render( scrollingOffset, 0 );
             Background_Texture.render( scrollingOffset + Background_Texture.getWidth(), 0 );
             Da1.render();
             Da2.render();
             wizard.render();
             Pause.render();
+            Close.render();
             SDL_Rect hitbox= {233,wizard.getY(),1,110};
             if(!bullet_on_screen)
             {
@@ -198,7 +218,7 @@ int main(int argc,char * argv[])
             ////tang toc do game
             int cur=SDL_GetTicks();
 
-            if(cur%400==0)    ScrollSpeed+=5;
+            //if(cur%400==0)    ScrollSpeed+=1,A.x_vel+=20;
             reload++;
             if(reload>500)       wizard.add_ammo(),reload=0;
             if(ScrollSpeed>12)   ScrollSpeed=16;
