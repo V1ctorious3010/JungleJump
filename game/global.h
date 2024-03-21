@@ -291,14 +291,14 @@ void Button::render()
 }
 void Button::Upd()
 {
-    if(type==1)           VaoGame=1;
+    if(type==1)           Rep=1,VaoGame=1,ShowMenu=0;
     if(type==0)           running=0;
     if(type==3||type==6)
     {
         PauseGame^=1;
-        cout<<PauseGame<<endl;
+        //cout<<PauseGame<<endl;
     }
     if(type==7)           Died=0,Rep=1;
-    if(type==9)           HuongDan=0,ShowMenu=1;
+    if(type==9)           HuongDan=0,ShowMenu=1,VaoGame=0,PauseGame=0,Died=0;
     if(type==8)           HuongDan=1;
 }

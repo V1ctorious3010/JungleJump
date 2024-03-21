@@ -94,12 +94,11 @@ int main(int argc,char * argv[])
     Button Tutorial= {8,453,493,300,75};
     Button Exit= {0,450,593,300,75};
 
-    Button Pause= {3,Width-120,10,50,50};
-    Button Menu= {5,450,400,300,75};
+    Button Pause= {3,Width-60,10,50,50};
     Button Resume= {6,570,400,50,50};
-    Button Replay= {7,570,400,100,100};
+    Button Replay= {7,570,400,50,50};
 
-    Button Close= {9,Width-60,10,50,50};
+    Button Home= {9,Width-60,10,50,50};
     while(running)
     {
         while(SDL_PollEvent(&EV))
@@ -110,45 +109,30 @@ int main(int argc,char * argv[])
             }
             if(HuongDan)
             {
-                Close.HandleEvent(EV);
+                Home.HandleEvent(EV);
             }
             if(ShowMenu)           //o menu
             {
-                SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
-                SDL_RenderClear(gRenderer);
-                MenuBackground.render(0,0);
-                Title.render(190,50);
-                Play.render();
                 Play.HandleEvent(EV);
-                Exit.render();
                 Exit.HandleEvent(EV);
-                Tutorial.render();
                 Tutorial.HandleEvent(EV);
-                LoadGame.render();
                 LoadGame.HandleEvent(EV);
             }
             if(VaoGame&&!PauseGame&&!Died)         //dang choi
             {
                 wizard.handleEvent(EV);
                 Pause.HandleEvent(EV);
-                Close.HandleEvent(EV);
             }
             if(PauseGame)
             {
                 Resume.HandleEvent(EV);
+                Home.HandleEvent(EV);
             }
             if(Died)
             {
                 Replay.HandleEvent(EV);
+                Home.HandleEvent(EV);
             }
-        }
-        if(HuongDan)
-        {
-            SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
-            SDL_RenderClear(gRenderer);
-            Background_Texture.render(0,0);
-            Tutorial_Texture.render(200,90);
-            Close.render();
         }
         if(Rep)
         {
@@ -161,6 +145,26 @@ int main(int argc,char * argv[])
             wizard.reset();
             GRAVITY=18;
             Rep=0;
+        }
+        if(ShowMenu)
+        {
+            SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+            SDL_RenderClear(gRenderer);
+            MenuBackground.render(0,0);
+            Title.render(190,50);
+            Play.render();
+            Tutorial.render();
+            Exit.render();
+            LoadGame.render();
+        }
+        if(HuongDan)
+        {
+            SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+            SDL_RenderClear(gRenderer);
+            Home.RePos(Width-60,10);
+            Background_Texture.render(0,0);
+            Tutorial_Texture.render(200,90);
+            Home.render();
         }
         if(VaoGame&&!PauseGame&&!Died)
         {
@@ -177,7 +181,6 @@ int main(int argc,char * argv[])
             Da2.render();
             wizard.render();
             Pause.render();
-            Close.render();
             SDL_Rect hitbox= {233,wizard.getY(),1,110};
             if(!bullet_on_screen)
             {
@@ -190,13 +193,13 @@ int main(int argc,char * argv[])
                 A.render();
                 if(checkCollision(hitbox,A.get()))
                 {
-                    // Died=1;
+                    Died=1;
                 }
                 if(A.x<0)   bullet_on_screen=0;
             }
             if(checkCollision(hitbox,Da1.get())||checkCollision(hitbox,Da2.get()))
             {
-                //  Died=1;
+                Died=1;
             }
             if(wizard.get_attack())
             {
@@ -210,15 +213,10 @@ int main(int argc,char * argv[])
                 }
             }
             for(int i=1; i<=wizard.get_ammo(); i++)    Ammo[i].render(10+(i-1)*70,10);
-            //hien thi diem
             Score++;
             RenderText(ScoreStr,Score,550,20);
-            //////////
             SDL_Delay(1000/60.0f);
-            ////tang toc do game
             int cur=SDL_GetTicks();
-
-            //if(cur%400==0)    ScrollSpeed+=1,A.x_vel+=20;
             reload++;
             if(reload>500)       wizard.add_ammo(),reload=0;
             if(ScrollSpeed>12)   ScrollSpeed=16;
@@ -229,13 +227,15 @@ int main(int argc,char * argv[])
             SDL_RenderClear(gRenderer);
             Background_Texture.render( scrollingOffset, 0 );
             Background_Texture.render( scrollingOffset + Background_Texture.getWidth()-3, 0 );
+            Home.RePos(650,400);
             Da1.render();
             Da2.render();
             if(bullet_on_screen)  A.render();
             Board.render(400,100);
             HighScore=max(HighScore,Score);
-            if(Died)       Replay.render();
+            if(Died)Replay.render();
             else if(PauseGame) Resume.render();
+            Home.render();
             RenderText(ScoreStr,Score,545,300);
             RenderText(HighScoreStr,HighScore,520,230);
         }

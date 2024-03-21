@@ -91,7 +91,6 @@ public:
         }
         if(type==9)
         {
-            cout<<x<< " "<<y<<endl;
             if(!nHTexture.LoadImage("home_button.png"))
             {
                 cout<<"Can't load home button";
