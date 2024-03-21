@@ -94,9 +94,9 @@ int main(int argc,char * argv[])
     Button Tutorial= {8,453,493,300,75};
     Button Exit= {0,450,593,300,75};
 
-    Button Pause= {3,Width-200,10,50,50};
+    Button Pause= {3,Width-120,10,50,50};
     Button Menu= {5,450,400,300,75};
-    Button Resume= {6,570,400,100,100};
+    Button Resume= {6,570,400,50,50};
     Button Replay= {7,570,400,100,100};
 
     Button Close= {9,Width-60,10,50,50};

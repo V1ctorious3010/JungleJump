@@ -96,7 +96,7 @@ public:
             {
                 cout<<"Can't load home button";
             }
-            if(!HTexture.LoadImage("home_button2.png"))
+            if(!HTexture.LoadImage("home_button1.png"))
             {
                 cout<<"can't load home button";
             }

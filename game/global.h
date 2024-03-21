@@ -180,7 +180,7 @@ void nhanvat::move()
     }
     double foot=mPosY+129;
     double nxtfoot=mPosY+y_vel/60+130;
-    if(foot<deadY&&nxtfoot>=deadY)
+    if(foot<=deadY&&nxtfoot>=deadY)
     {
         mPosY=deadY-character_HEIGHT;
         y_vel=0;
@@ -293,7 +293,11 @@ void Button::Upd()
 {
     if(type==1)           VaoGame=1;
     if(type==0)           running=0;
-    if(type==3||type==6)  PauseGame^=1;
+    if(type==3||type==6)
+    {
+        PauseGame^=1;
+        cout<<PauseGame<<endl;
+    }
     if(type==7)           Died=0,Rep=1;
     if(type==9)           HuongDan=0,ShowMenu=1;
     if(type==8)           HuongDan=1;
