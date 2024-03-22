@@ -45,12 +45,12 @@ bool init()
         cout<< "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError() ;
         return 0;
     }
-    Mix_Init(MIX_INIT_MP3);
-    if(Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048))
-    {
-        cout<<"Failed to load mixer"<<endl;
-        return 0;
-    }
+    /* Mix_Init(MIX_INIT_MP3);
+     if(Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048))
+     {
+         cout<<"Failed to load mixer"<<endl;
+         return 0;
+     }*/
     return 1;
 }
 void close()
@@ -85,22 +85,21 @@ int main(int argc,char * argv[])
     CucDa Da1(Width+20);
     CucDa Da2(Width+400);
     Died=0;
+    Play.reconstruct(1,450,293,300,75);
+    LoadGame.reconstruct(4,450,393,300,75);
+    Tutorial.reconstruct(8,453,493,300,75);
+    Exit.reconstruct(0,450,593,300,75);
+    Pause.reconstruct(3,1200-60,10,50,50);
+    Resume.reconstruct(6,570,400,50,50);
+    Replay.reconstruct(7,570,400,50,50);
+    Home.reconstruct(9,1200-60,10,50,50);
     ///////////////////
     SDL_SetRenderDrawColor(gRenderer,36,121,126,0xFF);
     SDL_RenderClear(gRenderer);
     SDL_Event  EV;
-    Button Play= {1,450,293,300,75};
-    Button LoadGame= {4,450,393,300,75};
-    Button Tutorial= {8,453,493,300,75};
-    Button Exit= {0,450,593,300,75};
-
-    Button Pause= {3,Width-60,10,50,50};
-    Button Resume= {6,570,400,50,50};
-    Button Replay= {7,570,400,50,50};
-
-    Button Home= {9,Width-60,10,50,50};
     while(running)
     {
+        //cout<<PauseGame<<endl;
         while(SDL_PollEvent(&EV))
         {
             if(EV.type==SDL_QUIT)
@@ -118,15 +117,16 @@ int main(int argc,char * argv[])
                 Tutorial.HandleEvent(EV);
                 LoadGame.HandleEvent(EV);
             }
-            if(VaoGame&&!PauseGame&&!Died)         //dang choi
-            {
-                wizard.handleEvent(EV);
-                Pause.HandleEvent(EV);
-            }
             if(PauseGame)
             {
                 Resume.HandleEvent(EV);
                 Home.HandleEvent(EV);
+                Replay.HandleEvent(EV);
+            }
+            if(VaoGame&&!PauseGame&&!Died)         //dang choi
+            {
+                wizard.handleEvent(EV);
+                Pause.HandleEvent(EV);
             }
             if(Died)
             {
@@ -193,13 +193,13 @@ int main(int argc,char * argv[])
                 A.render();
                 if(checkCollision(hitbox,A.get()))
                 {
-                    Died=1;
+                    //Died=1;
                 }
                 if(A.x<0)   bullet_on_screen=0;
             }
             if(checkCollision(hitbox,Da1.get())||checkCollision(hitbox,Da2.get()))
             {
-                Died=1;
+                //Died=1;
             }
             if(wizard.get_attack())
             {
@@ -216,12 +216,11 @@ int main(int argc,char * argv[])
             Score++;
             RenderText(ScoreStr,Score,550,20);
             SDL_Delay(1000/60.0f);
-            int cur=SDL_GetTicks();
             reload++;
             if(reload>500)       wizard.add_ammo(),reload=0;
             if(ScrollSpeed>12)   ScrollSpeed=16;
         }
-        else if(PauseGame||Died)
+        if(PauseGame||Died)
         {
             SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
             SDL_RenderClear(gRenderer);
@@ -230,6 +229,7 @@ int main(int argc,char * argv[])
             Home.RePos(650,400);
             Da1.render();
             Da2.render();
+            if(PauseGame)  wizard.render();
             if(bullet_on_screen)  A.render();
             Board.render(400,100);
             HighScore=max(HighScore,Score);

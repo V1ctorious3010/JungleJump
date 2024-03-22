@@ -53,10 +53,6 @@ int HighScore=0;
 bool HuongDan=0;
 bool ShowMenu=1;
 
-////button color
-
-///
-
 void LTexture ::render(int x,int y)
 {
     SDL_Rect tmp= {x,y,mWidth,mHeight};
@@ -108,7 +104,7 @@ void LoadTexture()
     }
     if(!Board.LoadImage("bang.png"))
     {
-        cout<<"can't load bg";
+        cout<<"can't load bang";
         return ;
     }
     if(!MenuBackground.LoadImage("background2.png"))
@@ -196,8 +192,15 @@ void nhanvat::render()
     add+=1;
     if(add==5)        add=0,status=(status+1)%8;
     if(!status)       status++;
-    if(on_ground)     Character_Texture[status].render(240,mPosY);
-    else    Character_Texture[0].render(240,mPosY);
+    if(PauseGame)
+    {
+
+    }
+    else
+    {
+        if(on_ground)     Character_Texture[status].render(240,mPosY);
+        else    Character_Texture[0].render(240,mPosY);
+    }
 }
 ///////ball;
 struct ball
@@ -267,7 +270,7 @@ struct CucDa
     void reset(int t)
     {
         x=t;
-        y=deadY-73;
+        y=deadY-80;
     }
 
 };
@@ -291,14 +294,19 @@ void Button::render()
 }
 void Button::Upd()
 {
-    if(type==1)           Rep=1,VaoGame=1,ShowMenu=0;
-    if(type==0)           running=0;
-    if(type==3||type==6)
-    {
-        PauseGame^=1;
-        //cout<<PauseGame<<endl;
-    }
-    if(type==7)           Died=0,Rep=1;
-    if(type==9)           HuongDan=0,ShowMenu=1,VaoGame=0,PauseGame=0,Died=0;
-    if(type==8)           HuongDan=1;
+    if(type==1)   Rep=1,VaoGame=1,ShowMenu=0,PauseGame=0,Died=0;
+    if(type==0)   running=0;
+    if(type==3)   PauseGame=1;
+    if(type==6)   PauseGame=0;
+    if(type==7)   Died=0,Rep=1;
+    if(type==9)   HuongDan=0,ShowMenu=1,VaoGame=0,PauseGame=0,Died=0;
+    if(type==8)   HuongDan=1;
+     Play.sink();
+     LoadGame.sink();
+     Tutorial.sink();
+     Exit.sink();
+     Pause.sink();
+     Resume.sink();
+     Replay.sink();
+     Home.sink();
 }

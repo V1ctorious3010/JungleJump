@@ -6,7 +6,7 @@ class Button
 {
 public:
     Button() {}
-    Button(int t,int x,int y,int u,int v)
+    void reconstruct(int t,int x,int y,int u,int v)
     {
         Rect= {x,y,u,v};
         isHovered=0;
@@ -110,9 +110,8 @@ public:
         }
         else if(Event.type == SDL_MOUSEBUTTONUP )
         {
-
         }
-        else if (Event.type==SDL_MOUSEMOTION)
+        if (Event.type==SDL_MOUSEMOTION)
         {
             if (isHovered!=IsWithinBounds(Event.motion.x, Event.motion.y))
             {
@@ -121,6 +120,7 @@ public:
             }
         }
         if(press)    Upd();
+
     }
     void Upd();
     void render();
@@ -129,6 +129,10 @@ public:
         int w=Rect.w;
         int h=Rect.h;
         Rect= {a,b,w,h};
+    }
+    void sink()
+    {
+        isHovered=0;
     }
 private:
     bool IsWithinBounds(int x, int y)
@@ -144,4 +148,13 @@ private:
     int type;
     LTexture nHTexture;
     LTexture HTexture;
+    bool press=0;
 };
+Button Play;
+Button LoadGame;
+Button Tutorial;
+Button Exit;
+Button Pause;
+Button Resume;
+Button Replay;
+Button Home;
