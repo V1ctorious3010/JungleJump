@@ -403,7 +403,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1711120878 source:e:\doodlejump\game\main.cpp
+1711128296 source:e:\doodlejump\game\main.cpp
 	<bits/stdc++.h>
 	<SDL.h>
 	<SDL_image.h>
@@ -417,7 +417,7 @@
 	<SDL.h>
 	<SDL_image.h>
 
-1711121011 e:\doodlejump\game\global.h
+1711129795 e:\doodlejump\game\global.h
 	<bits/stdc++.h>
 	<SDL.h>
 	<SDL_image.h>
@@ -430,9 +430,10 @@
 	<SDL.h>
 	<SDL_image.h>
 
-1711113601 e:\doodlejump\game\character.h
+1711130271 e:\doodlejump\game\character.h
 	<bits/stdc++.h>
 	<SDL.h>
+	"SDL_mixer.h"
 
 1709649319 source:e:\doodlejump\game\test.cpp
 	<SDL.h>
@@ -865,6 +866,15 @@
 	"close_code.h"
 
 1708535674 e:\doodlejump\sdl_lib\sdl2_mixer-2.8.0\i686-w64-mingw32\include\sdl2\sdl_mixer.h
+	"SDL_stdinc.h"
+	"SDL_rwops.h"
+	"SDL_audio.h"
+	"SDL_endian.h"
+	"SDL_version.h"
+	"begin_code.h"
+	"close_code.h"
+
+1451801791 e:\doodlejump\sdl_lib\sdl2_mixer-devel-2.0.1-mingw\sdl2_mixer-2.0.1\i686-w64-mingw32\include\sdl2\sdl_mixer.h
 	"SDL_stdinc.h"
 	"SDL_rwops.h"
 	"SDL_audio.h"

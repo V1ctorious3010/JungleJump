@@ -1,7 +1,9 @@
 #include<bits/stdc++.h>
 using namespace std;
 #include<SDL.h>
+#include"SDL_mixer.h"
 double GRAVITY=18;
+Mix_Music *JumpSound=NULL;
 class fireball
 {
     double x;

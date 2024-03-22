@@ -38,6 +38,8 @@ LTexture HighScoreText;
 LTexture MenuBackground;
 LTexture Ammo[4];
 LTexture Title;
+Mix_Music *MenuMusic=NULL;
+Mix_Music *InGameMusic=NULL;
 double down_speed=1.5;
 int VELOCITY=0;
 double SPEED=240;
@@ -153,6 +155,12 @@ void LoadTexture()
     Character_Texture[6].LoadImage("run/run6.png");
     Character_Texture[7].LoadImage("run/run7.png");
     Character_Texture[0] .LoadImage("run/run0.png");
+    JumpSound=Mix_LoadMUS( "jumpsound.wav" );
+    if(JumpSound==NULL)
+    {
+        cout<<"NGU";
+        return;
+    }
 }
 bool checkCollision( SDL_Rect a, SDL_Rect b )
 {
