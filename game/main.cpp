@@ -9,6 +9,7 @@ using namespace std;
 int reload=0;
 string ScoreStr="Score :";
 string HighScoreStr="HighScore :";
+
 void RenderText(string &s,int score,int x,int y)
 {
     string tmp=s;
@@ -45,20 +46,20 @@ bool init()
         cout<< "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError() ;
         return 0;
     }
-    /* Mix_Init(MIX_INIT_MP3);
-     if(Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048))
-     {
-         cout<<"Failed to load mixer"<<endl;
-         return 0;
-     }*/
+    if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 )
+    {
+        printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
+        return 0;
+    }
+
     return 1;
 }
 void close()
 {
     //Free loaded images
     for(int i=0; i<=7; i++)  Character_Texture[i].free();
-    Background_Texture.free();
-    bullet.free();
+    Background_Texture[CurrentBackground].free();
+    for(int j=0; j<=1; j++)   bullet[j].free();
     for(int i=1; i<=4; i++)    Ammo[i].free();
     ScoreText.free();
     FireBall.free();
@@ -162,7 +163,7 @@ int main(int argc,char * argv[])
             SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
             SDL_RenderClear(gRenderer);
             Home.RePos(Width-60,10);
-            Background_Texture.render(0,0);
+            Background_Texture[CurrentBackground].render(0,0);
             Tutorial_Texture.render(200,90);
             Home.render();
         }
@@ -173,15 +174,15 @@ int main(int argc,char * argv[])
             Da2.move();
             Da1.move();
             scrollingOffset-=ScrollSpeed;
-            if( scrollingOffset <- Background_Texture.getWidth() )    scrollingOffset = 0;
+            if( scrollingOffset <- Background_Texture[CurrentBackground].getWidth() )    scrollingOffset = 0;
             wizard.move();
-            Background_Texture.render( scrollingOffset, 0 );
-            Background_Texture.render( scrollingOffset + Background_Texture.getWidth(), 0 );
-            Da1.render();
-            Da2.render();
+            Background_Texture[CurrentBackground].render( scrollingOffset, 0 );
+            Background_Texture[CurrentBackground].render( scrollingOffset + Background_Texture[CurrentBackground].getWidth(), 0 );
+            Da1.render(CurrentBackground);
+            Da2.render(CurrentBackground);
             wizard.render();
             Pause.render();
-            SDL_Rect hitbox= {233,wizard.getY(),1,110};
+            SDL_Rect hitbox= {260,wizard.getY(),1,110};
             if(!bullet_on_screen)
             {
                 int n=rnd(1,1000);
@@ -220,18 +221,18 @@ int main(int argc,char * argv[])
             RenderText(ScoreStr,(int)Score/10,550,20);
             SDL_Delay(1000/60.0f);
             reload++;
-            if(reload>500)       wizard.add_ammo(),reload=0;
+            if(reload>500)       wizard.add_ammo(),reload=0,CurrentBackground^=1;
             if(ScrollSpeed>12)   ScrollSpeed=16;
         }
         if(PauseGame||Died)
         {
             SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
             SDL_RenderClear(gRenderer);
-            Background_Texture.render( scrollingOffset, 0 );
-            Background_Texture.render( scrollingOffset + Background_Texture.getWidth()-3, 0 );
-            Home.RePos(650,400);
-            Da1.render();
-            Da2.render();
+            Background_Texture[CurrentBackground].render( scrollingOffset, 0 );
+            Background_Texture[CurrentBackground].render( scrollingOffset + Background_Texture[CurrentBackground].getWidth()-3, 0 );
+            Home.RePos(630,400);
+            Da1.render(CurrentBackground);
+            Da2.render(CurrentBackground);
             if(PauseGame)  wizard.render();
             if(bullet_on_screen)  A.render();
             Board.render(400,100);
@@ -239,8 +240,8 @@ int main(int argc,char * argv[])
             if(Died)Replay.render();
             else if(PauseGame) Resume.render();
             Home.render();
-            RenderText(ScoreStr,Score,545,300);
-            RenderText(HighScoreStr,HighScore,520,230);
+            RenderText(ScoreStr,Score/10,545,300);
+            RenderText(HighScoreStr,HighScore/10,520,230);
         }
         SDL_RenderPresent( gRenderer );
         //////

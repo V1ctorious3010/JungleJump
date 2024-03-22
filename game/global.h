@@ -29,8 +29,8 @@ bool Rep;
 ///
 LTexture Character_Texture[9];
 LTexture Tutorial_Texture;
-LTexture Background_Texture;
-LTexture bullet;
+LTexture Background_Texture[3];
+LTexture bullet[2];
 LTexture st1,st2;
 LTexture FireBall;
 LTexture ScoreText;
@@ -51,7 +51,7 @@ LTexture Board;
 int HighScore=0;
 bool HuongDan=0;
 bool ShowMenu=1;
-
+int CurrentBackground;
 void LTexture ::render(int x,int y)
 {
     SDL_Rect tmp= {x,y,mWidth,mHeight};
@@ -96,7 +96,12 @@ bool LTexture::loadFromRenderedText( std::string textureText, SDL_Color textColo
 }
 void LoadTexture()
 {
-    if(!Background_Texture.LoadImage("bg2.png"))
+    if(!Background_Texture[0].LoadImage("bg2.png"))
+    {
+        cout<<"can't load bg";
+        return ;
+    }
+    if(!Background_Texture[1].LoadImage("bg3.png"))
     {
         cout<<"can't load bg";
         return ;
@@ -111,7 +116,12 @@ void LoadTexture()
         cout<<"can't load menu bg";
         return ;
     }
-    if(!bullet.LoadImage("bullet.png"))
+    if(!bullet[0].LoadImage("bullet.png"))
+    {
+        cout<<"can't load bullet";
+        return ;
+    }
+    if(!bullet[1].LoadImage("bullet1.png"))
     {
         cout<<"can't load bullet";
         return ;
@@ -206,6 +216,8 @@ struct ball
 {
     double x;
     double y;
+    int cnt;
+    int CurState=0;
     double x_vel=1200;
     ball()
     {
@@ -216,11 +228,13 @@ struct ball
     }
     void render()
     {
-        bullet.render(x,y);
+        bullet[CurState].render(x,y);
     }
     void move()
     {
         x-=x_vel/60;
+        cnt++;
+        if(cnt>=10)  CurState^=1,cnt=0;
     }
     void reset()
     {
@@ -239,17 +253,18 @@ struct CucDa
 {
     double x;
     double y;
-    LTexture stone;
+    LTexture stone[2];
     CucDa() {}
     CucDa(int t)
     {
         x=t;
         y=deadY-80;
-        !stone.LoadImage("stone.png");
+        stone[0].LoadImage("stone.png");
+        stone[1].LoadImage("stone1.png");
     }
-    void render()
+    void render(int Cur)
     {
-        stone.render(x,y);
+        stone[Cur].render(x,y);
     }
     void move()
     {
