@@ -9,7 +9,7 @@ using namespace std;
 int reload=0;
 string ScoreStr="Score :";
 string HighScoreStr="HighScore :";
-void RenderText(string &s,int &score,int x,int y)
+void RenderText(string &s,int score,int x,int y)
 {
     string tmp=s;
     tmp+=to_string(score);
@@ -201,20 +201,23 @@ int main(int argc,char * argv[])
             {
                 //Died=1;
             }
-            if(wizard.get_attack())
+            for (int i = 1; i <= 3; i++)
             {
-                FIRE.move();
-                FIRE.render();
-                if(bullet_on_screen&&checkCollision(FIRE.get(),A.get()))
+                if(wizard.get_attack(i))
                 {
-                    A.reset(),bullet_on_screen=0;
-                    wizard.cooldown();
-                    Score+=100;
+                    FIRE[i].move();
+                    FIRE[i].render(i);
+                    if (bullet_on_screen&&checkCollision(FIRE[i].get(),A.get()))
+                    {
+                        A.reset(),bullet_on_screen=0;
+                        wizard.cooldown(i);
+                        Score+=100;
+                    }
                 }
             }
             for(int i=1; i<=wizard.get_ammo(); i++)    Ammo[i].render(10+(i-1)*70,10);
             Score++;
-            RenderText(ScoreStr,Score,550,20);
+            RenderText(ScoreStr,(int)Score/10,550,20);
             SDL_Delay(1000/60.0f);
             reload++;
             if(reload>500)       wizard.add_ammo(),reload=0;

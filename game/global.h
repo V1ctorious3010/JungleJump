@@ -21,7 +21,6 @@ SDL_Window *gWindow;
 SDL_Renderer *gRenderer;
 
 nhanvat wizard;
-fireball Fire;
 bool running=1;
 TTF_Font *gFont;
 bool PauseGame=0;
@@ -277,12 +276,12 @@ struct CucDa
 CucDa Da1(Width+20);
 CucDa Da2(Width+500);
 
-void fireball::render()
+void fireball::render(int a)
 {
     if(x<Width) FireBall.render(x,y);
     else
     {
-        wizard.cooldown();
+        wizard.cooldown(a);
         x=255;
         y=525;
     }
@@ -301,12 +300,12 @@ void Button::Upd()
     if(type==7)   Died=0,Rep=1;
     if(type==9)   HuongDan=0,ShowMenu=1,VaoGame=0,PauseGame=0,Died=0;
     if(type==8)   HuongDan=1;
-     Play.sink();
-     LoadGame.sink();
-     Tutorial.sink();
-     Exit.sink();
-     Pause.sink();
-     Resume.sink();
-     Replay.sink();
-     Home.sink();
+    Play.sink();
+    LoadGame.sink();
+    Tutorial.sink();
+    Exit.sink();
+    Pause.sink();
+    Resume.sink();
+    Replay.sink();
+    Home.sink();
 }

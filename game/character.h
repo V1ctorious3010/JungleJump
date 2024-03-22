@@ -21,12 +21,12 @@ public:
     {
         return {(int)x,(int)y,30,50};
     }
-    void render();
+    void render(int a);
     void set_y(int T)
     {
         y=T;
     }
-} FIRE;
+} FIRE[4];
 
 class nhanvat
 {
@@ -57,8 +57,24 @@ public:
                 GRAVITY=300;
                 break;
             case SDL_SCANCODE_J:
-                if(ammo>0)    attack=1,ammo--,FIRE.set_y(mPosY+20);
-                break;
+                if (ammo == 3)
+                {
+                    attack[3] = 1;
+                    ammo--;
+                    FIRE[3].set_y(mPosY+20);
+                }
+                else if (ammo == 2)
+                {
+                    attack[2] = 1;
+                    ammo--;
+                    FIRE[2].set_y(mPosY+20);
+                }
+                else if (ammo == 1)
+                {
+                    attack[1] = 1;
+                    ammo--;
+                    FIRE[1].set_y(mPosY+20);
+                }
             default:
                 break;
             }
@@ -84,13 +100,13 @@ public:
     {
         return mPosY;
     }
-    void cooldown()
+    void cooldown(int a)
     {
-        attack=0;
+        attack[a]=0;
     }
-    int get_attack()
+    int get_attack(int a)
     {
-        return attack;
+        return attack[a];
     }
     int get_ammo()
     {
@@ -117,6 +133,6 @@ private:
     bool on_ground;
     short add,add2;
     short status;
-    bool attack=0;
+    bool attack[4]= {0,0,0,0};
     short ammo;
 };
