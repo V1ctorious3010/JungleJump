@@ -46,7 +46,7 @@ bool init()
         cout<< "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError() ;
         return 0;
     }
-    if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 )
+    if( Mix_OpenAudio( 22050, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 )
     {
         printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
         return 0;
@@ -85,6 +85,7 @@ int main(int argc,char * argv[])
     LoadTexture();
     CucDa Da1(Width+20);
     CucDa Da2(Width+400);
+    coin COIN;
     Died=0;
     Play.reconstruct(1,450,293,300,75);
     LoadGame.reconstruct(4,450,393,300,75);
@@ -98,8 +99,10 @@ int main(int argc,char * argv[])
     SDL_SetRenderDrawColor(gRenderer,36,121,126,0xFF);
     SDL_RenderClear(gRenderer);
     SDL_Event  EV;
+    Mix_PlayMusic(GameMusic,-1);
     while(running)
     {
+
         //cout<<PauseGame<<endl;
         while(SDL_PollEvent(&EV))
         {
@@ -126,6 +129,7 @@ int main(int argc,char * argv[])
             }
             if(VaoGame&&!PauseGame&&!Died)         //dang choi
             {
+
                 wizard.handleEvent(EV);
                 Pause.HandleEvent(EV);
             }
@@ -146,6 +150,7 @@ int main(int argc,char * argv[])
             wizard.reset();
             GRAVITY=18;
             Rep=0;
+            reload=0;
         }
         if(ShowMenu)
         {
@@ -173,20 +178,21 @@ int main(int argc,char * argv[])
             SDL_RenderClear(gRenderer);
             Da2.move();
             Da1.move();
-            scrollingOffset-=ScrollSpeed;
-            if( scrollingOffset <- Background_Texture[CurrentBackground].getWidth() )    scrollingOffset = 0;
             wizard.move();
+            COIN.move();
             Background_Texture[CurrentBackground].render( scrollingOffset, 0 );
             Background_Texture[CurrentBackground].render( scrollingOffset + Background_Texture[CurrentBackground].getWidth(), 0 );
+
             Da1.render(CurrentBackground);
             Da2.render(CurrentBackground);
             wizard.render();
             Pause.render();
-            SDL_Rect hitbox= {260,wizard.getY(),1,110};
+            COIN.render();
+            SDL_Rect hitbox= {258,wizard.getY(),1,110};
             if(!bullet_on_screen)
             {
                 int n=rnd(1,1000);
-                if(n>995)     A.reset(),bullet_on_screen=1;
+                if(n>998)     A.reset(),bullet_on_screen=1;
             }
             if(bullet_on_screen)
             {
@@ -194,13 +200,22 @@ int main(int argc,char * argv[])
                 A.render();
                 if(checkCollision(hitbox,A.get()))
                 {
-                    //Died=1;
+                    //Mix_PlayChannel(-1,LoseSound,0);
+                  //  Died=1;
                 }
                 if(A.x<0)   bullet_on_screen=0;
             }
             if(checkCollision(hitbox,Da1.get())||checkCollision(hitbox,Da2.get()))
             {
-                //Died=1;
+               // Mix_PlayChannel(-1,LoseSound,0);
+               // Died=1;
+            }
+            if(checkCollision(hitbox,COIN.get()))
+            {
+
+                Score+=COIN.score;
+               // Mix_PlayChannel(-1,GainSound,0);
+                COIN.reset();
             }
             for (int i = 1; i <= 3; i++)
             {
@@ -210,6 +225,7 @@ int main(int argc,char * argv[])
                     FIRE[i].render(i);
                     if (bullet_on_screen&&checkCollision(FIRE[i].get(),A.get()))
                     {
+                        Mix_PlayChannel(-1,AttackSound,0);
                         A.reset(),bullet_on_screen=0;
                         wizard.cooldown(i);
                         Score+=100;
@@ -217,11 +233,11 @@ int main(int argc,char * argv[])
                 }
             }
             for(int i=1; i<=wizard.get_ammo(); i++)    Ammo[i].render(10+(i-1)*70,10);
-            Score++;
-            RenderText(ScoreStr,(int)Score/10,550,20);
-            SDL_Delay(1000/60.0f);
+            RenderText(ScoreStr,(int)Score,550,20);
             reload++;
-            if(reload>500)       wizard.add_ammo(),reload=0,CurrentBackground^=1;
+            if(reload>500)       wizard.add_ammo(),reload=0,CurrentBackground^=0;
+            scrollingOffset-=ScrollSpeed;
+            if( scrollingOffset <- Background_Texture[CurrentBackground].getWidth() )    scrollingOffset = 0;
             if(ScrollSpeed>12)   ScrollSpeed=16;
         }
         if(PauseGame||Died)
@@ -240,10 +256,11 @@ int main(int argc,char * argv[])
             if(Died)Replay.render();
             else if(PauseGame) Resume.render();
             Home.render();
-            RenderText(ScoreStr,Score/10,545,300);
-            RenderText(HighScoreStr,HighScore/10,520,230);
+            RenderText(ScoreStr,Score,545,300);
+            RenderText(HighScoreStr,HighScore,520,230);
         }
         SDL_RenderPresent( gRenderer );
+        SDL_Delay(1000/60.0f);
         //////
     }
     close();

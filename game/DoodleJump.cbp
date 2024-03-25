@@ -45,6 +45,7 @@
 		<Unit filename="LTexture.h" />
 		<Unit filename="button.h" />
 		<Unit filename="character.h" />
+		<Unit filename="coin.h" />
 		<Unit filename="global.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>

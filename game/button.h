@@ -2,6 +2,8 @@
 #include <SDL.h>
 #include<bits/stdc++.h>
 #include"LTexture.h"
+Mix_Chunk *ButtonSound=NULL;
+
 class Button
 {
 public:
@@ -106,6 +108,7 @@ public:
         bool press=0;
         if (Event.type == SDL_MOUSEBUTTONDOWN &&Event.button.button == SDL_BUTTON_LEFT &&isHovered)
         {
+            Mix_PlayChannel(-1,ButtonSound,0);
             press=1;
         }
         else if(Event.type == SDL_MOUSEBUTTONUP )
@@ -119,7 +122,10 @@ public:
                 render();
             }
         }
-        if(press)    Upd();
+        if(press)
+        {
+            Upd();
+        }
 
     }
     void Upd();

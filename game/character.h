@@ -3,7 +3,8 @@ using namespace std;
 #include<SDL.h>
 #include"SDL_mixer.h"
 double GRAVITY=18;
-Mix_Music *JumpSound=NULL;
+Mix_Chunk *JumpSound=NULL;
+Mix_Chunk *AttackSound=NULL;
 class fireball
 {
     double x;
@@ -61,18 +62,21 @@ public:
             case SDL_SCANCODE_J:
                 if (ammo == 3)
                 {
+                    Mix_PlayChannel(-1,AttackSound,0);
                     attack[3] = 1;
                     ammo--;
                     FIRE[3].set_y(mPosY+20);
                 }
                 else if (ammo == 2)
                 {
+                    Mix_PlayChannel(-1,AttackSound,0);
                     attack[2] = 1;
                     ammo--;
                     FIRE[2].set_y(mPosY+20);
                 }
                 else if (ammo == 1)
                 {
+                    Mix_PlayChannel(-1,AttackSound,0);
                     attack[1] = 1;
                     ammo--;
                     FIRE[1].set_y(mPosY+20);
