@@ -60,6 +60,8 @@ bool ShowMenu=1;
 int CurrentBackground;
 LTexture Gem;
 LTexture Gem1;
+SDL_Color Black={0,0,0};
+SDL_Color White={255,255,255};
 void LTexture ::render(int x,int y)
 {
     SDL_Rect tmp= {x,y,mWidth,mHeight};
@@ -104,7 +106,7 @@ bool LTexture::loadFromRenderedText( std::string textureText, SDL_Color textColo
 }
 void LoadTexture()
 {
-    if(!Background_Texture[0].LoadImage("test.png"))
+    if(!Background_Texture[0].LoadImage("bg2.png"))
     {
         cout<<"can't load bg";
         return ;

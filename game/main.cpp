@@ -10,12 +10,11 @@ int reload=0;
 string ScoreStr="Score :";
 string HighScoreStr="HighScore :";
 
-void RenderText(string &s,int score,int x,int y)
+void RenderText(string &s,int score,int x,int y,SDL_Color &X)
 {
     string tmp=s;
     tmp+=to_string(score);
-    SDL_Color textColor = {0,0,0};
-    if(!ScoreText.loadFromRenderedText(tmp,textColor))
+    if(!ScoreText.loadFromRenderedText(tmp,X))
     {
         printf( "Failed to render text texture!\n");
     }
@@ -200,21 +199,21 @@ int main(int argc,char * argv[])
                 A.render();
                 if(checkCollision(hitbox,A.get()))
                 {
-                    //Mix_PlayChannel(-1,LoseSound,0);
-                  //  Died=1;
+                   Mix_PlayChannel(-1,LoseSound,0);
+                   Died=1;
                 }
                 if(A.x<0)   bullet_on_screen=0;
             }
             if(checkCollision(hitbox,Da1.get())||checkCollision(hitbox,Da2.get()))
             {
-               // Mix_PlayChannel(-1,LoseSound,0);
-               // Died=1;
+               Mix_PlayChannel(-1,LoseSound,0);
+               Died=1;
             }
             if(checkCollision(hitbox,COIN.get()))
             {
 
                 Score+=COIN.score;
-               // Mix_PlayChannel(-1,GainSound,0);
+                Mix_PlayChannel(-1,GainSound,0);
                 COIN.reset();
             }
             for (int i = 1; i <= 3; i++)
@@ -233,9 +232,10 @@ int main(int argc,char * argv[])
                 }
             }
             for(int i=1; i<=wizard.get_ammo(); i++)    Ammo[i].render(10+(i-1)*70,10);
-            RenderText(ScoreStr,(int)Score,550,20);
             reload++;
-            if(reload>500)       wizard.add_ammo(),reload=0,CurrentBackground^=0;
+            if(reload>500)       wizard.add_ammo(),reload=0,CurrentBackground^=1;
+            RenderText(ScoreStr,(int)Score,550,20,!CurrentBackground?Black:White);
+
             scrollingOffset-=ScrollSpeed;
             if( scrollingOffset <- Background_Texture[CurrentBackground].getWidth() )    scrollingOffset = 0;
             if(ScrollSpeed>12)   ScrollSpeed=16;
@@ -256,8 +256,8 @@ int main(int argc,char * argv[])
             if(Died)Replay.render();
             else if(PauseGame) Resume.render();
             Home.render();
-            RenderText(ScoreStr,Score,545,300);
-            RenderText(HighScoreStr,HighScore,520,230);
+            RenderText(ScoreStr,Score,545,300,Black);
+            RenderText(HighScoreStr,HighScore,520,230,Black);
         }
         SDL_RenderPresent( gRenderer );
         SDL_Delay(1000/60.0f);
