@@ -1,18 +1,20 @@
 #include<bits/stdc++.h>
 using namespace std;
-mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+
 #include<SDL.h>
 #include<SDL_image.h>
 #include<SDL_ttf.h>
 #include"character.h"
 #include"button.h"
-vector<int>TYPE= {0,0,1};
-int VelX=0;
-int Move_down=0;
+#include"coin.h"
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 int rnd(int l,int r)
 {
     return l+rng()%(r-l+1);
 }
+vector<int>TYPE= {0,0,1};
+int VelX=0;
+int Move_down=0;
 const int deadY=660;
 SDL_Rect san= {0,600,800,10};
 const int Width=1200;
@@ -21,7 +23,6 @@ SDL_Window *gWindow;
 SDL_Renderer *gRenderer;
 
 nhanvat wizard;
-fireball Fire;
 bool running=1;
 TTF_Font *gFont;
 bool PauseGame=0;
@@ -30,8 +31,8 @@ bool Rep;
 ///
 LTexture Character_Texture[9];
 LTexture Tutorial_Texture;
-LTexture Background_Texture;
-LTexture bullet;
+LTexture Background_Texture[3];
+LTexture bullet[2];
 LTexture st1,st2;
 LTexture FireBall;
 LTexture ScoreText;
@@ -39,12 +40,16 @@ LTexture HighScoreText;
 LTexture MenuBackground;
 LTexture Ammo[4];
 LTexture Title;
+Mix_Music *GameMusic=NULL;
+Mix_Chunk *BlastSound=NULL;
+Mix_Chunk *GainSound=NULL;
+Mix_Chunk *LoseSound=NULL;
 double down_speed=1.5;
 int VELOCITY=0;
 double SPEED=240;
 const int FPS=60;
 int Score=0;
-double ScrollSpeed=5;
+int ScrollSpeed=12;
 int scrollingOffset=5;
 bool bullet_on_screen=1;
 bool VaoGame=0;
@@ -52,7 +57,10 @@ LTexture Board;
 int HighScore=0;
 bool HuongDan=0;
 bool ShowMenu=1;
-
+bool Choitiep=0;
+int CurrentBackground;
+LTexture Gem;
+LTexture Gem1;
 void LTexture ::render(int x,int y)
 {
     SDL_Rect tmp= {x,y,mWidth,mHeight};
@@ -97,7 +105,12 @@ bool LTexture::loadFromRenderedText( std::string textureText, SDL_Color textColo
 }
 void LoadTexture()
 {
-    if(!Background_Texture.LoadImage("bg2.png"))
+    if(!Background_Texture[0].LoadImage("test.png"))
+    {
+        cout<<"can't load bg";
+        return ;
+    }
+    if(!Background_Texture[1].LoadImage("bg3.png"))
     {
         cout<<"can't load bg";
         return ;
@@ -112,7 +125,12 @@ void LoadTexture()
         cout<<"can't load menu bg";
         return ;
     }
-    if(!bullet.LoadImage("bullet.png"))
+    if(!bullet[0].LoadImage("bullet.png"))
+    {
+        cout<<"can't load bullet";
+        return ;
+    }
+    if(!bullet[1].LoadImage("bullet1.png"))
     {
         cout<<"can't load bullet";
         return ;
@@ -136,6 +154,8 @@ void LoadTexture()
         cout<<"can't load tutor";
         return ;
     }
+    if(!Gem.LoadImage("ruby.png"))    cout<<"Can't load ruby"<<endl;
+    if(!Gem1.LoadImage("diamond.png")) cout<<"Can't load diamond"<<endl;
     Character_Texture[1].LoadImage("run/run1.png");
     Character_Texture[2].LoadImage("run/run2.png");
     Character_Texture[3].LoadImage("run/run3.png");
@@ -144,6 +164,18 @@ void LoadTexture()
     Character_Texture[6].LoadImage("run/run6.png");
     Character_Texture[7].LoadImage("run/run7.png");
     Character_Texture[0] .LoadImage("run/run0.png");
+    JumpSound=Mix_LoadWAV( "jumpsound.wav" );
+    AttackSound=Mix_LoadWAV("AttackSound.wav");
+    ButtonSound=Mix_LoadWAV("button_sound.wav");
+    GameMusic=Mix_LoadMUS("bgm.wav");
+    BlastSound=Mix_LoadWAV("blast.wav");
+    Mix_VolumeChunk(ButtonSound,30);
+    Mix_VolumeChunk(AttackSound,30);
+    Mix_VolumeChunk(JumpSound,30);
+    Mix_VolumeMusic(50);
+    GainSound=Mix_LoadWAV("gainsound.wav");
+    LoseSound=Mix_LoadWAV("losesound.wav");
+
 }
 bool checkCollision( SDL_Rect a, SDL_Rect b )
 {
@@ -170,6 +202,7 @@ void nhanvat::move()
     if(!on_ground)  y_vel += GRAVITY;
     if (jump_pressed && can_jump)
     {
+        Mix_PlayChannel(-1,JumpSound,0);
         on_ground=0;
         can_jump = false;
         y_vel = -700;
@@ -207,6 +240,8 @@ struct ball
 {
     double x;
     double y;
+    int cnt;
+    int CurState=0;
     double x_vel=1200;
     ball()
     {
@@ -217,11 +252,13 @@ struct ball
     }
     void render()
     {
-        bullet.render(x,y);
+        bullet[CurState].render(x,y);
     }
     void move()
     {
         x-=x_vel/60;
+        cnt++;
+        if(cnt>=10)  CurState^=1,cnt=0;
     }
     void reset()
     {
@@ -240,17 +277,18 @@ struct CucDa
 {
     double x;
     double y;
-    LTexture stone;
+    LTexture stone[2];
     CucDa() {}
     CucDa(int t)
     {
         x=t;
         y=deadY-80;
-        !stone.LoadImage("stone.png");
+        stone[0].LoadImage("stone.png");
+        stone[1].LoadImage("stone1.png");
     }
-    void render()
+    void render(int Cur)
     {
-        stone.render(x,y);
+        stone[Cur].render(x,y);
     }
     void move()
     {
@@ -274,15 +312,15 @@ struct CucDa
     }
 
 };
-CucDa Da1(Width+20);
-CucDa Da2(Width+500);
+//CucDa Da1;
+//CucDa Da2;
 
-void fireball::render()
+void fireball::render(int a)
 {
     if(x<Width) FireBall.render(x,y);
     else
     {
-        wizard.cooldown();
+        wizard.cooldown(a);
         x=255;
         y=525;
     }
@@ -294,19 +332,53 @@ void Button::render()
 }
 void Button::Upd()
 {
+    Play.sink();
+    LoadGame.sink();
+    Tutorial.sink();
+    Exit.sink();
+    Pause.sink();
+    Resume.sink();
+    Replay.sink();
+    Home.sink();
+    SDL_Delay(125);
     if(type==1)   Rep=1,VaoGame=1,ShowMenu=0,PauseGame=0,Died=0;
+    if(type== 4)  Choitiep=1,VaoGame=1,ShowMenu=0,PauseGame=0,Died=0;
     if(type==0)   running=0;
     if(type==3)   PauseGame=1;
     if(type==6)   PauseGame=0;
     if(type==7)   Died=0,Rep=1;
     if(type==9)   HuongDan=0,ShowMenu=1,VaoGame=0,PauseGame=0,Died=0;
     if(type==8)   HuongDan=1;
-     Play.sink();
-     LoadGame.sink();
-     Tutorial.sink();
-     Exit.sink();
-     Pause.sink();
-     Resume.sink();
-     Replay.sink();
-     Home.sink();
+}
+coin::coin()
+{
+    t=rnd(0,1);
+    x=Width+100;
+    y=400;
+    if(t==1)   score=50;
+    if(t==0)   score=25;
+}
+void coin::render()
+{
+    if(t==0)    Gem.render(x,y);
+    if(t==1)    Gem1.render(x,y);
+}
+void coin::move()
+{
+    x-=ScrollSpeed;
+    if(x<=-50)   reset();
+}
+void coin::reset()
+{
+    x=Width+100;
+    t=rnd(0,1);
+    if(t==1)   score=50;
+    if(t==0)   score=25;
+}
+coin::coin(int a,int c)
+{
+    x=a;
+    t=c;
+    if(t==1)   score=50;
+    if(t==0)   score=25;
 }

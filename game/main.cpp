@@ -9,11 +9,14 @@ using namespace std;
 int reload=0;
 string ScoreStr="Score :";
 string HighScoreStr="HighScore :";
-void RenderText(string &s,int &score,int x,int y)
+
+void RenderText(string &s,int score,int x,int y)
 {
     string tmp=s;
     tmp+=to_string(score);
-    SDL_Color textColor = {0,0,0};
+    SDL_Color textColor;
+    if (CurrentBackground == 0) textColor = {0,0,0};
+    else textColor = {255,255,255};
     if(!ScoreText.loadFromRenderedText(tmp,textColor))
     {
         printf( "Failed to render text texture!\n");
@@ -45,20 +48,20 @@ bool init()
         cout<< "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError() ;
         return 0;
     }
-    /* Mix_Init(MIX_INIT_MP3);
-     if(Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048))
-     {
-         cout<<"Failed to load mixer"<<endl;
-         return 0;
-     }*/
+    if( Mix_OpenAudio( 22050, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 )
+    {
+        printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
+        return 0;
+    }
+
     return 1;
 }
 void close()
 {
     //Free loaded images
     for(int i=0; i<=7; i++)  Character_Texture[i].free();
-    Background_Texture.free();
-    bullet.free();
+    Background_Texture[CurrentBackground].free();
+    for(int j=0; j<=1; j++)   bullet[j].free();
     for(int i=1; i<=4; i++)    Ammo[i].free();
     ScoreText.free();
     FireBall.free();
@@ -76,18 +79,27 @@ void close()
 }
 int main(int argc,char * argv[])
 {
+    ifstream in;
+    in.open("luugame.txt");
+    int so_lg_dan, x_Da1, x_Da2;
+    in >> Score >> HighScore >> CurrentBackground >> x_Da1 >> x_Da2 >> so_lg_dan;
+    wizard.update_ammo(so_lg_dan);
+    ofstream out;
+    out.open("luugame.txt");
+
     if(!init())
     {
         cout<<"Can't init"<<endl;
         return 0;
     }
     LoadTexture();
-    CucDa Da1(Width+20);
-    CucDa Da2(Width+400);
+    CucDa Da1(x_Da1);
+    CucDa Da2(x_Da2);
+    coin COIN;
     Died=0;
     Play.reconstruct(1,450,293,300,75);
     LoadGame.reconstruct(4,450,393,300,75);
-    Tutorial.reconstruct(8,453,493,300,75);
+    Tutorial.reconstruct(8,450,493,300,75);
     Exit.reconstruct(0,450,593,300,75);
     Pause.reconstruct(3,1200-60,10,50,50);
     Resume.reconstruct(6,570,400,50,50);
@@ -97,6 +109,7 @@ int main(int argc,char * argv[])
     SDL_SetRenderDrawColor(gRenderer,36,121,126,0xFF);
     SDL_RenderClear(gRenderer);
     SDL_Event  EV;
+    Mix_PlayMusic(GameMusic,-1);
     while(running)
     {
         //cout<<PauseGame<<endl;
@@ -104,7 +117,9 @@ int main(int argc,char * argv[])
         {
             if(EV.type==SDL_QUIT)
             {
-                return 0;
+//                in.close();
+//                out.close();
+                running = 0;
             }
             if(HuongDan)
             {
@@ -125,6 +140,7 @@ int main(int argc,char * argv[])
             }
             if(VaoGame&&!PauseGame&&!Died)         //dang choi
             {
+
                 wizard.handleEvent(EV);
                 Pause.HandleEvent(EV);
             }
@@ -134,17 +150,30 @@ int main(int argc,char * argv[])
                 Home.HandleEvent(EV);
             }
         }
+        if(Choitiep)
+        {
+            VaoGame=1;
+            ScrollSpeed=5;
+            scrollingOffset=5;
+            bullet_on_screen=0;
+            GRAVITY=18;
+            Choitiep=0;
+            reload=0;
+        }
         if(Rep)
         {
             Score=0;
+            CurrentBackground = 0;
             VaoGame=1;
             ScrollSpeed=5;
             scrollingOffset=5;
             bullet_on_screen=0;
             Da1.reset(Width+20),Da2.reset(Width+400);
             wizard.reset();
+            wizard.update_ammo(3);
             GRAVITY=18;
             Rep=0;
+            reload=0;
         }
         if(ShowMenu)
         {
@@ -156,13 +185,17 @@ int main(int argc,char * argv[])
             Tutorial.render();
             Exit.render();
             LoadGame.render();
+//            SDL_Rect fillRect = { 0, 0, 1200, 740 };
+//            SDL_SetRenderDrawColor( gRenderer, 0, 0, 0, 0 );
+//            SDL_RenderFillRect( gRenderer, &fillRect );
+//            SDL_RenderPresent( gRenderer );
         }
         if(HuongDan)
         {
             SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
             SDL_RenderClear(gRenderer);
             Home.RePos(Width-60,10);
-            Background_Texture.render(0,0);
+            Background_Texture[CurrentBackground].render(0,0);
             Tutorial_Texture.render(200,90);
             Home.render();
         }
@@ -172,20 +205,21 @@ int main(int argc,char * argv[])
             SDL_RenderClear(gRenderer);
             Da2.move();
             Da1.move();
-            scrollingOffset-=ScrollSpeed;
-            if( scrollingOffset <- Background_Texture.getWidth() )    scrollingOffset = 0;
             wizard.move();
-            Background_Texture.render( scrollingOffset, 0 );
-            Background_Texture.render( scrollingOffset + Background_Texture.getWidth(), 0 );
-            Da1.render();
-            Da2.render();
+            COIN.move();
+            Background_Texture[CurrentBackground].render( scrollingOffset, 0 );
+            Background_Texture[CurrentBackground].render( scrollingOffset + Background_Texture[CurrentBackground].getWidth(), 0 );
+
+            Da1.render(CurrentBackground);
+            Da2.render(CurrentBackground);
             wizard.render();
             Pause.render();
-            SDL_Rect hitbox= {233,wizard.getY(),1,110};
+            COIN.render();
+            SDL_Rect hitbox= {258,wizard.getY(),1,110};
             if(!bullet_on_screen)
             {
                 int n=rnd(1,1000);
-                if(n>995)     A.reset(),bullet_on_screen=1;
+                if(n>998)     A.reset(),bullet_on_screen=1;
             }
             if(bullet_on_screen)
             {
@@ -193,42 +227,55 @@ int main(int argc,char * argv[])
                 A.render();
                 if(checkCollision(hitbox,A.get()))
                 {
-                    //Died=1;
+                    //Mix_PlayChannel(-1,LoseSound,0);
+                    //  Died=1;
                 }
                 if(A.x<0)   bullet_on_screen=0;
             }
             if(checkCollision(hitbox,Da1.get())||checkCollision(hitbox,Da2.get()))
             {
-                //Died=1;
+                // Mix_PlayChannel(-1,LoseSound,0);
+                // Died=1;
             }
-            if(wizard.get_attack())
+            if(checkCollision(hitbox,COIN.get()))
             {
-                FIRE.move();
-                FIRE.render();
-                if(bullet_on_screen&&checkCollision(FIRE.get(),A.get()))
+
+                Score+=COIN.score;
+                // Mix_PlayChannel(-1,GainSound,0);
+                COIN.reset();
+            }
+            for (int i = 1; i <= 3; i++)
+            {
+                if(wizard.get_attack(i))
                 {
-                    A.reset(),bullet_on_screen=0;
-                    wizard.cooldown();
-                    Score+=100;
+                    FIRE[i].move();
+                    FIRE[i].render(i);
+                    if (bullet_on_screen&&checkCollision(FIRE[i].get(),A.get()))
+                    {
+                        Mix_PlayChannel(-1,AttackSound,0);
+                        A.reset(),bullet_on_screen=0;
+                        wizard.cooldown(i);
+                        Score+=100;
+                    }
                 }
             }
             for(int i=1; i<=wizard.get_ammo(); i++)    Ammo[i].render(10+(i-1)*70,10);
-            Score++;
-            RenderText(ScoreStr,Score,550,20);
-            SDL_Delay(1000/60.0f);
+            RenderText(ScoreStr,(int)Score,550,20);
             reload++;
-            if(reload>500)       wizard.add_ammo(),reload=0;
+            if(reload>500)       wizard.add_ammo(),reload=0,CurrentBackground^=1;
+            scrollingOffset-=ScrollSpeed;
+            if( scrollingOffset <- Background_Texture[CurrentBackground].getWidth() )    scrollingOffset = 0;
             if(ScrollSpeed>12)   ScrollSpeed=16;
         }
         if(PauseGame||Died)
         {
             SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
             SDL_RenderClear(gRenderer);
-            Background_Texture.render( scrollingOffset, 0 );
-            Background_Texture.render( scrollingOffset + Background_Texture.getWidth()-3, 0 );
-            Home.RePos(650,400);
-            Da1.render();
-            Da2.render();
+            Background_Texture[CurrentBackground].render( scrollingOffset, 0 );
+            Background_Texture[CurrentBackground].render( scrollingOffset + Background_Texture[CurrentBackground].getWidth()-3, 0 );
+            Home.RePos(630,400);
+            Da1.render(CurrentBackground);
+            Da2.render(CurrentBackground);
             if(PauseGame)  wizard.render();
             if(bullet_on_screen)  A.render();
             Board.render(400,100);
@@ -240,8 +287,16 @@ int main(int argc,char * argv[])
             RenderText(HighScoreStr,HighScore,520,230);
         }
         SDL_RenderPresent( gRenderer );
+        ofstream out("luugame.txt", ofstream::out | ofstream::trunc);
+        HighScore=max(HighScore,Score);
+        out << Score << " " << HighScore << " " << CurrentBackground <<" "<< Da1.x << " " << Da2.x << " " << wizard.get_ammo();
+        SDL_Delay(1000/60.0f);
+
+
         //////
     }
     close();
+    in.close();
+    out.close();
     return 0;
 }

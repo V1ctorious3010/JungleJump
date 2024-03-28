@@ -2,8 +2,26 @@
 #include <SDL.h>
 #include<bits/stdc++.h>
 #include"LTexture.h"
+Mix_Chunk *ButtonSound=NULL;
+
 class Button
 {
+private:
+    bool IsWithinBounds(int x, int y)
+    {
+        if (x < Rect.x) return false;// Too far left
+        if (x > Rect.x + Rect.w) return false; // Too far right
+        if (y < Rect.y) return false; // Too high
+        if (y > Rect.y + Rect.h) return false; // Too low
+        return true;   // Inside rectangle
+    }
+    bool isHovered;
+    SDL_Rect Rect;
+    int type;
+    LTexture nHTexture;
+    LTexture HTexture;
+    bool press=0;
+
 public:
     Button() {}
     void reconstruct(int t,int x,int y,int u,int v)
@@ -106,6 +124,7 @@ public:
         bool press=0;
         if (Event.type == SDL_MOUSEBUTTONDOWN &&Event.button.button == SDL_BUTTON_LEFT &&isHovered)
         {
+            Mix_PlayChannel(-1,ButtonSound,0);
             press=1;
         }
         else if(Event.type == SDL_MOUSEBUTTONUP )
@@ -119,7 +138,10 @@ public:
                 render();
             }
         }
-        if(press)    Upd();
+        if(press)
+        {
+            Upd();
+        }
 
     }
     void Upd();
@@ -134,21 +156,7 @@ public:
     {
         isHovered=0;
     }
-private:
-    bool IsWithinBounds(int x, int y)
-    {
-        if (x < Rect.x) return false;// Too far left
-        if (x > Rect.x + Rect.w) return false; // Too far right
-        if (y < Rect.y) return false; // Too high
-        if (y > Rect.y + Rect.h) return false; // Too low
-        return true;   // Inside rectangle
-    }
-    bool isHovered;
-    SDL_Rect Rect;
-    int type;
-    LTexture nHTexture;
-    LTexture HTexture;
-    bool press=0;
+
 };
 Button Play;
 Button LoadGame;

@@ -1,7 +1,10 @@
 #include<bits/stdc++.h>
 using namespace std;
 #include<SDL.h>
+#include"SDL_mixer.h"
 double GRAVITY=18;
+Mix_Chunk *JumpSound=NULL;
+Mix_Chunk *AttackSound=NULL;
 class fireball
 {
     double x;
@@ -21,16 +24,17 @@ public:
     {
         return {(int)x,(int)y,30,50};
     }
-    void render();
+    void render(int a);
     void set_y(int T)
     {
         y=T;
     }
-} FIRE;
+} FIRE[4];
 
 class nhanvat
 {
 public:
+
     const int character_WIDTH = 90;
     const int character_HEIGHT = 130;
     const int character_speed = 20;
@@ -57,8 +61,27 @@ public:
                 GRAVITY=300;
                 break;
             case SDL_SCANCODE_J:
-                if(ammo>0)    attack=1,ammo--,FIRE.set_y(mPosY+20);
-                break;
+                if (ammo == 3)
+                {
+                    Mix_PlayChannel(-1,AttackSound,0);
+                    attack[3] = 1;
+                    ammo--;
+                    FIRE[3].set_y(mPosY+20);
+                }
+                else if (ammo == 2)
+                {
+                    Mix_PlayChannel(-1,AttackSound,0);
+                    attack[2] = 1;
+                    ammo--;
+                    FIRE[2].set_y(mPosY+20);
+                }
+                else if (ammo == 1)
+                {
+                    Mix_PlayChannel(-1,AttackSound,0);
+                    attack[1] = 1;
+                    ammo--;
+                    FIRE[1].set_y(mPosY+20);
+                }
             default:
                 break;
             }
@@ -84,17 +107,20 @@ public:
     {
         return mPosY;
     }
-    void cooldown()
+    void cooldown(int a)
     {
-        attack=0;
+        attack[a]=0;
     }
-    int get_attack()
+    int get_attack(int a)
     {
-        return attack;
+        return attack[a];
     }
     int get_ammo()
     {
         return ammo;
+    }
+    void update_ammo(int a){
+        ammo = a;
     }
     void add_ammo()
     {
@@ -104,7 +130,7 @@ public:
     void reset()
     {
         mPosY=250,y_vel=0;
-        ammo=3;
+        //ammo=3;
         can_jump=0;
         jump_pressed=0;
         on_ground=0;
@@ -117,6 +143,6 @@ private:
     bool on_ground;
     short add,add2;
     short status;
-    bool attack=0;
+    bool attack[4]= {0,0,0,0};
     short ammo;
 };
