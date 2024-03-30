@@ -199,15 +199,15 @@ int main(int argc,char * argv[])
                 A.render();
                 if(checkCollision(hitbox,A.get()))
                 {
-                   Mix_PlayChannel(-1,LoseSound,0);
-                   Died=1;
+                  // Mix_PlayChannel(-1,LoseSound,0);
+                   //Died=1;
                 }
                 if(A.x<0)   bullet_on_screen=0;
             }
             if(checkCollision(hitbox,Da1.get())||checkCollision(hitbox,Da2.get()))
             {
-               Mix_PlayChannel(-1,LoseSound,0);
-               Died=1;
+               //Mix_PlayChannel(-1,LoseSound,0);
+               //Died=1;
             }
             if(checkCollision(hitbox,COIN.get()))
             {
@@ -231,6 +231,7 @@ int main(int argc,char * argv[])
                     }
                 }
             }
+            BOSS.bot();
             for(int i=1; i<=wizard.get_ammo(); i++)    Ammo[i].render(10+(i-1)*70,10);
             reload++;
             if(reload>500)       wizard.add_ammo(),reload=0,CurrentBackground^=1;

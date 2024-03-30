@@ -7,11 +7,7 @@ using namespace std;
 #include"character.h"
 #include"button.h"
 #include"coin.h"
-mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-int rnd(int l,int r)
-{
-    return l+rng()%(r-l+1);
-}
+#include"boss.h"
 vector<int>TYPE= {0,0,1};
 int VelX=0;
 int Move_down=0;
@@ -38,6 +34,7 @@ LTexture FireBall;
 LTexture ScoreText;
 LTexture HighScoreText;
 LTexture MenuBackground;
+LTexture IdleBoss[12],SlashingBoss[12],ThrowingBoss[12];
 LTexture Ammo[4];
 LTexture Title;
 Mix_Music *GameMusic=NULL;
@@ -60,8 +57,8 @@ bool ShowMenu=1;
 int CurrentBackground;
 LTexture Gem;
 LTexture Gem1;
-SDL_Color Black={0,0,0};
-SDL_Color White={255,255,255};
+SDL_Color Black= {0,0,0};
+SDL_Color White= {255,255,255};
 void LTexture ::render(int x,int y)
 {
     SDL_Rect tmp= {x,y,mWidth,mHeight};
@@ -176,7 +173,34 @@ void LoadTexture()
     Mix_VolumeMusic(50);
     GainSound=Mix_LoadWAV("gainsound.wav");
     LoseSound=Mix_LoadWAV("losesound.wav");
-
+    string s="Idle/0_Golem_idle_0";
+    for(int i=0; i<=11; i++)
+    {
+        string tmp=s;
+        if(i<10)  tmp+="0";
+        tmp+=to_string(i);
+        tmp+=".png";
+        IdleBoss[i].LoadImage(tmp);
+    }
+    s="Slashing/0_Golem_Slashing_0";
+    for(int i=0; i<=11; i++)
+    {
+        string tmp=s;
+        if(i<10)  tmp+="0";
+        tmp+=to_string(i);
+        tmp+=".png";
+       // cout<<tmp<<endl;
+        if(!SlashingBoss[i].LoadImage(tmp)) cout<<"CANT";
+    }
+    s="Throwing/0_Golem_Throwing_0";
+    for(int i=0; i<=11; i++)
+    {
+        string tmp=s;
+        if(i<10)  tmp+="0";
+        tmp+=to_string(i);
+        tmp+=".png";
+        ThrowingBoss[i].LoadImage(tmp);
+    }
 }
 bool checkCollision( SDL_Rect a, SDL_Rect b )
 {
@@ -203,6 +227,7 @@ void nhanvat::move()
     if(!on_ground)  y_vel += GRAVITY;
     if (jump_pressed && can_jump)
     {
+        GRAVITY=18;
         Mix_PlayChannel(-1,JumpSound,0);
         on_ground=0;
         can_jump = false;
@@ -382,3 +407,19 @@ coin::coin(int a,int c)
     if(t==1)   score=50;
     if(t==0)   score=25;
 }
+void boss::render_idle(int x)
+{
+    int tmp=x%13;
+    IdleBoss[tmp].render(BOSS.x,BOSS.y);
+}
+void boss::render_slashing(int x)
+{
+    int tmp=x%13;
+    SlashingBoss[tmp].render(BOSS.x,BOSS.y);
+}
+void boss::render_throwing(int x)
+{
+    int tmp=x%13;
+    ThrowingBoss[tmp].render(BOSS.x,BOSS.y);
+}
+
