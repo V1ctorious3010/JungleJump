@@ -34,7 +34,8 @@ LTexture FireBall;
 LTexture ScoreText;
 LTexture HighScoreText;
 LTexture MenuBackground;
-LTexture IdleBoss[12],SlashingBoss[12],ThrowingBoss[12];
+LTexture IdleBoss[6],SlashingBoss[6],ThrowingBoss[6];
+LTexture DirtBall;
 LTexture Ammo[4];
 LTexture Title;
 Mix_Music *GameMusic=NULL;
@@ -59,10 +60,11 @@ LTexture Gem;
 LTexture Gem1;
 SDL_Color Black= {0,0,0};
 SDL_Color White= {255,255,255};
-void LTexture ::render(int x,int y)
+void LTexture ::render(int x,int y,SDL_RendererFlip flip)
 {
     SDL_Rect tmp= {x,y,mWidth,mHeight};
-    SDL_RenderCopy(gRenderer,mTexture,NULL,&tmp);
+   SDL_RenderCopyEx(gRenderer,mTexture,NULL,&tmp,0.0,NULL, flip );
+
 }
 bool LTexture ::LoadImage(string file_path)
 {
@@ -173,34 +175,32 @@ void LoadTexture()
     Mix_VolumeMusic(50);
     GainSound=Mix_LoadWAV("gainsound.wav");
     LoseSound=Mix_LoadWAV("losesound.wav");
-    string s="Idle/0_Golem_idle_0";
-    for(int i=0; i<=11; i++)
+    string s="Idle/0_Golem_idle_00";
+    for(int i=0; i<=5; i++)
     {
         string tmp=s;
-        if(i<10)  tmp+="0";
         tmp+=to_string(i);
         tmp+=".png";
-        IdleBoss[i].LoadImage(tmp);
+        if(!IdleBoss[i].LoadImage(tmp))  cout<<"CANT";
     }
-    s="Slashing/0_Golem_Slashing_0";
-    for(int i=0; i<=11; i++)
+    s="Slashing/0_Golem_Slashing_00";
+    for(int i=0; i<=5; i++)
     {
         string tmp=s;
-        if(i<10)  tmp+="0";
         tmp+=to_string(i);
         tmp+=".png";
-       // cout<<tmp<<endl;
+        // cout<<tmp<<endl;
         if(!SlashingBoss[i].LoadImage(tmp)) cout<<"CANT";
     }
-    s="Throwing/0_Golem_Throwing_0";
-    for(int i=0; i<=11; i++)
+    s="Throwing/0_Golem_Throwing_00";
+    for(int i=0; i<=5; i++)
     {
         string tmp=s;
-        if(i<10)  tmp+="0";
         tmp+=to_string(i);
         tmp+=".png";
         ThrowingBoss[i].LoadImage(tmp);
     }
+    DirtBall.LoadImage("dirtball.png");
 }
 bool checkCollision( SDL_Rect a, SDL_Rect b )
 {
@@ -224,6 +224,10 @@ bool checkCollision( SDL_Rect a, SDL_Rect b )
 }
 void nhanvat::move()
 {
+    mPosX+=x_vel/60;
+    if(mPosX<20)   mPosX=20;
+    if(mPosX>800)   mPosX=800;
+
     if(!on_ground)  y_vel += GRAVITY;
     if (jump_pressed && can_jump)
     {
@@ -257,8 +261,8 @@ void nhanvat::render()
     }
     else
     {
-        if(on_ground)     Character_Texture[status].render(240,mPosY);
-        else    Character_Texture[0].render(240,mPosY);
+        if(on_ground)     Character_Texture[status].render(mPosX,mPosY,flip);
+        else    Character_Texture[0].render(mPosX,mPosY,flip);
     }
 }
 ///////ball;
@@ -409,17 +413,53 @@ coin::coin(int a,int c)
 }
 void boss::render_idle(int x)
 {
-    int tmp=x%13;
+    int tmp=x%6;
     IdleBoss[tmp].render(BOSS.x,BOSS.y);
 }
 void boss::render_slashing(int x)
 {
-    int tmp=x%13;
+    int tmp=x%6;
     SlashingBoss[tmp].render(BOSS.x,BOSS.y);
 }
 void boss::render_throwing(int x)
 {
-    int tmp=x%13;
+    int tmp=x%6;
     ThrowingBoss[tmp].render(BOSS.x,BOSS.y);
 }
+void dirtball::render()
+{
+    DirtBall.render(x,y);
+}
 
+void dirtball:: move()
+{
+    if(BossAt2)
+    {
+        x-=15;
+        if(x<0)     BossAt2=0,x=800,y=500;
+    }
+    if(BossAt1)
+    {
+        y+=10;
+        if(y>deadY)     BossAt1=0,x=800,y=500;
+    }
+}
+void boss::action()
+{
+    //render_idle(stt);
+    if(!status)   render_idle(stt);
+    if(status==1)   render_slashing(stt);
+    if(status==2)   render_throwing(stt);
+    add++;
+    if(add>5)   stt++,add=0;
+    if(stt==6)
+    {
+        if(status==2)     BossAt2=1;
+        if(status==1)     BossAt1=1,Dirt={wizard.getX(),0};
+        if(status)  Rest=100;
+        stt=0;
+        add=0;
+        status=0;
+    }
+    Dirt.Handle();
+}

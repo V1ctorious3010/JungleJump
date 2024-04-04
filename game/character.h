@@ -40,6 +40,7 @@ public:
     nhanvat()
     {
         mPosY=250,y_vel=0;
+        mPosX=240;
         jump_pressed=0;
         can_jump=0;
         on_ground=0;
@@ -55,6 +56,14 @@ public:
             {
             case SDL_SCANCODE_W:
                 jump_pressed = true;
+                break;
+            case SDL_SCANCODE_D:
+                x_vel=200;
+                flip=SDL_FLIP_NONE;
+                break;
+            case SDL_SCANCODE_A:
+                x_vel=-700;
+                flip=SDL_FLIP_HORIZONTAL;
                 break;
             case SDL_SCANCODE_S:
                 GRAVITY=300;
@@ -95,6 +104,12 @@ public:
             case SDL_SCANCODE_S:
                 GRAVITY=18;
                 break;
+            case SDL_SCANCODE_D:
+                x_vel=0;
+                break;
+            case SDL_SCANCODE_A:
+                x_vel=0;
+                break;
             default:
                 break;
             }
@@ -105,6 +120,10 @@ public:
     int getY()
     {
         return mPosY;
+    }
+    int getX()
+    {
+        return mPosX;
     }
     void cooldown(int a)
     {
@@ -132,8 +151,9 @@ public:
         on_ground=0;
     }
 private:
-    double mPosY;
-    double y_vel;
+    double mPosY,mPosX;
+    double y_vel,x_vel;
+    SDL_RendererFlip flip=SDL_FLIP_NONE;
     bool jump_pressed;
     bool can_jump;
     bool on_ground;

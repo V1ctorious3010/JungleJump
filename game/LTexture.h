@@ -31,7 +31,7 @@ public:
             mWidth=mHeight=0;
         }
     }
-    void render(int x,int y);
+    void render(int x,int y,SDL_RendererFlip flip=SDL_FLIP_NONE);
     int getWidth()
     {
         return mWidth;

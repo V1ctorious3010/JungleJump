@@ -118,7 +118,15 @@ int main(int argc,char * argv[])
                 Play.HandleEvent(EV);
                 Exit.HandleEvent(EV);
                 Tutorial.HandleEvent(EV);
-                LoadGame.HandleEvent(EV);
+                SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+                SDL_RenderClear(gRenderer);
+                MenuBackground.render(0,0);
+                Title.render(190,50);
+                Play.render();
+                Tutorial.render();
+                Exit.render();
+                LoadGame.render();
+
             }
             if(PauseGame)
             {
@@ -151,17 +159,7 @@ int main(int argc,char * argv[])
             Rep=0;
             reload=0;
         }
-        if(ShowMenu)
-        {
-            SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
-            SDL_RenderClear(gRenderer);
-            MenuBackground.render(0,0);
-            Title.render(190,50);
-            Play.render();
-            Tutorial.render();
-            Exit.render();
-            LoadGame.render();
-        }
+
         if(HuongDan)
         {
             SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
@@ -199,15 +197,15 @@ int main(int argc,char * argv[])
                 A.render();
                 if(checkCollision(hitbox,A.get()))
                 {
-                  // Mix_PlayChannel(-1,LoseSound,0);
-                   //Died=1;
+                    // Mix_PlayChannel(-1,LoseSound,0);
+                    //Died=1;
                 }
                 if(A.x<0)   bullet_on_screen=0;
             }
             if(checkCollision(hitbox,Da1.get())||checkCollision(hitbox,Da2.get()))
             {
-               //Mix_PlayChannel(-1,LoseSound,0);
-               //Died=1;
+                //Mix_PlayChannel(-1,LoseSound,0);
+                //Died=1;
             }
             if(checkCollision(hitbox,COIN.get()))
             {

@@ -6,13 +6,42 @@ int rnd(int l,int r)
 {
     return l+rng()%(r-l+1);
 }
+bool BossAt2=0;
+bool BossAt1=0;
+struct dirtball
+{
+    int x=800;
+    int y=500;
+    void Handle()
+    {
+        if(BossAt2)
+        {
+            render();
+            move();
+        }
+        if(BossAt1)
+        {
+            render();
+            move();
+        }
+    }
+    void render();
+    void move();
+
+} Dirt;
 struct boss
 {
     int x,y;
     int status;
-    int LastActionTime=0;
+    int Rest=0;
     int HP=100;
     int stt=0;
+    int add=0;
+    boss()
+    {
+        x=800;
+        y=270;
+    }
     void heal()
     {
         HP=100;
@@ -23,26 +52,19 @@ struct boss
     void bot()
     {
         if(!HP)  return;
-        if(status==0&&LastActionTime>=60)
+        //if(Rest>0)  status=0;
+        if(Rest<=0)
         {
-            LastActionTime=0;
-            status=rnd(1,3);
+            status=rnd(1,2);
             stt=0;
+            Rest=100;
         }
-        else LastActionTime++;
-        action(status);
+        Rest--;
+        action();
     }
-    void action(int type)
+    void action();
+    void hurt()
     {
-        if(type==0)   render_idle(stt);
-        if(type==1)   render_slashing(stt);
-        if(type==2)   render_throwing(stt);
-        stt++;
-        if(stt==98)
-        {
-            status=0;
-            stt=0;
-        }
+        HP-=30;
     }
-    void hurt(){HP-=15;}
-}BOSS;
+} BOSS;
