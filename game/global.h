@@ -8,6 +8,7 @@ using namespace std;
 #include"button.h"
 #include"coin.h"
 #include"boss.h"
+#include"boss2.h"
 vector<int>TYPE= {0,0,1};
 int VelX=0;
 int Move_down=0;
@@ -28,13 +29,14 @@ bool Rep;
 LTexture Character_Texture[9];
 LTexture Tutorial_Texture;
 LTexture Background_Texture[3];
-LTexture bullet[2];
+LTexture bullet;
 LTexture st1,st2;
 LTexture FireBall;
 LTexture ScoreText;
 LTexture HighScoreText;
 LTexture MenuBackground;
 LTexture IdleBoss[6],SlashingBoss[6],ThrowingBoss[6];
+LTexture IdleBoss2,AttackingBoss2[4];
 LTexture DirtBall;
 LTexture Ammo[4];
 LTexture Title;
@@ -49,7 +51,6 @@ const int FPS=60;
 int Score=0;
 int ScrollSpeed=12;
 int scrollingOffset=5;
-bool bullet_on_screen=1;
 bool VaoGame=0;
 LTexture Board;
 int HighScore=0;
@@ -63,7 +64,7 @@ SDL_Color White= {255,255,255};
 void LTexture ::render(int x,int y,SDL_RendererFlip flip)
 {
     SDL_Rect tmp= {x,y,mWidth,mHeight};
-   SDL_RenderCopyEx(gRenderer,mTexture,NULL,&tmp,0.0,NULL, flip );
+    SDL_RenderCopyEx(gRenderer,mTexture,NULL,&tmp,0.0,NULL, flip );
 
 }
 bool LTexture ::LoadImage(string file_path)
@@ -123,16 +124,6 @@ void LoadTexture()
     if(!MenuBackground.LoadImage("background2.png"))
     {
         cout<<"can't load menu bg";
-        return ;
-    }
-    if(!bullet[0].LoadImage("bullet.png"))
-    {
-        cout<<"can't load bullet";
-        return ;
-    }
-    if(!bullet[1].LoadImage("bullet1.png"))
-    {
-        cout<<"can't load bullet";
         return ;
     }
     if(!FireBall.LoadImage("fire/fire2.png"))
@@ -201,6 +192,17 @@ void LoadTexture()
         ThrowingBoss[i].LoadImage(tmp);
     }
     DirtBall.LoadImage("dirtball.png");
+    bullet.LoadImage("boss2/Charge_1.png");
+    s="boss2/Attack_";
+    for(int i=1; i<=4; i++)
+    {
+        string tmp=s;
+        tmp+=to_string(i);
+        tmp+=".png";
+        AttackingBoss2[i-1].LoadImage(tmp);
+    }
+    if(!IdleBoss2.LoadImage("boss2/Idle1.png"));
+
 }
 bool checkCollision( SDL_Rect a, SDL_Rect b )
 {
@@ -229,7 +231,7 @@ void nhanvat::move()
     if(mPosX>800)   mPosX=800;
 
     if(!on_ground)  y_vel += GRAVITY;
-    if (jump_pressed && can_jump)
+    if (jump_pressed&&can_jump)
     {
         GRAVITY=18;
         Mix_PlayChannel(-1,JumpSound,0);
@@ -265,44 +267,6 @@ void nhanvat::render()
         else    Character_Texture[0].render(mPosX,mPosY,flip);
     }
 }
-///////ball;
-struct ball
-{
-    double x;
-    double y;
-    int cnt;
-    int CurState=0;
-    double x_vel=1200;
-    ball()
-    {
-        x=Width-100;
-        int t=rnd(0,1);
-        if(t)y=deadY-200;
-        else y=deadY-80;
-    }
-    void render()
-    {
-        bullet[CurState].render(x,y);
-    }
-    void move()
-    {
-        x-=x_vel/60;
-        cnt++;
-        if(cnt>=10)  CurState^=1,cnt=0;
-    }
-    void reset()
-    {
-        x=Width-100;
-        int t=rnd(0,1);
-        if(t)y=deadY-200;
-        else y=deadY-80;
-    }
-    SDL_Rect get()
-    {
-        return {(int)x,(int)y,50,50};
-    }
-
-} A;
 struct CucDa
 {
     double x;
@@ -411,20 +375,20 @@ coin::coin(int a,int c)
     if(t==1)   score=50;
     if(t==0)   score=25;
 }
-void boss::render_idle(int x)
+void boss::render_idle(int stt)
 {
-    int tmp=x%6;
-    IdleBoss[tmp].render(BOSS.x,BOSS.y);
+    int tmp=stt%6;
+    IdleBoss[tmp].render(x,y);
 }
-void boss::render_slashing(int x)
+void boss::render_slashing(int stt)
 {
-    int tmp=x%6;
-    SlashingBoss[tmp].render(BOSS.x,BOSS.y);
+    int tmp=stt%6;
+    SlashingBoss[tmp].render(x,y);
 }
-void boss::render_throwing(int x)
+void boss::render_throwing(int stt)
 {
-    int tmp=x%6;
-    ThrowingBoss[tmp].render(BOSS.x,BOSS.y);
+    int tmp=stt%6;
+    ThrowingBoss[tmp].render(x,y);
 }
 void dirtball::render()
 {
@@ -455,11 +419,58 @@ void boss::action()
     if(stt==6)
     {
         if(status==2)     BossAt2=1;
-        if(status==1)     BossAt1=1,Dirt={wizard.getX(),0};
+        if(status==1)     BossAt1=1,Dirt= {wizard.getX(),0};
         if(status)  Rest=100;
         stt=0;
         add=0;
         status=0;
     }
     Dirt.Handle();
+}
+void thunder::render()
+{
+    bullet.render(x,y);
+}
+void thunder::move()
+{
+    x-=x_vel/60;
+    for (int i = 1; i <= 3; i++)
+    {
+        if(wizard.get_attack(i))
+        {
+            if (checkCollision(FIRE[i].get(),get()))
+            {
+                Mix_PlayChannel(-1,AttackSound,0);
+                reset();
+                BOSS2.attack=0;
+                wizard.cooldown(i);
+            }
+        }
+    }
+    if(x<0)   reset(),BOSS2.attack=0;
+
+}
+void boss2::action()
+{
+    if(!status)     render_idle(stt);
+    if(status==1)   render_at(stt);
+    add++;
+    if(add>7)   stt++,add=0;
+    if(stt==4&&status==1)
+    {
+        BOSS2.attack=1;
+        Rest=100;
+        stt=0;
+        add=0;
+        status=0;
+    }
+}
+void boss2::render_idle(int tmp)
+{
+    IdleBoss2.render(x,y);
+}
+void boss2::render_at(int stt)
+{
+    int tmp=stt%4;
+    AttackingBoss2[tmp].render(x,y);
 }

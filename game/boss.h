@@ -25,6 +25,11 @@ struct dirtball
             move();
         }
     }
+    void reset()
+    {
+        x=800;
+        y=500;
+    }
     void render();
     void move();
 
@@ -34,7 +39,7 @@ struct boss
     int x,y;
     int status;
     int Rest=0;
-    int HP=100;
+    int HP=0;
     int stt=0;
     int add=0;
     boss()
@@ -44,7 +49,11 @@ struct boss
     }
     void heal()
     {
-        HP=100;
+        stt=0;
+        status=0;
+        add=0;
+        HP=600;
+        BossAt1=BossAt2=0;
     }
     void render_idle(int x);
     void render_slashing(int x);
@@ -59,12 +68,10 @@ struct boss
             stt=0;
             Rest=100;
         }
+        HP--;
+        if(!HP)   Dirt.reset();
         Rest--;
         action();
     }
     void action();
-    void hurt()
-    {
-        HP-=30;
-    }
 } BOSS;

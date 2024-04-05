@@ -29,6 +29,10 @@ public:
     {
         y=T;
     }
+    void set_x(int T)
+    {
+        x=T;
+    }
 } FIRE[4];
 
 class nhanvat
@@ -75,6 +79,7 @@ public:
                     attack[3] = 1;
                     ammo--;
                     FIRE[3].set_y(mPosY+20);
+                    FIRE[3].set_x(mPosX+20);
                 }
                 else if (ammo == 2)
                 {
@@ -82,6 +87,7 @@ public:
                     attack[2] = 1;
                     ammo--;
                     FIRE[2].set_y(mPosY+20);
+                    FIRE[2].set_x(mPosX+20);
                 }
                 else if (ammo == 1)
                 {
@@ -89,6 +95,7 @@ public:
                     attack[1] = 1;
                     ammo--;
                     FIRE[1].set_y(mPosY+20);
+                    FIRE[1].set_x(mPosX+20);
                 }
             default:
                 break;

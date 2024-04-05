@@ -9,7 +9,7 @@ using namespace std;
 int reload=0;
 string ScoreStr="Score :";
 string HighScoreStr="HighScore :";
-
+int No_Boss_Time=0;
 void RenderText(string &s,int score,int x,int y,SDL_Color &X)
 {
     string tmp=s;
@@ -58,7 +58,6 @@ void close()
     //Free loaded images
     for(int i=0; i<=7; i++)  Character_Texture[i].free();
     Background_Texture[CurrentBackground].free();
-    for(int j=0; j<=1; j++)   bullet[j].free();
     for(int i=1; i<=4; i++)    Ammo[i].free();
     ScoreText.free();
     FireBall.free();
@@ -152,7 +151,7 @@ int main(int argc,char * argv[])
             VaoGame=1;
             ScrollSpeed=5;
             scrollingOffset=5;
-            bullet_on_screen=0;
+            BOSS2.attack=0;
             Da1.reset(Width+20),Da2.reset(Width+400);
             wizard.reset();
             GRAVITY=18;
@@ -186,21 +185,20 @@ int main(int argc,char * argv[])
             Pause.render();
             COIN.render();
             SDL_Rect hitbox= {258,wizard.getY(),1,110};
-            if(!bullet_on_screen)
+              bool has_boss=(BOSS.HP>0)||(BOSS2.HP>0);
+            if(!has_boss)  No_Boss_Time++;
+            if(No_Boss_Time>=150)
             {
-                int n=rnd(1,1000);
-                if(n>998)     A.reset(),bullet_on_screen=1;
+                No_Boss_Time=0;
+                int t=rnd(1,3);
+                if(t==1)  BOSS.heal();
+                if(t==2)  BOSS2.heal();
+                //if(t==1)  BOSS.heal();
             }
-            if(bullet_on_screen)
+            if(BOSS2.attack)
             {
                 A.move();
                 A.render();
-                if(checkCollision(hitbox,A.get()))
-                {
-                    // Mix_PlayChannel(-1,LoseSound,0);
-                    //Died=1;
-                }
-                if(A.x<0)   bullet_on_screen=0;
             }
             if(checkCollision(hitbox,Da1.get())||checkCollision(hitbox,Da2.get()))
             {
@@ -214,22 +212,16 @@ int main(int argc,char * argv[])
                 Mix_PlayChannel(-1,GainSound,0);
                 COIN.reset();
             }
-            for (int i = 1; i <= 3; i++)
+            for(int i=1; i<=3; i++)
             {
                 if(wizard.get_attack(i))
                 {
                     FIRE[i].move();
                     FIRE[i].render(i);
-                    if (bullet_on_screen&&checkCollision(FIRE[i].get(),A.get()))
-                    {
-                        Mix_PlayChannel(-1,AttackSound,0);
-                        A.reset(),bullet_on_screen=0;
-                        wizard.cooldown(i);
-                        Score+=100;
-                    }
                 }
             }
             BOSS.bot();
+            BOSS2.bot();
             for(int i=1; i<=wizard.get_ammo(); i++)    Ammo[i].render(10+(i-1)*70,10);
             reload++;
             if(reload>500)       wizard.add_ammo(),reload=0,CurrentBackground^=1;
@@ -244,12 +236,12 @@ int main(int argc,char * argv[])
             SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
             SDL_RenderClear(gRenderer);
             Background_Texture[CurrentBackground].render( scrollingOffset, 0 );
-            Background_Texture[CurrentBackground].render( scrollingOffset + Background_Texture[CurrentBackground].getWidth()-3, 0 );
+            Background_Texture[CurrentBackground].render( scrollingOffset + Background_Texture[CurrentBackground].getWidth()-1, 0 );
             Home.RePos(630,400);
             Da1.render(CurrentBackground);
             Da2.render(CurrentBackground);
             if(PauseGame)  wizard.render();
-            if(bullet_on_screen)  A.render();
+            if(BOSS2.attack)  A.render();
             Board.render(400,100);
             HighScore=max(HighScore,Score);
             if(Died)Replay.render();
