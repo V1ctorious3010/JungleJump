@@ -9,6 +9,7 @@ using namespace std;
 int reload=0;
 string ScoreStr="Score :";
 string HighScoreStr="HighScore :";
+int32_t lastUPD=0.0;
 int No_Boss_Time=0;
 void RenderText(string &s,int score,int x,int y,SDL_Color &X)
 {
@@ -58,7 +59,7 @@ void close()
     //Free loaded images
     for(int i=0; i<=7; i++)  Character_Texture[i].free();
     Background_Texture[CurrentBackground].free();
-    for(int i=1; i<=4; i++)    Ammo[i].free();
+    for(int i=1; i<=4; i++)    Ammo.free();
     ScoreText.free();
     FireBall.free();
     //Destroy window
@@ -75,6 +76,8 @@ void close()
 }
 int main(int argc,char * argv[])
 {
+    ios_base::sync_with_stdio(0);
+   // freopen("x.out","w",stdout);
     if(!init())
     {
         cout<<"Can't init"<<endl;
@@ -135,7 +138,6 @@ int main(int argc,char * argv[])
             }
             if(VaoGame&&!PauseGame&&!Died)         //dang choi
             {
-
                 wizard.handleEvent(EV);
                 Pause.HandleEvent(EV);
             }
@@ -178,27 +180,48 @@ int main(int argc,char * argv[])
             COIN.move();
             Background_Texture[CurrentBackground].render( scrollingOffset, 0 );
             Background_Texture[CurrentBackground].render( scrollingOffset + Background_Texture[CurrentBackground].getWidth(), 0 );
-
             Da1.render(CurrentBackground);
             Da2.render(CurrentBackground);
             wizard.render();
             Pause.render();
             COIN.render();
-            SDL_Rect hitbox= {258,wizard.getY(),1,110};
-              bool has_boss=(BOSS.HP>0)||(BOSS2.HP>0);
-            if(!has_boss)  No_Boss_Time++;
+            SDL_Rect hitbox= {wizard.getX(),wizard.getY(),1,110};
+            bool has_boss=(BOSS.HP>0)||(BOSS2.HP>0)||(BOSS3.HP>0);
+            if(!has_boss)  No_Boss_Time++,CURBOSSx=0,CURBOSSy=0;
             if(No_Boss_Time>=150)
             {
                 No_Boss_Time=0;
-                int t=rnd(1,3);
-                if(t==1)  BOSS.heal();
-                if(t==2)  BOSS2.heal();
-                //if(t==1)  BOSS.heal();
+                int t=rnd(1,1);
+                if(t==1)  BOSS.heal(),CURBOSSx=BOSS.x/25+7,CURBOSSy=BOSS.y/40+7;
+                if(t==2)  BOSS2.heal(),CURBOSSx=BOSS2.x/25,CURBOSSy=BOSS2.y/40;
+                if(t==3)  BOSS3.heal(),CURBOSSx=BOSS3.x/25,CURBOSSy=BOSS3.y/40;
             }
             if(BOSS2.attack)
             {
                 A.move();
                 A.render();
+            }
+            if(BOSS3.attack)
+            {
+                int dem=0;
+                for(int i=0;i<=6;i++)
+                {
+                    if(FLAME[i].exist)
+                    {
+                        FLAME[i].move();
+                        FLAME[i].render();
+                    }
+                    else
+                    {
+                        dem++;
+                        FLAME[i].reset(i);
+                    }                }
+                if(dem==7)   BOSS3.status=1,BOSS3.stt=0,BOSS3.add=0,BOSS3.attack=0;
+            }
+            if(R.cast&&CURBOSSx&&CURBOSSy)
+            {
+                R.render();
+                R.move();
             }
             if(checkCollision(hitbox,Da1.get())||checkCollision(hitbox,Da2.get()))
             {
@@ -222,7 +245,8 @@ int main(int argc,char * argv[])
             }
             BOSS.bot();
             BOSS2.bot();
-            for(int i=1; i<=wizard.get_ammo(); i++)    Ammo[i].render(10+(i-1)*70,10);
+            BOSS3.bot();
+            for(int i=1; i<=wizard.get_ammo(); i++)    Ammo.render(10+(i-1)*70,10);
             reload++;
             if(reload>500)       wizard.add_ammo(),reload=0,CurrentBackground^=1;
             RenderText(ScoreStr,(int)Score,550,20,!CurrentBackground?Black:White);
@@ -236,7 +260,7 @@ int main(int argc,char * argv[])
             SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
             SDL_RenderClear(gRenderer);
             Background_Texture[CurrentBackground].render( scrollingOffset, 0 );
-            Background_Texture[CurrentBackground].render( scrollingOffset + Background_Texture[CurrentBackground].getWidth()-1, 0 );
+            Background_Texture[CurrentBackground].render( scrollingOffset + Background_Texture[CurrentBackground].getWidth(), 0 );
             Home.RePos(630,400);
             Da1.render(CurrentBackground);
             Da2.render(CurrentBackground);
@@ -251,7 +275,9 @@ int main(int argc,char * argv[])
             RenderText(HighScoreStr,HighScore,520,230,Black);
         }
         SDL_RenderPresent( gRenderer );
-        SDL_Delay(1000/60.0f);
+        int cur=SDL_GetTicks();
+        SDL_Delay(max((float)0.0,1000/60.0f-(cur-lastUPD)));
+        lastUPD=cur;
         //////
     }
     close();

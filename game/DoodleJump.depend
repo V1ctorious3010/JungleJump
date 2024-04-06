@@ -403,7 +403,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1712333766 source:e:\doodlejump\game\main.cpp
+1712434003 source:e:\doodlejump\game\main.cpp
 	<bits/stdc++.h>
 	<SDL.h>
 	<SDL_image.h>
@@ -417,7 +417,7 @@
 	<SDL.h>
 	<SDL_image.h>
 
-1712334700 e:\doodlejump\game\global.h
+1712434153 e:\doodlejump\game\global.h
 	<bits/stdc++.h>
 	<SDL.h>
 	<SDL_image.h>
@@ -427,13 +427,14 @@
 	"coin.h"
 	"boss.h"
 	"boss2.h"
+	"boss3.h"
 
 1708868357 e:\doodlejump\game\bar.h
 	<bits/stdc++.h>
 	<SDL.h>
 	<SDL_image.h>
 
-1712334578 e:\doodlejump\game\character.h
+1712429155 e:\doodlejump\game\character.h
 	<bits/stdc++.h>
 	<SDL.h>
 	"SDL_mixer.h"
@@ -890,11 +891,15 @@
 	<bits/stdc++.h>
 	<SDL.h>
 
-1712337156 e:\doodlejump\game\boss.h
+1712429480 e:\doodlejump\game\boss.h
 	<bits/stdc++.h>
 	<SDL.h>
 
-1712336619 e:\doodlejump\game\boss2.h
+1712429493 e:\doodlejump\game\boss2.h
+	<bits/stdc++.h>
+	<SDL.h>
+
+1712430197 e:\doodlejump\game\boss3.h
 	<bits/stdc++.h>
 	<SDL.h>
 

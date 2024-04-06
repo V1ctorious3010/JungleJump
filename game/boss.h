@@ -6,7 +6,6 @@ int rnd(int l,int r)
 {
     return l+rng()%(r-l+1);
 }
-bool BossAt2=0;
 bool BossAt1=0;
 struct dirtball
 {
@@ -14,16 +13,11 @@ struct dirtball
     int y=500;
     void Handle()
     {
-        if(BossAt2)
-        {
-            render();
-            move();
-        }
-        if(BossAt1)
-        {
-            render();
-            move();
-        }
+       if(BossAt1)
+       {
+           render();
+           move();
+       }
     }
     void reset()
     {
@@ -36,6 +30,7 @@ struct dirtball
 } Dirt;
 struct boss
 {
+    int xx,yy;
     int x,y;
     int status;
     int Rest=0;
@@ -52,11 +47,10 @@ struct boss
         stt=0;
         status=0;
         add=0;
-        HP=600;
-        BossAt1=BossAt2=0;
+        HP=500;
+        Rest=0;
     }
     void render_idle(int x);
-    void render_slashing(int x);
     void render_throwing(int x);
     void bot()
     {
@@ -64,7 +58,7 @@ struct boss
         //if(Rest>0)  status=0;
         if(Rest<=0)
         {
-            status=rnd(1,2);
+            status=1;
             stt=0;
             Rest=100;
         }

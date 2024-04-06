@@ -5,6 +5,14 @@ using namespace std;
 double GRAVITY=18;
 Mix_Chunk *JumpSound=NULL;
 Mix_Chunk *AttackSound=NULL;
+struct skill
+{
+    bool cast;
+    int x=240;int y=530;
+    void render();
+    void move();
+    void reset();
+}R;
 class fireball
 {
     double x;
@@ -61,16 +69,11 @@ public:
             case SDL_SCANCODE_W:
                 jump_pressed = true;
                 break;
-            case SDL_SCANCODE_D:
-                x_vel=200;
-                flip=SDL_FLIP_NONE;
-                break;
-            case SDL_SCANCODE_A:
-                x_vel=-700;
-                flip=SDL_FLIP_HORIZONTAL;
-                break;
             case SDL_SCANCODE_S:
                 GRAVITY=300;
+                break;
+            case SDL_SCANCODE_R:
+                if(ult_cooldown==1000) ult_cooldown=0,R.cast=1,R.reset();
                 break;
             case SDL_SCANCODE_J:
                 if (ammo == 3)
@@ -110,12 +113,6 @@ public:
                 break;
             case SDL_SCANCODE_S:
                 GRAVITY=18;
-                break;
-            case SDL_SCANCODE_D:
-                x_vel=0;
-                break;
-            case SDL_SCANCODE_A:
-                x_vel=0;
                 break;
             default:
                 break;
@@ -168,4 +165,5 @@ private:
     short status;
     bool attack[4]= {0,0,0,0};
     short ammo;
+    int ult_cooldown=1000;
 };

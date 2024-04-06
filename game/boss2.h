@@ -24,6 +24,7 @@ struct thunder
 } A;
 struct boss2
 {
+    int xx,yy;
     int x,y;
     int status,Rest=0,HP=0,add=0;
     bool attack=0;

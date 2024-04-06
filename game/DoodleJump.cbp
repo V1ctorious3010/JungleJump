@@ -45,6 +45,7 @@
 		<Unit filename="LTexture.h" />
 		<Unit filename="boss.h" />
 		<Unit filename="boss2.h" />
+		<Unit filename="boss3.h" />
 		<Unit filename="button.h" />
 		<Unit filename="character.h" />
 		<Unit filename="coin.h" />

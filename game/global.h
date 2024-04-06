@@ -9,16 +9,24 @@ using namespace std;
 #include"coin.h"
 #include"boss.h"
 #include"boss2.h"
+#include"boss3.h"
 vector<int>TYPE= {0,0,1};
 int VelX=0;
 int Move_down=0;
 const int deadY=660;
 SDL_Rect san= {0,600,800,10};
+int dx[]= {0,-1,1,0};
+int dy[]= {-1,0,0,1};
+int dd[21][41];
+int d[21][41];
+int prevx[41];
+int prevy[21];
 const int Width=1200;
 const int Height=740;
 SDL_Window *gWindow;
 SDL_Renderer *gRenderer;
-
+vector<int>Order= {0,1,2,3,4,5,6};
+vector<int>boss3_skill;
 nhanvat wizard;
 bool running=1;
 TTF_Font *gFont;
@@ -35,10 +43,13 @@ LTexture FireBall;
 LTexture ScoreText;
 LTexture HighScoreText;
 LTexture MenuBackground;
-LTexture IdleBoss[6],SlashingBoss[6],ThrowingBoss[6];
+LTexture IdleBoss[6],ThrowingBoss[6];
 LTexture IdleBoss2,AttackingBoss2[4];
+LTexture IdleBoss3,AttackingBoss3[5];
 LTexture DirtBall;
-LTexture Ammo[4];
+LTexture SPIRIT_FLAME;
+LTexture ultimate;
+LTexture Ammo;
 LTexture Title;
 Mix_Music *GameMusic=NULL;
 Mix_Chunk *BlastSound=NULL;
@@ -61,6 +72,12 @@ LTexture Gem;
 LTexture Gem1;
 SDL_Color Black= {0,0,0};
 SDL_Color White= {255,255,255};
+int CURBOSSx;
+int CURBOSSy;
+bool inside(int x,int y)
+{
+    return (x>=0&&x<=20&&y>=0&&y<=40);
+}
 void LTexture ::render(int x,int y,SDL_RendererFlip flip)
 {
     SDL_Rect tmp= {x,y,mWidth,mHeight};
@@ -106,45 +123,14 @@ bool LTexture::loadFromRenderedText( std::string textureText, SDL_Color textColo
 }
 void LoadTexture()
 {
-    if(!Background_Texture[0].LoadImage("bg2.png"))
-    {
-        cout<<"can't load bg";
-        return ;
-    }
-    if(!Background_Texture[1].LoadImage("bg3.png"))
-    {
-        cout<<"can't load bg";
-        return ;
-    }
-    if(!Board.LoadImage("bang.png"))
-    {
-        cout<<"can't load bang";
-        return ;
-    }
-    if(!MenuBackground.LoadImage("background2.png"))
-    {
-        cout<<"can't load menu bg";
-        return ;
-    }
-    if(!FireBall.LoadImage("fire/fire2.png"))
-    {
-        cout<<"can't load fire";
-        return ;
-    }
-    for(int i=1; i<=4; i++)
-    {
-        if(!Ammo[i].LoadImage("ammo.png"))   cout<<"Can't load ammo";
-    }
-    if(!Title.LoadImage("new_title.png"))
-    {
-        cout<<"can't load title";
-        return ;
-    }
-    if(!Tutorial_Texture.LoadImage("tutorial.png"))
-    {
-        cout<<"can't load tutor";
-        return ;
-    }
+    if(!Background_Texture[0].LoadImage("bg2.png")) cout<<"can't load bg";
+    if(!Background_Texture[1].LoadImage("bg3.png")) cout<<"can't load bg";
+    if(!Board.LoadImage("bang.png"))cout<<"can't load bang";
+    if(!MenuBackground.LoadImage("background2.png"))cout<<"can't load menu bg";
+    if(!FireBall.LoadImage("fire/fire2.png")) cout<<"can't load fire";
+    if(!Ammo.LoadImage("ammo.png"))   cout<<"Can't load ammo";
+    if(!Title.LoadImage("new_title.png"))cout<<"can't load title";
+    if(!Tutorial_Texture.LoadImage("tutorial.png"))  cout<<"can't load tutor";
     if(!Gem.LoadImage("ruby.png"))    cout<<"Can't load ruby"<<endl;
     if(!Gem1.LoadImage("diamond.png")) cout<<"Can't load diamond"<<endl;
     Character_Texture[1].LoadImage("run/run1.png");
@@ -174,15 +160,6 @@ void LoadTexture()
         tmp+=".png";
         if(!IdleBoss[i].LoadImage(tmp))  cout<<"CANT";
     }
-    s="Slashing/0_Golem_Slashing_00";
-    for(int i=0; i<=5; i++)
-    {
-        string tmp=s;
-        tmp+=to_string(i);
-        tmp+=".png";
-        // cout<<tmp<<endl;
-        if(!SlashingBoss[i].LoadImage(tmp)) cout<<"CANT";
-    }
     s="Throwing/0_Golem_Throwing_00";
     for(int i=0; i<=5; i++)
     {
@@ -191,7 +168,6 @@ void LoadTexture()
         tmp+=".png";
         ThrowingBoss[i].LoadImage(tmp);
     }
-    DirtBall.LoadImage("dirtball.png");
     bullet.LoadImage("boss2/Charge_1.png");
     s="boss2/Attack_";
     for(int i=1; i<=4; i++)
@@ -201,8 +177,22 @@ void LoadTexture()
         tmp+=".png";
         AttackingBoss2[i-1].LoadImage(tmp);
     }
-    if(!IdleBoss2.LoadImage("boss2/Idle1.png"));
 
+    s="boss3/boss3_at";
+    for(int i=0; i<=4; i++)
+    {
+        string tmp=s;
+        tmp+=to_string(i);
+        tmp+=".png";
+        AttackingBoss3[i].LoadImage(tmp);
+    }
+    DirtBall.LoadImage("dirtball.png");
+    SPIRIT_FLAME.LoadImage("boss3/spirit.png");
+    if(!IdleBoss2.LoadImage("boss2/Idle1.png"));
+    if(!IdleBoss3.LoadImage("boss3/Idle1.png")) cout<<"A";
+    if(!ultimate.LoadImage("Ultimate.png"))  cout<<"ULTI";
+    //chia map thanh cac o
+    //for(int i=1)
 }
 bool checkCollision( SDL_Rect a, SDL_Rect b )
 {
@@ -380,11 +370,6 @@ void boss::render_idle(int stt)
     int tmp=stt%6;
     IdleBoss[tmp].render(x,y);
 }
-void boss::render_slashing(int stt)
-{
-    int tmp=stt%6;
-    SlashingBoss[tmp].render(x,y);
-}
 void boss::render_throwing(int stt)
 {
     int tmp=stt%6;
@@ -397,29 +382,19 @@ void dirtball::render()
 
 void dirtball:: move()
 {
-    if(BossAt2)
-    {
-        x-=15;
-        if(x<0)     BossAt2=0,x=800,y=500;
-    }
-    if(BossAt1)
-    {
-        y+=10;
-        if(y>deadY)     BossAt1=0,x=800,y=500;
-    }
+    x-=15;
+    if(x<0)     x=800,y=500,BossAt1=0;
 }
 void boss::action()
 {
     //render_idle(stt);
     if(!status)   render_idle(stt);
-    if(status==1)   render_slashing(stt);
-    if(status==2)   render_throwing(stt);
+    if(status==1)  render_throwing(stt);
     add++;
     if(add>5)   stt++,add=0;
     if(stt==6)
     {
-        if(status==2)     BossAt2=1;
-        if(status==1)     BossAt1=1,Dirt= {wizard.getX(),0};
+        if(status==1)     BossAt1=1;
         if(status)  Rest=100;
         stt=0;
         add=0;
@@ -455,7 +430,7 @@ void boss2::action()
     if(!status)     render_idle(stt);
     if(status==1)   render_at(stt);
     add++;
-    if(add>7)   stt++,add=0;
+    if(add>6)   stt++,add=0;
     if(stt==4&&status==1)
     {
         BOSS2.attack=1;
@@ -474,3 +449,120 @@ void boss2::render_at(int stt)
     int tmp=stt%4;
     AttackingBoss2[tmp].render(x,y);
 }
+void boss3::action()
+{
+    if(!status)     render_idle();
+    if(status==1)   render_at(stt);
+    add++;
+    if(add>6)   stt++,add=0;
+    if(stt==5&&status==1)
+    {
+        BOSS3.attack=1;
+        random_shuffle(Order.begin(),Order.end());
+        boss3_skill.clear();
+        for(int i=0; i<=6; i++)    FLAME[i].exist=0;
+        for(int i=0; i<=3; i++)    boss3_skill.push_back(Order[i]);
+        for(int i=0; i<=3; i++)    FLAME[boss3_skill[i]].exist=1,FLAME[boss3_skill[i]].reset(boss3_skill[i]);
+        stt=0;
+        add=0;
+        status=0;
+    }
+}
+void boss3::render_idle()
+{
+    IdleBoss3.render(x,y);
+}
+void boss3::render_at(int stt)
+{
+    int tmp=stt%5;
+    AttackingBoss3[tmp].render(x,y);
+}
+void spirit_flame::move()
+{
+    x-=x_vel/60;
+    for (int i = 1; i <= 3; i++)
+    {
+        if(wizard.get_attack(i))
+        {
+            if (checkCollision(FIRE[i].get(),get()))
+            {
+                Mix_PlayChannel(-1,AttackSound,0);
+                exist=0;
+                wizard.cooldown(i);
+            }
+        }
+    }
+    if(x<0)   exist=0;
+}
+void spirit_flame::render()
+{
+    SPIRIT_FLAME.render(x,y);
+}
+void skill::render()
+{
+    ultimate.render(x,y);
+}
+void skill::move()
+{
+
+    for(int i=1; i<=20; i++) for(int j=0; j<=40; j++) a[i][j]=0;
+    for(int i=0; i<=6; i++)   if(FLAME[i].exist)       a[FLAME[i].x/40][FLAME[i].y/25]=1;
+    for(int i=1;i<=20; i++) for(int j=0;j<=40; j++) if(a[i][j]==1)   a[i][j-1]=1;
+    queue<pair<int,int>>q;
+    q.push({CURBOSSy,CURBOSSx});
+    cout<<CURBOSSy<< " "<<CURBOSSx<<endl;
+    memset(dd,0,sizeof dd);
+    memset(d,127,sizeof d);
+    int cnt=0;
+    d[CURBOSSy][CURBOSSx]=0;
+    dd[CURBOSSy][CURBOSSx]=1;
+    while(!q.empty())
+    {
+        int i=q.front().first;
+        int j=q.front().second;
+        q.pop();
+        cnt++;
+        for(int k=0; k<=3; k++)
+        {
+            int u=i+dx[k];
+            int v=j+dy[k];
+            if(!dd[u][v]&&inside(u,v)&&!a[u][v])
+            {
+                dd[u][v]=1;
+                q.push({u,v});
+                d[u][v]=d[i][j]+1;
+            }
+        }
+    }
+   /* for(int i=1;i<=20;i++)
+    {
+        for(int j=1;j<=40;j++)
+        {
+            cout<<d[i][j]<< " ";
+        }
+        cout<<endl;
+    }
+    cout<<endl;*/
+    for(int k=0; k<=3; k++)
+    {
+        int u=y/40-dx[k];
+        int v=x/25-dy[k];
+        if(d[u][v]==d[y/40][x/25]-1)
+        {
+            x=v*25;
+            y=u*40+25;
+           // cout<<u<< " "<<v<< " "<<y<<" "<<x<<endl;
+            break;
+        }
+    }
+    //x+=10;
+    if(x>=1200)    reset();
+}
+void skill::reset()
+{
+    x=wizard.getX();
+    y=wizard.getY();
+    //cout<<x<< " "<<y<<endl;
+
+}
+
