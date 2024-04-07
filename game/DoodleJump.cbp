@@ -43,6 +43,7 @@
 			<Add directory="../SDL_lib/SDL2_mixer-devel-2.0.1-mingw/SDL2_mixer-2.0.1/i686-w64-mingw32/lib" />
 		</Linker>
 		<Unit filename="LTexture.h" />
+		<Unit filename="blood.h" />
 		<Unit filename="button.h" />
 		<Unit filename="character.h" />
 		<Unit filename="coin.h" />

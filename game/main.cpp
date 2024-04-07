@@ -3,9 +3,9 @@ using namespace std;
 #include<SDL.h>
 #include<SDL_image.h>
 #include"global.h"
-#include"LTexture.h"
 #include<SDL_ttf.h>
 #include<SDL_mixer.h>
+#include"LTexture.h"
 int reload=0;
 string ScoreStr="Score :";
 string HighScoreStr="HighScore :";
@@ -82,11 +82,10 @@ int main(int argc,char * argv[])
     ifstream in;
     in.open("luugame.txt");
     int so_lg_dan, x_Da1, x_Da2;
-    in >> Score >> HighScore >> CurrentBackground >> x_Da1 >> x_Da2 >> so_lg_dan;
+    in >> Score >> HighScore >> CurrentBackground >> x_Da1 >> x_Da2 >> so_lg_dan >> blood;
     wizard.update_ammo(so_lg_dan);
     ofstream out;
     out.open("luugame.txt");
-
     if(!init())
     {
         cout<<"Can't init"<<endl;
@@ -96,6 +95,9 @@ int main(int argc,char * argv[])
     CucDa Da1(x_Da1);
     CucDa Da2(x_Da2);
     coin COIN;
+    for(int i = 0; i < 9; i++){
+        GOLD[i].change(-100,-100);
+    }
     Died=0;
     Play.reconstruct(1,450,293,300,75);
     LoadGame.reconstruct(4,450,393,300,75);
@@ -162,6 +164,7 @@ int main(int argc,char * argv[])
         }
         if(Rep)
         {
+            blood = 246;
             Score=0;
             CurrentBackground = 0;
             VaoGame=1;
@@ -185,10 +188,6 @@ int main(int argc,char * argv[])
             Tutorial.render();
             Exit.render();
             LoadGame.render();
-//            SDL_Rect fillRect = { 0, 0, 1200, 740 };
-//            SDL_SetRenderDrawColor( gRenderer, 0, 0, 0, 0 );
-//            SDL_RenderFillRect( gRenderer, &fillRect );
-//            SDL_RenderPresent( gRenderer );
         }
         if(HuongDan)
         {
@@ -203,19 +202,53 @@ int main(int argc,char * argv[])
         {
             SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
             SDL_RenderClear(gRenderer);
-            Da2.move();
-            Da1.move();
-            wizard.move();
-            COIN.move();
+
+
             Background_Texture[CurrentBackground].render( scrollingOffset, 0 );
             Background_Texture[CurrentBackground].render( scrollingOffset + Background_Texture[CurrentBackground].getWidth(), 0 );
-
             Da1.render(CurrentBackground);
             Da2.render(CurrentBackground);
             wizard.render();
             Pause.render();
             COIN.render();
+            SKILL.render();
+            for(int i = 0;i < 9;i++){
+                GOLD[i].render();
+            }
+
+//            Laze.render(810,0);
+//            Laze_gun_bottom.render(800,690);
+//            Laze_gun_top.render(800,0);
+
+            Da2.move();
+            Da1.move();
+            wizard.move();
+            COIN.move();
+            SKILL.move();
+            for(int i = 0;i < 9;i++){
+                GOLD[i].move();
+            }
+
+            wizard.wait_timeskill++;
+            if(wizard.wait_timeskill==1080){
+                SKILL.x = Width +100;
+                wizard.wait_timeskill=0;
+            }
+            if(wizard.activate_skill==1){
+                wizard.timeskill++;
+                if(wizard.timeskill==600){
+                    wizard.timeskill=0;
+                    wizard.activate_skill=0;
+                    SKILL.reset();
+                }
+            }
+            BloodBar.render(10, 10);
+            SDL_Rect mau = {71,24,blood,25};
+            SDL_SetRenderDrawColor( gRenderer, 0xFF, 0x00, 0x00, 0xFF );
+            SDL_RenderFillRect( gRenderer, &mau );
+
             SDL_Rect hitbox= {258,wizard.getY(),1,110};
+            SDL_Rect tia_laze={710,0,20,700};
             if(!bullet_on_screen)
             {
                 int n=rnd(1,1000);
@@ -229,6 +262,8 @@ int main(int argc,char * argv[])
                 {
                     //Mix_PlayChannel(-1,LoseSound,0);
                     //  Died=1;
+                    blood-=50;
+                    if (blood < 0) Died=1,blood=246;
                 }
                 if(A.x<0)   bullet_on_screen=0;
             }
@@ -236,14 +271,44 @@ int main(int argc,char * argv[])
             {
                 // Mix_PlayChannel(-1,LoseSound,0);
                 // Died=1;
+                blood -= 3;
+                if (blood < 0) Died=1,blood=246;
             }
             if(checkCollision(hitbox,COIN.get()))
             {
-
-                Score+=COIN.score;
+                if (COIN.t == 2){
+                    blood += COIN.upblood;
+                    if (blood > 246) blood = 246;
+                }
+                else Score+=COIN.score;
                 // Mix_PlayChannel(-1,GainSound,0);
                 COIN.reset();
             }
+            if(checkCollision(hitbox,SKILL.get())){
+                wizard.activate_skill=1;
+                SKILL.x = -100;
+            }
+            for(int i = 0; i <=9; i++){
+                if(checkCollision(hitbox,GOLD[i].get())){
+                    Score+=GOLD[i].score;
+                    GOLD[i].change(-100,-100);
+                }
+            }
+            if(SKILL.t == 3 && wizard.activate_skill==1){
+                if(checkCollision(tia_laze,Da1.get())){
+                    gold_number++;
+                    if(gold_number == 10) gold_number=0;
+                    GOLD[gold_number].change(Da1.x,Da1.y);
+                    Da1.x = -10;
+                }
+                if(checkCollision(tia_laze,Da2.get())){
+                    gold_number++;
+                    if(gold_number == 10) gold_number=0;
+                    GOLD[gold_number].change(Da2.x,Da2.y);
+                    Da2.x = -10;
+                }
+            }
+
             for (int i = 1; i <= 3; i++)
             {
                 if(wizard.get_attack(i))
@@ -259,20 +324,20 @@ int main(int argc,char * argv[])
                     }
                 }
             }
-            for(int i=1; i<=wizard.get_ammo(); i++)    Ammo[i].render(10+(i-1)*70,10);
+            for(int i=1; i<=wizard.get_ammo(); i++)    Ammo[i].render(10+(i-1)*70,55);
             RenderText(ScoreStr,(int)Score,550,20);
             reload++;
             if(reload>500)       wizard.add_ammo(),reload=0,CurrentBackground^=1;
             scrollingOffset-=ScrollSpeed;
             if( scrollingOffset <- Background_Texture[CurrentBackground].getWidth() )    scrollingOffset = 0;
-            if(ScrollSpeed>12)   ScrollSpeed=16;
+            //(ScrollSpeed>12)   ScrollSpeed=16;
         }
         if(PauseGame||Died)
         {
             SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
             SDL_RenderClear(gRenderer);
             Background_Texture[CurrentBackground].render( scrollingOffset, 0 );
-            Background_Texture[CurrentBackground].render( scrollingOffset + Background_Texture[CurrentBackground].getWidth()-3, 0 );
+            Background_Texture[CurrentBackground].render( scrollingOffset + Background_Texture[CurrentBackground].getWidth(), 0 );
             Home.RePos(630,400);
             Da1.render(CurrentBackground);
             Da2.render(CurrentBackground);
@@ -289,7 +354,7 @@ int main(int argc,char * argv[])
         SDL_RenderPresent( gRenderer );
         ofstream out("luugame.txt", ofstream::out | ofstream::trunc);
         HighScore=max(HighScore,Score);
-        out << Score << " " << HighScore << " " << CurrentBackground <<" "<< Da1.x << " " << Da2.x << " " << wizard.get_ammo();
+        out << Score << " " << HighScore << " " << CurrentBackground <<" "<< Da1.x << " " << Da2.x << " " << wizard.get_ammo() <<" "<<blood;
         SDL_Delay(1000/60.0f);
 
 

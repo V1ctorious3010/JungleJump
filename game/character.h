@@ -34,16 +34,24 @@ public:
 class nhanvat
 {
 public:
-
+    bool activate_skill;
+    int timeskill;
+    int wait_timeskill;
+    double mPosY, mPosX;
     const int character_WIDTH = 90;
     const int character_HEIGHT = 130;
     const int character_speed = 20;
     nhanvat()
     {
         mPosY=250,y_vel=0;
+        mPosX=240;
         jump_pressed=0;
-        can_jump=0;
+        tele_pressed=0;
+        check_Q=0;
         on_ground=0;
+        activate_skill=0;
+        timeskill=0;
+        wait_timeskill=600;
         add=0;
         status=1;
         ammo=3;
@@ -54,6 +62,10 @@ public:
         {
             switch (EV.key.keysym.scancode)
             {
+            case SDL_SCANCODE_Q:
+                if(check_Q==false&&tele_pressed==false)tele_pressed=true,check_Q=true;
+                else tele_pressed=false;
+                break;
             case SDL_SCANCODE_W:
                 jump_pressed = true;
                 break;
@@ -90,6 +102,10 @@ public:
         {
             switch (EV.key.keysym.scancode)
             {
+            case SDL_SCANCODE_Q:
+                tele_pressed=false;
+                check_Q=false;
+                break;
             case SDL_SCANCODE_W:
                 jump_pressed = false;
                 break;
@@ -130,16 +146,22 @@ public:
     void reset()
     {
         mPosY=250,y_vel=0;
+        mPosX=240;
         //ammo=3;
-        can_jump=0;
         jump_pressed=0;
+        tele_pressed=0;
+        check_Q=0;
         on_ground=0;
+        activate_skill=0;
+        timeskill = 0;
+        wait_timeskill=600;
     }
 private:
-    double mPosY;
+
     double y_vel;
     bool jump_pressed;
-    bool can_jump;
+    bool tele_pressed;
+    bool check_Q;
     bool on_ground;
     short add,add2;
     short status;

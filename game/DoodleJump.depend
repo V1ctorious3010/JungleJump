@@ -888,14 +888,14 @@
 	<bits/stdc++.h>
 	<SDL.h>
 
-1711621539 source:d:\c++\junglejump-main2603\junglejump-main\game\main.cpp
+1712481853 source:d:\c++\junglejump-main2603\junglejump-main\game\main.cpp
 	<bits/stdc++.h>
 	<SDL.h>
 	<SDL_image.h>
 	"global.h"
-	"LTexture.h"
 	<SDL_ttf.h>
 	<SDL_mixer.h>
+	"LTexture.h"
 
 1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl.h
 	"SDL_main.h"
@@ -1296,7 +1296,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1711621539 d:\c++\junglejump-main2603\junglejump-main\game\global.h
+1712496474 d:\c++\junglejump-main2603\junglejump-main\game\global.h
 	<bits/stdc++.h>
 	<SDL.h>
 	<SDL_image.h>
@@ -1310,7 +1310,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1711619758 d:\c++\junglejump-main2603\junglejump-main\game\character.h
+1712427298 d:\c++\junglejump-main2603\junglejump-main\game\character.h
 	<bits/stdc++.h>
 	<SDL.h>
 	"SDL_mixer.h"
@@ -1334,7 +1334,7 @@
 	<SDL.h>
 	<SDL_image.h>
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\game\coin.h
+1712495842 d:\c++\junglejump-main2603\junglejump-main\game\coin.h
 	<bits/stdc++.h>
 	<SDL.h>
 
