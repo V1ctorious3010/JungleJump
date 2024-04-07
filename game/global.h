@@ -15,8 +15,8 @@ int VelX=0;
 int Move_down=0;
 const int deadY=660;
 SDL_Rect san= {0,600,800,10};
-int dx[]= {0,-1,1,0};
-int dy[]= {-1,0,0,1};
+int dx[]= {0,-1,1,0,1,-1,1,-1};
+int dy[]= {-1,0,0,1,-1,1,1,-1};
 int dd[21][41];
 int d[21][41];
 int prevx[41];
@@ -26,7 +26,7 @@ const int Height=740;
 SDL_Window *gWindow;
 SDL_Renderer *gRenderer;
 vector<int>Order= {0,1,2,3,4,5,6};
-vector<int>boss3_skill;
+vector<int>boss3_Ulti;
 nhanvat wizard;
 bool running=1;
 TTF_Font *gFont;
@@ -48,6 +48,7 @@ LTexture IdleBoss2,AttackingBoss2[4];
 LTexture IdleBoss3,AttackingBoss3[5];
 LTexture DirtBall;
 LTexture SPIRIT_FLAME;
+LTexture SPIRIT_SHIELD;
 LTexture ultimate;
 LTexture Ammo;
 LTexture Title;
@@ -55,6 +56,7 @@ Mix_Music *GameMusic=NULL;
 Mix_Chunk *BlastSound=NULL;
 Mix_Chunk *GainSound=NULL;
 Mix_Chunk *LoseSound=NULL;
+LTexture ULTI;
 double down_speed=1.5;
 int VELOCITY=0;
 double SPEED=240;
@@ -187,10 +189,18 @@ void LoadTexture()
         AttackingBoss3[i].LoadImage(tmp);
     }
     DirtBall.LoadImage("dirtball.png");
-    SPIRIT_FLAME.LoadImage("boss3/spirit.png");
+    SPIRIT_FLAME.LoadImage("spirit.png");
+    SPIRIT_SHIELD.LoadImage("spirit2.png");
     if(!IdleBoss2.LoadImage("boss2/Idle1.png"));
     if(!IdleBoss3.LoadImage("boss3/Idle1.png")) cout<<"A";
     if(!ultimate.LoadImage("Ultimate.png"))  cout<<"ULTI";
+    ULTI.LoadImage("Ultimate2.png");
+    SHIELD[0].y=8*40;
+    SHIELD[1].y=5*40+20;
+    SHIELD[2].y=9*40;
+    SHIELD[0].x=34*25;
+    SHIELD[1].x=35*25;
+    SHIELD[2].x=35*25;
     //chia map thanh cac o
     //for(int i=1)
 }
@@ -457,12 +467,13 @@ void boss3::action()
     if(add>6)   stt++,add=0;
     if(stt==5&&status==1)
     {
+        shield^=1;
         BOSS3.attack=1;
         random_shuffle(Order.begin(),Order.end());
-        boss3_skill.clear();
+        boss3_Ulti.clear();
         for(int i=0; i<=6; i++)    FLAME[i].exist=0;
-        for(int i=0; i<=3; i++)    boss3_skill.push_back(Order[i]);
-        for(int i=0; i<=3; i++)    FLAME[boss3_skill[i]].exist=1,FLAME[boss3_skill[i]].reset(boss3_skill[i]);
+        for(int i=0; i<=3; i++)    boss3_Ulti.push_back(Order[i]);
+        for(int i=0; i<=3; i++)    FLAME[boss3_Ulti[i]].exist=1,FLAME[boss3_Ulti[i]].reset(boss3_Ulti[i]);
         stt=0;
         add=0;
         status=0;
@@ -494,23 +505,59 @@ void spirit_flame::move()
     }
     if(x<0)   exist=0;
 }
+
+void spirit_shield::smth()
+{
+    for (int i = 1; i <= 3; i++)
+    {
+        if(wizard.get_attack(i))
+        {
+            if (checkCollision(FIRE[i].get(),get()))
+            {
+                Mix_PlayChannel(-1,AttackSound,0);
+                wizard.cooldown(i);
+            }
+        }
+    }
+}
 void spirit_flame::render()
 {
     SPIRIT_FLAME.render(x,y);
 }
-void skill::render()
+void spirit_shield::render()
+{
+    SPIRIT_SHIELD.render(x,y);
+}
+void Ulti::render()
 {
     ultimate.render(x,y);
 }
-void skill::move()
+void Ulti::move()
 {
-
-    for(int i=1; i<=20; i++) for(int j=0; j<=40; j++) a[i][j]=0;
-    for(int i=0; i<=6; i++)   if(FLAME[i].exist)       a[FLAME[i].x/40][FLAME[i].y/25]=1;
-    for(int i=1;i<=20; i++) for(int j=0;j<=40; j++) if(a[i][j]==1)   a[i][j-1]=1;
+    if(SHIELD[0].exist)
+    {
+        a[7][34]=1,a[7][33]=1;
+        a[8][34]=1,a[8][33]=1;
+        a[9][34]=1,a[9][33]=1;
+        a[10][34]=1,a[10][33]=1;
+        a[11][34]=1,a[11][33]=1;
+        a[12][34]=1,a[12][33]=1;
+    }
+    else
+    {
+        a[7][34]=0,a[7][33]=0;
+        a[8][34]=0,a[8][33]=0;
+        a[9][34]=0,a[9][33]=0;
+        a[10][34]=0,a[10][33]=0;
+        a[11][34]=0,a[11][33]=0;
+        a[12][34]=0,a[12][33]=0;
+    }
+    if(SHIELD[1].exist)   a[5][35]=1;
+    else a[5][35]=0;
+    if(SHIELD[2].exist)    a[9][35]=1;
+    else a[9][35]=0;
     queue<pair<int,int>>q;
     q.push({CURBOSSy,CURBOSSx});
-    cout<<CURBOSSy<< " "<<CURBOSSx<<endl;
     memset(dd,0,sizeof dd);
     memset(d,127,sizeof d);
     int cnt=0;
@@ -522,28 +569,19 @@ void skill::move()
         int j=q.front().second;
         q.pop();
         cnt++;
-        for(int k=0; k<=3; k++)
+        for(int k=0; k<=7; k++)
         {
             int u=i+dx[k];
             int v=j+dy[k];
-            if(!dd[u][v]&&inside(u,v)&&!a[u][v])
+            if(!dd[u][v]&&inside(u,v)&&a[u][v]!=1)
             {
                 dd[u][v]=1;
-                q.push({u,v});
                 d[u][v]=d[i][j]+1;
+                q.push({u,v});
             }
         }
     }
-   /* for(int i=1;i<=20;i++)
-    {
-        for(int j=1;j<=40;j++)
-        {
-            cout<<d[i][j]<< " ";
-        }
-        cout<<endl;
-    }
-    cout<<endl;*/
-    for(int k=0; k<=3; k++)
+    for(int k=0; k<=7; k++)
     {
         int u=y/40-dx[k];
         int v=x/25-dy[k];
@@ -551,18 +589,48 @@ void skill::move()
         {
             x=v*25;
             y=u*40+25;
-           // cout<<u<< " "<<v<< " "<<y<<" "<<x<<endl;
             break;
         }
     }
-    //x+=10;
-    if(x>=1200)    reset();
+    return;
 }
-void skill::reset()
+void Ulti::reset()
 {
     x=wizard.getX();
     y=wizard.getY();
     //cout<<x<< " "<<y<<endl;
-
 }
-
+void dirtball::reset()
+{
+    x=800;
+    y=wizard.getY()+50;
+}
+void boss3::hurt()
+{
+    if(checkCollision(R.get(),get()))
+    {
+        shield^=1;
+        Mix_PlayChannel(-1,AttackSound,0);
+        R.reset();
+        HP-=300;
+        R.cast=0;
+    }
+    for (int i = 1; i <= 3; i++)
+    {
+        if(wizard.get_attack(i))
+        {
+            if (checkCollision(FIRE[i].get(),get()))
+            {
+                Mix_PlayChannel(-1,AttackSound,0);
+                wizard.cooldown(i);
+                HP-=100;
+                shield^=1;
+                R.reset();
+                R.cast=0;
+            }
+        }
+    }
+    SDL_Rect HP_Bar={x+45,y-10,HP/5,15};
+    SDL_SetRenderDrawColor(gRenderer,0xFF,0x00,0x00,0xFF);
+    SDL_RenderFillRect (gRenderer,&HP_Bar);
+}

@@ -38,7 +38,8 @@ struct boss2
         stt=0;
         status=0;
         add=0;
-        HP=600;
+        HP=630;
+        Rest=100;
         attack=0;
     }
     void render_idle(int x);

@@ -77,7 +77,7 @@ void close()
 int main(int argc,char * argv[])
 {
     ios_base::sync_with_stdio(0);
-   // freopen("x.out","w",stdout);
+    // freopen("x.out","w",stdout);
     if(!init())
     {
         cout<<"Can't init"<<endl;
@@ -191,10 +191,10 @@ int main(int argc,char * argv[])
             if(No_Boss_Time>=150)
             {
                 No_Boss_Time=0;
-                int t=rnd(1,1);
+                int t=rnd(3,3);
                 if(t==1)  BOSS.heal(),CURBOSSx=BOSS.x/25+7,CURBOSSy=BOSS.y/40+7;
                 if(t==2)  BOSS2.heal(),CURBOSSx=BOSS2.x/25,CURBOSSy=BOSS2.y/40;
-                if(t==3)  BOSS3.heal(),CURBOSSx=BOSS3.x/25,CURBOSSy=BOSS3.y/40;
+                if(t==3)  BOSS3.heal(),CURBOSSx=40,CURBOSSy=7;
             }
             if(BOSS2.attack)
             {
@@ -204,7 +204,7 @@ int main(int argc,char * argv[])
             if(BOSS3.attack)
             {
                 int dem=0;
-                for(int i=0;i<=6;i++)
+                for(int i=0; i<=6; i++)
                 {
                     if(FLAME[i].exist)
                     {
@@ -215,7 +215,8 @@ int main(int argc,char * argv[])
                     {
                         dem++;
                         FLAME[i].reset(i);
-                    }                }
+                    }
+                }
                 if(dem==7)   BOSS3.status=1,BOSS3.stt=0,BOSS3.add=0,BOSS3.attack=0;
             }
             if(R.cast&&CURBOSSx&&CURBOSSy)
@@ -246,11 +247,12 @@ int main(int argc,char * argv[])
             BOSS.bot();
             BOSS2.bot();
             BOSS3.bot();
+
             for(int i=1; i<=wizard.get_ammo(); i++)    Ammo.render(10+(i-1)*70,10);
+            if(wizard.get_cooldownR()>=100)     ULTI.render(10+3*70,10);
             reload++;
             if(reload>500)       wizard.add_ammo(),reload=0,CurrentBackground^=1;
             RenderText(ScoreStr,(int)Score,550,20,!CurrentBackground?Black:White);
-
             scrollingOffset-=ScrollSpeed;
             if( scrollingOffset <- Background_Texture[CurrentBackground].getWidth() )    scrollingOffset = 0;
             if(ScrollSpeed>12)   ScrollSpeed=16;

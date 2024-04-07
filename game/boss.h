@@ -19,11 +19,7 @@ struct dirtball
            move();
        }
     }
-    void reset()
-    {
-        x=800;
-        y=500;
-    }
+    void reset();
     void render();
     void move();
 

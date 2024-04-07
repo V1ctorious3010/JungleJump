@@ -5,13 +5,17 @@ using namespace std;
 double GRAVITY=18;
 Mix_Chunk *JumpSound=NULL;
 Mix_Chunk *AttackSound=NULL;
-struct skill
+struct Ulti
 {
     bool cast;
     int x=240;int y=530;
     void render();
     void move();
     void reset();
+    SDL_Rect get()
+    {
+        return {x,y,25,25};
+    }
 }R;
 class fireball
 {
@@ -62,6 +66,7 @@ public:
     }
     void handleEvent( SDL_Event &EV)
     {
+        ult_cooldown++;
         if(EV.type== SDL_KEYDOWN)
         {
             switch (EV.key.keysym.scancode)
@@ -73,7 +78,7 @@ public:
                 GRAVITY=300;
                 break;
             case SDL_SCANCODE_R:
-                if(ult_cooldown==1000) ult_cooldown=0,R.cast=1,R.reset();
+                if(ult_cooldown>=10) ult_cooldown=0,R.cast=1,R.reset();
                 break;
             case SDL_SCANCODE_J:
                 if (ammo == 3)
@@ -153,6 +158,10 @@ public:
         can_jump=0;
         jump_pressed=0;
         on_ground=0;
+    }
+    int get_cooldownR()
+    {
+         return ult_cooldown;
     }
 private:
     double mPosY,mPosX;
