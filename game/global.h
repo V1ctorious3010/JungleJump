@@ -25,20 +25,25 @@ const int Width=1200;
 const int Height=740;
 SDL_Window *gWindow;
 SDL_Renderer *gRenderer;
+
 vector<int>Order= {0,1,2,3,4,5,6};
 vector<int>boss3_Ulti;
 nhanvat wizard;
+skill SKILL;
+coin GOLD[10];
+int gold_number=-1;
 bool running=1;
 TTF_Font *gFont;
 bool PauseGame=0;
 bool Died=0;
+int blood = 246;
 bool Rep;
 ///
+LTexture BloodBar;
 LTexture Character_Texture[9];
 LTexture Tutorial_Texture;
 LTexture Background_Texture[3];
 LTexture bullet;
-LTexture st1,st2;
 LTexture FireBall;
 LTexture ScoreText;
 LTexture HighScoreText;
@@ -72,10 +77,20 @@ bool ShowMenu=1;
 int CurrentBackground;
 LTexture Gem;
 LTexture Gem1;
+LTexture Heart;
+LTexture Skill;
+LTexture Cloud;
+LTexture Teleport;
+LTexture Position_teleport;
+LTexture Laze_gun_bottom;
+LTexture Laze_gun_top;
+LTexture Laze;
+LTexture Gold;
 SDL_Color Black= {0,0,0};
 SDL_Color White= {255,255,255};
 int CURBOSSx;
 int CURBOSSy;
+bool Choitiep=0,bullet_on_screen=0;
 bool inside(int x,int y)
 {
     return (x>=0&&x<=20&&y>=0&&y<=40);
@@ -133,8 +148,35 @@ void LoadTexture()
     if(!Ammo.LoadImage("ammo.png"))   cout<<"Can't load ammo";
     if(!Title.LoadImage("new_title.png"))cout<<"can't load title";
     if(!Tutorial_Texture.LoadImage("tutorial.png"))  cout<<"can't load tutor";
-    if(!Gem.LoadImage("ruby.png"))    cout<<"Can't load ruby"<<endl;
-    if(!Gem1.LoadImage("diamond.png")) cout<<"Can't load diamond"<<endl;
+    if(!BloodBar.LoadImage("bloodbar.png"))
+    {
+        cout<<"can't load bloodbar";
+        return ;
+    }
+    if(!Heart.LoadImage("traitim.png"))
+    {
+        cout<<"can't load heart";
+        return ;
+    }
+    if(!Skill.LoadImage("skill.png"))
+    {
+        cout<<"can't load skill";
+        return ;
+    }
+    if(!Cloud.LoadImage("cloud.png"))
+    {
+        cout<<"can't load cloud";
+        return ;
+    }
+    Teleport.LoadImage("teleport.png");
+    Position_teleport.LoadImage("position_teleport.png");
+    Laze_gun_bottom.LoadImage("laze_gun_bottom.png");
+    Laze_gun_top.LoadImage("laze_gun_top.png");
+    Gold.LoadImage("gold.png");
+    Laze.LoadImage("laze.png");
+
+     if(!Gem.LoadImage("bronze.png"))    cout<<"Can't load ruby"<<endl;
+    if(!Gem1.LoadImage("sliver.png")) cout<<"Can't load diamond"<<endl;
     Character_Texture[1].LoadImage("run/run1.png");
     Character_Texture[2].LoadImage("run/run2.png");
     Character_Texture[3].LoadImage("run/run3.png");
@@ -226,45 +268,120 @@ bool checkCollision( SDL_Rect a, SDL_Rect b )
 }
 void nhanvat::move()
 {
-    mPosX+=x_vel/60;
-    if(mPosX<20)   mPosX=20;
-    if(mPosX>800)   mPosX=800;
+    ult_cooldown++;
 
-    if(!on_ground)  y_vel += GRAVITY;
-    if (jump_pressed&&can_jump)
-    {
-        GRAVITY=18;
-        Mix_PlayChannel(-1,JumpSound,0);
-        on_ground=0;
-        can_jump = false;
-        y_vel = -700;
+    if(activate_skill==0||SKILL.t==3){
+        if(mPosX>240){
+            mPosX-=5;
+        }
+        if(mPosX<240){
+            mPosX=240;
+        }
+        SKILL.mPosX_skill2=240+150;
+        if(!on_ground)  y_vel += GRAVITY;
+        if (jump_pressed && on_ground)
+        {
+            Mix_PlayChannel(-1,JumpSound,0);
+            on_ground=0;
+            y_vel = -700;
+        }
+        double foot=mPosY+129;
+        double nxtfoot=mPosY+y_vel/60+130;
+        if(foot<=deadY&&nxtfoot>=deadY)
+        {
+            mPosY=deadY-character_HEIGHT;
+            y_vel=0;
+            on_ground=1;
+        }
+        else on_ground=0;
+        mPosY+= y_vel/60;
     }
-    double foot=mPosY+129;
-    double nxtfoot=mPosY+y_vel/60+130;
-    if(foot<=deadY&&nxtfoot>=deadY)
-    {
-        mPosY=deadY-character_HEIGHT;
-        y_vel=0;
-        can_jump=1;
-        on_ground=1;
+    if (activate_skill==1){
+        if(SKILL.t==1){
+            if(!on_ground){
+                mPosY+=5;
+            }
+            if(jump_pressed){
+                mPosY-=15;
+                on_ground=0;
+            }
+
+            double foot=mPosY+129;
+            double nxtfoot=mPosY+5+130;
+            if(foot<=deadY&&nxtfoot>=deadY)
+            {
+                mPosY=deadY-character_HEIGHT;
+                on_ground=1;
+            }
+            else{
+                on_ground=0;
+                Cloud.render(270,mPosY+119);
+            }
+        }
+        else if(SKILL.t==2){
+            if(tele_pressed==true){
+                if(SKILL.mPosX_skill2<850){
+                    mPosX=SKILL.mPosX_skill2;
+                    mPosY=SKILL.mPosY_skill2-70;//do lech anh
+                    SKILL.mPosX_skill2+=150;
+                    tele_pressed=false;
+                }
+                else{
+                    mPosY=SKILL.mPosY_skill2-70;
+                    tele_pressed=false;
+                }
+            }
+            if(mPosX>240){
+                mPosX-=5;
+                SKILL.mPosX_skill2-=5;
+            }
+            if(mPosX<240){
+                mPosX=240;
+                SKILL.mPosX_skill2=mPosX+150;
+            }
+        }
+        else if(SKILL.t==3){
+            if(SKILL.mPosY_top_skill3==0){
+                Laze.render(710,0);
+            }
+            Laze_gun_bottom.render(SKILL.mPosX_bottom_skill3,SKILL.mPosY_bottom_skill3);
+            Laze_gun_top.render(SKILL.mPosX_top_skill3,SKILL.mPosY_top_skill3);
+            if(SKILL.mPosY_top_skill3 > 0){
+                SKILL.mPosY_top_skill3-=15;
+                SKILL.mPosY_bottom_skill3+=15;
+            }
+            if(SKILL.mPosY_top_skill3 < 0){
+                SKILL.mPosY_top_skill3 = 0;
+                SKILL.mPosY_bottom_skill3 = 690;
+            }
+
+        }
     }
-    else on_ground=0,can_jump=0;
-    mPosY+= y_vel/60;
 }
+
 
 void nhanvat::render()
 {
-    add+=1;
-    if(add==5)        add=0,status=(status+1)%8;
-    if(!status)       status++;
-    if(PauseGame)
-    {
-
+    if(SKILL.t==2 && activate_skill==1){
+        Teleport.render(mPosX,mPosY);
+        Position_teleport.render(SKILL.mPosX_skill2,SKILL.mPosY_skill2);
+        SKILL.mPosY_skill2+=SKILL.skill2_vel;
+        if(SKILL.mPosY_skill2+50>=deadY) SKILL.skill2_vel=-7;
+        if(SKILL.mPosY_skill2<=0) SKILL.skill2_vel=7;
     }
-    else
-    {
-        if(on_ground)     Character_Texture[status].render(mPosX,mPosY,flip);
-        else    Character_Texture[0].render(mPosX,mPosY,flip);
+    else{
+        add+=1;
+        if(add==5)        add=0,status=(status+1)%8;
+        if(!status)       status++;
+        if(PauseGame)
+        {
+
+        }
+        else
+        {
+            if(on_ground)     Character_Texture[status].render(mPosX,mPosY);
+            else    Character_Texture[0].render(mPosX,mPosY);
+        }
     }
 }
 struct CucDa
@@ -345,16 +462,19 @@ void Button::Upd()
 }
 coin::coin()
 {
-    t=rnd(0,1);
+    t=rate_coin[rnd(0,9)];
     x=Width+100;
     y=400;
     if(t==1)   score=50;
     if(t==0)   score=25;
+    if(t==2)   upblood = 80;
 }
 void coin::render()
 {
     if(t==0)    Gem.render(x,y);
     if(t==1)    Gem1.render(x,y);
+    if(t==2)    Heart.render(x,y);
+    if(t==3)    Gold.render(x,y);
 }
 void coin::move()
 {
@@ -364,9 +484,16 @@ void coin::move()
 void coin::reset()
 {
     x=Width+100;
-    t=rnd(0,1);
+    t=rate_coin[rnd(0,9)];
     if(t==1)   score=50;
     if(t==0)   score=25;
+    if(t==2)   upblood=80;
+}
+void coin::change(int a, int b){
+    x = a;
+    y = b;
+    score = 100;
+    t = 3;
 }
 coin::coin(int a,int c)
 {
@@ -374,6 +501,7 @@ coin::coin(int a,int c)
     t=c;
     if(t==1)   score=50;
     if(t==0)   score=25;
+    if(t==2)   upblood=80;
 }
 void boss::render_idle(int stt)
 {
@@ -630,7 +758,33 @@ void boss3::hurt()
             }
         }
     }
-    SDL_Rect HP_Bar={x+45,y-10,HP/5,15};
+    SDL_Rect HP_Bar= {x+45,y-10,HP/5,15};
     SDL_SetRenderDrawColor(gRenderer,0xFF,0x00,0x00,0xFF);
     SDL_RenderFillRect (gRenderer,&HP_Bar);
+}
+skill::skill(){
+    t = number_skill[rnd(0,3)];
+    x = -100;
+    y = 400;
+    mPosY_skill2 = 400;//vi an skill o vi tri y = 400
+    mPosX_skill2 = wizard.mPosX+150;
+    skill2_vel=7;
+    mPosX_top_skill3 = 700, mPosY_top_skill3 = 363;
+    mPosX_bottom_skill3=700, mPosY_bottom_skill3=400;
+}
+void skill::render(){
+    Skill.render(x,y);
+}
+void skill::move(){
+    x-=ScrollSpeed;
+}
+void skill::reset(){
+    t = number_skill[rnd(0,3)];
+    x = -100;
+    y = 400;
+    mPosY_skill2 = 400;//vi an skill o vi tri y = 400
+    mPosX_skill2 = wizard.mPosX+150;
+    skill2_vel=7;
+    mPosX_top_skill3=700, mPosY_top_skill3=326;
+    mPosX_bottom_skill3=700, mPosY_bottom_skill3=363;
 }
