@@ -86,11 +86,13 @@ LTexture Laze_gun_bottom;
 LTexture Laze_gun_top;
 LTexture Laze;
 LTexture Gold;
+LTexture portal;
 SDL_Color Black= {0,0,0};
 SDL_Color White= {255,255,255};
 int CURBOSSx;
 int CURBOSSy;
 bool Choitiep=0,bullet_on_screen=0;
+int PortalY=0;
 bool inside(int x,int y)
 {
     return (x>=0&&x<=20&&y>=0&&y<=40);
@@ -168,6 +170,7 @@ void LoadTexture()
         cout<<"can't load cloud";
         return ;
     }
+    portal.LoadImage("portal.png");
     Teleport.LoadImage("teleport.png");
     Position_teleport.LoadImage("position_teleport.png");
     Laze_gun_bottom.LoadImage("laze_gun_bottom.png");
@@ -358,8 +361,6 @@ void nhanvat::move()
         }
     }
 }
-
-
 void nhanvat::render()
 {
     if(SKILL.t==2 && activate_skill==1){
@@ -571,6 +572,8 @@ void boss2::action()
     if(add>6)   stt++,add=0;
     if(stt==4&&status==1)
     {
+        A.y=wizard.getY()+40;
+        PortalY=wizard.getY()-20;
         BOSS2.attack=1;
         Rest=100;
         stt=0;
@@ -717,6 +720,7 @@ void Ulti::move()
         {
             x=v*25;
             y=u*40+25;
+            if(!d[u][v]) R.cast=0;
             break;
         }
     }

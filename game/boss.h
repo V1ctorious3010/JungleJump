@@ -22,6 +22,10 @@ struct dirtball
     void reset();
     void render();
     void move();
+    SDL_Rect get()
+    {
+        return {x,y,100,100};
+    }
 
 } Dirt;
 struct boss

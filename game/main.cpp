@@ -243,13 +243,14 @@ int main(int argc,char * argv[])
             if(No_Boss_Time>=150)
             {
                 No_Boss_Time=0;
-                int t=rnd(2,2);
+                int t=rnd(1,3);
                 if(t==1)  BOSS.heal(),CURBOSSx=BOSS.x/25+7,CURBOSSy=BOSS.y/40+7;
                 if(t==2)  BOSS2.heal(),CURBOSSx=BOSS2.x/25,CURBOSSy=BOSS2.y/40;
                 if(t==3)  BOSS3.heal(),CURBOSSx=40,CURBOSSy=7;
             }
             if(BOSS2.attack)
             {
+                portal.render(900,PortalY);
                 A.move();
                 A.render();
             }
@@ -294,31 +295,54 @@ int main(int argc,char * argv[])
                 // Mix_PlayChannel(-1,GainSound,0);
                 COIN.reset();
             }
-             if(checkCollision(hitbox,SKILL.get())){
+            if(checkCollision(hitbox,SKILL.get()))
+            {
                 wizard.activate_skill=1;
                 SKILL.x = -100;
             }
-            for(int i = 0; i <=9; i++){
-                if(checkCollision(hitbox,GOLD[i].get())){
+            for(int i = 0; i <=9; i++)
+            {
+                if(checkCollision(hitbox,GOLD[i].get()))
+                {
                     Score+=GOLD[i].score;
                     GOLD[i].change(-100,-100);
                 }
             }
-            if(SKILL.t == 3 && wizard.activate_skill==1){
-                if(checkCollision(tia_laze,Da1.get())){
+            if(SKILL.t == 3 && wizard.activate_skill==1)
+            {
+                if(checkCollision(tia_laze,Da1.get()))
+                {
                     gold_number++;
                     if(gold_number == 10) gold_number=0;
                     GOLD[gold_number].change(Da1.x,Da1.y);
                     Da1.x = -10;
                 }
-                if(checkCollision(tia_laze,Da2.get())){
+                if(checkCollision(tia_laze,Da2.get()))
+                {
                     gold_number++;
                     if(gold_number == 10) gold_number=0;
                     GOLD[gold_number].change(Da2.x,Da2.y);
                     Da2.x = -10;
                 }
             }
-
+            for(int i=0; i<=7; i++)
+            {
+                if(FLAME[i].exist)   if(checkCollision(hitbox,FLAME[i].get()))
+                {
+                        blood -= 10;
+                        if (blood < 0) Died=1,blood=246;
+                }
+            }
+            if(checkCollision(A.get(),hitbox))
+            {
+                blood -= 15;
+                if (blood < 0) Died=1,blood=246;
+            }
+            if(checkCollision(Dirt.get(),hitbox))
+            {
+                blood-=10;
+                if (blood < 0) Died=1,blood=246;
+            }
             for(int i=1; i<=3; i++)
             {
                 if(wizard.get_attack(i))
