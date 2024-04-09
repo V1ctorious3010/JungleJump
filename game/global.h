@@ -771,7 +771,7 @@ skill::skill(){
     x = -100;
     y = 400;
     mPosY_skill2 = 400;//vi an skill o vi tri y = 400
-    mPosX_skill2 = wizard.mPosX+150;
+    mPosX_skill2 = wizard.mPosX+80;
     skill2_vel=7;
     mPosX_top_skill3 = 700, mPosY_top_skill3 = 363;
     mPosX_bottom_skill3=700, mPosY_bottom_skill3=400;
@@ -787,7 +787,7 @@ void skill::reset(){
     x = -100;
     y = 400;
     mPosY_skill2 = 400;//vi an skill o vi tri y = 400
-    mPosX_skill2 = wizard.mPosX+150;
+    mPosX_skill2 = wizard.mPosX+80;
     skill2_vel=7;
     mPosX_top_skill3=700, mPosY_top_skill3=326;
     mPosX_bottom_skill3=700, mPosY_bottom_skill3=363;
