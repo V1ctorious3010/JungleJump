@@ -3,21 +3,19 @@ using namespace std;
 #include<SDL.h>
 #include<SDL_image.h>
 #include"global.h"
+#include"LTexture.h"
 #include<SDL_ttf.h>
 #include<SDL_mixer.h>
-#include"LTexture.h"
 int reload=0;
 string ScoreStr="Score :";
 string HighScoreStr="HighScore :";
-
-void RenderText(string &s,int score,int x,int y)
+int32_t lastUPD=0.0;
+int No_Boss_Time=0;
+void RenderText(string &s,int score,int x,int y,SDL_Color &X)
 {
     string tmp=s;
     tmp+=to_string(score);
-    SDL_Color textColor;
-    if (CurrentBackground == 0) textColor = {0,0,0};
-    else textColor = {255,255,255};
-    if(!ScoreText.loadFromRenderedText(tmp,textColor))
+    if(!ScoreText.loadFromRenderedText(tmp,X))
     {
         printf( "Failed to render text texture!\n");
     }
@@ -61,8 +59,7 @@ void close()
     //Free loaded images
     for(int i=0; i<=7; i++)  Character_Texture[i].free();
     Background_Texture[CurrentBackground].free();
-    for(int j=0; j<=1; j++)   bullet[j].free();
-    for(int i=1; i<=4; i++)    Ammo[i].free();
+    for(int i=1; i<=4; i++)    Ammo.free();
     ScoreText.free();
     FireBall.free();
     //Destroy window
@@ -79,6 +76,8 @@ void close()
 }
 int main(int argc,char * argv[])
 {
+    ios_base::sync_with_stdio(0);
+    // freopen("x.out","w",stdout);
     ifstream in;
     in.open("luugame.txt");
     int so_lg_dan, x_Da1, x_Da2;
@@ -95,13 +94,16 @@ int main(int argc,char * argv[])
     CucDa Da1(x_Da1);
     CucDa Da2(x_Da2);
     coin COIN;
-    for(int i = 0; i < 9; i++){
+    for(int i = 0; i <= 99; i++)
+    {
+        GOLD[i].t=3;
         GOLD[i].change(-100,-100);
+        GOLD[i].score = 100;
     }
     Died=0;
     Play.reconstruct(1,450,293,300,75);
     LoadGame.reconstruct(4,450,393,300,75);
-    Tutorial.reconstruct(8,450,493,300,75);
+    Tutorial.reconstruct(8,453,493,300,75);
     Exit.reconstruct(0,450,593,300,75);
     Pause.reconstruct(3,1200-60,10,50,50);
     Resume.reconstruct(6,570,400,50,50);
@@ -114,14 +116,11 @@ int main(int argc,char * argv[])
     Mix_PlayMusic(GameMusic,-1);
     while(running)
     {
-        //cout<<PauseGame<<endl;
         while(SDL_PollEvent(&EV))
         {
             if(EV.type==SDL_QUIT)
             {
-//                in.close();
-//                out.close();
-                running = 0;
+                return 0;
             }
             if(HuongDan)
             {
@@ -132,7 +131,15 @@ int main(int argc,char * argv[])
                 Play.HandleEvent(EV);
                 Exit.HandleEvent(EV);
                 Tutorial.HandleEvent(EV);
-                LoadGame.HandleEvent(EV);
+                SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+                SDL_RenderClear(gRenderer);
+                MenuBackground.render(0,0);
+                Title.render(190,50);
+                Play.render();
+                Tutorial.render();
+                Exit.render();
+                LoadGame.render();
+
             }
             if(PauseGame)
             {
@@ -142,7 +149,6 @@ int main(int argc,char * argv[])
             }
             if(VaoGame&&!PauseGame&&!Died)         //dang choi
             {
-
                 wizard.handleEvent(EV);
                 Pause.HandleEvent(EV);
             }
@@ -178,17 +184,6 @@ int main(int argc,char * argv[])
             Rep=0;
             reload=0;
         }
-        if(ShowMenu)
-        {
-            SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
-            SDL_RenderClear(gRenderer);
-            MenuBackground.render(0,0);
-            Title.render(190,50);
-            Play.render();
-            Tutorial.render();
-            Exit.render();
-            LoadGame.render();
-        }
         if(HuongDan)
         {
             SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
@@ -202,8 +197,6 @@ int main(int argc,char * argv[])
         {
             SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
             SDL_RenderClear(gRenderer);
-
-
             Background_Texture[CurrentBackground].render( scrollingOffset, 0 );
             Background_Texture[CurrentBackground].render( scrollingOffset + Background_Texture[CurrentBackground].getWidth(), 0 );
             Da1.render(CurrentBackground);
@@ -212,31 +205,30 @@ int main(int argc,char * argv[])
             Pause.render();
             COIN.render();
             SKILL.render();
-            for(int i = 0;i < 9;i++){
+            for(int i = 0; i <= 99; i++)
+            {
                 GOLD[i].render();
             }
-
-//            Laze.render(810,0);
-//            Laze_gun_bottom.render(800,690);
-//            Laze_gun_top.render(800,0);
-
             Da2.move();
             Da1.move();
             wizard.move();
             COIN.move();
             SKILL.move();
-            for(int i = 0;i < 9;i++){
+            for(int i = 0; i <= 99; i++)
+            {
                 GOLD[i].move();
             }
-
             wizard.wait_timeskill++;
-            if(wizard.wait_timeskill==1080){
+            if(wizard.wait_timeskill==1080)
+            {
                 SKILL.x = Width +100;
                 wizard.wait_timeskill=0;
             }
-            if(wizard.activate_skill==1){
+            if(wizard.activate_skill==1)
+            {
                 wizard.timeskill++;
-                if(wizard.timeskill==600){
+                if(wizard.timeskill==600)
+                {
                     wizard.timeskill=0;
                     wizard.activate_skill=0;
                     SKILL.reset();
@@ -246,37 +238,58 @@ int main(int argc,char * argv[])
             SDL_Rect mau = {71,24,blood,25};
             SDL_SetRenderDrawColor( gRenderer, 0xFF, 0x00, 0x00, 0xFF );
             SDL_RenderFillRect( gRenderer, &mau );
-
-            SDL_Rect hitbox= {258,wizard.getY(),1,110};
-            SDL_Rect tia_laze={710,0,20,700};
-            if(!bullet_on_screen)
+            SDL_Rect tia_laze= {710,0,20,700};
+            SDL_Rect hitbox= {wizard.getX(),wizard.getY(),1,110};
+            bool has_boss=(BOSS.HP>0)||(BOSS2.HP>0)||(BOSS3.HP>0);
+            if(!has_boss)  No_Boss_Time++,CURBOSSx=0,CURBOSSy=0;
+            if(No_Boss_Time>=150)
             {
-                int n=rnd(1,1000);
-                if(n>998)     A.reset(),bullet_on_screen=1;
+                No_Boss_Time=0;
+                int t=rnd(1,3);
+                if(t==1)  BOSS.heal(),CURBOSSx=BOSS.x/25+7,CURBOSSy=BOSS.y/40+7;
+                if(t==2)  BOSS2.heal(),CURBOSSx=BOSS2.x/25,CURBOSSy=BOSS2.y/40;
+                if(t==3)  BOSS3.heal(),CURBOSSx=40,CURBOSSy=7;
             }
-            if(bullet_on_screen)
+            if(BOSS2.attack)
             {
+                portal.render(900,PortalY);
                 A.move();
                 A.render();
-                if(checkCollision(hitbox,A.get()))
+            }
+            if(BOSS3.attack)
+            {
+                int dem=0;
+                for(int i=0; i<=6; i++)
                 {
-                    //Mix_PlayChannel(-1,LoseSound,0);
-                    //  Died=1;
-                    blood-=50;
-                    if (blood < 0) Died=1,blood=246;
+                    if(FLAME[i].exist)
+                    {
+                        FLAME[i].move();
+                        FLAME[i].render();
+                    }
+                    else
+                    {
+                        dem++;
+                        FLAME[i].reset(i);
+                    }
                 }
-                if(A.x<0)   bullet_on_screen=0;
+                if(dem==7)   BOSS3.status=1,BOSS3.stt=0,BOSS3.add=0,BOSS3.attack=0;
+            }
+            if(R.cast&&CURBOSSx&&CURBOSSy&&has_boss)
+            {
+                R.render();
+                R.move();
             }
             if(checkCollision(hitbox,Da1.get())||checkCollision(hitbox,Da2.get()))
             {
-                // Mix_PlayChannel(-1,LoseSound,0);
-                // Died=1;
+                //Mix_PlayChannel(-1,LoseSound,0);
                 blood -= 3;
                 if (blood < 0) Died=1,blood=246;
             }
             if(checkCollision(hitbox,COIN.get()))
             {
-                if (COIN.t == 2){
+
+                if (COIN.t == 2)
+                {
                     blood += COIN.upblood;
                     if (blood > 246) blood = 246;
                 }
@@ -284,53 +297,98 @@ int main(int argc,char * argv[])
                 // Mix_PlayChannel(-1,GainSound,0);
                 COIN.reset();
             }
-            if(checkCollision(hitbox,SKILL.get())){
+            if(checkCollision(hitbox,SKILL.get()))
+            {
                 wizard.activate_skill=1;
                 SKILL.x = -100;
             }
-            for(int i = 0; i <=9; i++){
-                if(checkCollision(hitbox,GOLD[i].get())){
+            for(int i = 0; i <= 99; i++)
+            {
+                if(checkCollision(hitbox,GOLD[i].get()))
+                {
                     Score+=GOLD[i].score;
                     GOLD[i].change(-100,-100);
                 }
             }
-            if(SKILL.t == 3 && wizard.activate_skill==1){
-                if(checkCollision(tia_laze,Da1.get())){
+            if(SKILL.t == 3 && wizard.activate_skill==1)
+            {
+                if(checkCollision(tia_laze,Da1.get()))
+                {
                     gold_number++;
-                    if(gold_number == 10) gold_number=0;
+                    if(gold_number == 100) gold_number=0;
                     GOLD[gold_number].change(Da1.x,Da1.y);
                     Da1.x = -10;
                 }
-                if(checkCollision(tia_laze,Da2.get())){
+                if(checkCollision(tia_laze,Da2.get()))
+                {
                     gold_number++;
-                    if(gold_number == 10) gold_number=0;
+                    if(gold_number == 100) gold_number=0;
                     GOLD[gold_number].change(Da2.x,Da2.y);
                     Da2.x = -10;
                 }
-            }
+                if(checkCollision(tia_laze, Dirt.get())){
+                    gold_number++;
+                    if(gold_number == 100) gold_number=0;
+                    GOLD[gold_number].change(Dirt.x,Dirt.y);
+                    Dirt.x = 800;
+                    BossAt1 = 0;
+                }
+                if(checkCollision(tia_laze, A.get())){
+                    gold_number++;
+                    if(gold_number == 100) gold_number=0;
+                    GOLD[gold_number].change(A.x,A.y);
+                    A.reset();
+                    BOSS2.attack=0;
+                }
+                for (int i = 0; i <= 9; i++){
+                    if(checkCollision(tia_laze, FLAME[i].get())&&FLAME[i].exist){
+                        gold_number++;
+                        if(gold_number == 100) gold_number=0;
+                        GOLD[gold_number].change(FLAME[i].x,FLAME[i].y);
+                        FLAME[i].reset(i);
+                        FLAME[i].exist=0;
+                    }
+                }
 
-            for (int i = 1; i <= 3; i++)
+            }
+            for(int i=0; i<=7; i++)
+            {
+                if(FLAME[i].exist)   if(checkCollision(hitbox,FLAME[i].get()))
+                {
+                        blood -= 1;
+                        if (blood < 0) Died=1,blood=246;
+                }
+            }
+            if(checkCollision(A.get(),hitbox))
+            {
+                blood -= 15;
+                if (blood < 0) Died=1,blood=246;
+            }
+            if(checkCollision(Dirt.get(),hitbox))
+            {
+                blood-=10;
+                if (blood < 0) Died=1,blood=246;
+            }
+            for(int i=1; i<=3; i++)
             {
                 if(wizard.get_attack(i))
                 {
                     FIRE[i].move();
                     FIRE[i].render(i);
-                    if (bullet_on_screen&&checkCollision(FIRE[i].get(),A.get()))
-                    {
-                        Mix_PlayChannel(-1,AttackSound,0);
-                        A.reset(),bullet_on_screen=0;
-                        wizard.cooldown(i);
-                        Score+=100;
-                    }
                 }
             }
-            for(int i=1; i<=wizard.get_ammo(); i++)    Ammo[i].render(10+(i-1)*70,55);
-            RenderText(ScoreStr,(int)Score,550,20);
+            BOSS.bot();
+            BOSS2.bot();
+            BOSS3.bot();
+
+            for(int i=1; i<=wizard.get_ammo(); i++)    Ammo.render(10+(i-1)*70,55);
+            if(wizard.get_cooldownR()>=100)     ULTI.render(10+3*70,55);
             reload++;
             if(reload>500)       wizard.add_ammo(),reload=0,CurrentBackground^=1;
+            RenderText(ScoreStr,(int)Score,550,20,!CurrentBackground?Black:White);
             scrollingOffset-=ScrollSpeed;
             if( scrollingOffset <- Background_Texture[CurrentBackground].getWidth() )    scrollingOffset = 0;
-            //(ScrollSpeed>12)   ScrollSpeed=16;
+            if(ScrollSpeed>12)   ScrollSpeed=16;
         }
         if(PauseGame||Died)
         {
@@ -342,26 +400,24 @@ int main(int argc,char * argv[])
             Da1.render(CurrentBackground);
             Da2.render(CurrentBackground);
             if(PauseGame)  wizard.render();
-            if(bullet_on_screen)  A.render();
+            if(BOSS2.attack)  A.render();
             Board.render(400,100);
             HighScore=max(HighScore,Score);
             if(Died)Replay.render();
             else if(PauseGame) Resume.render();
             Home.render();
-            RenderText(ScoreStr,Score,545,300);
-            RenderText(HighScoreStr,HighScore,520,230);
+            RenderText(ScoreStr,Score,545,300,Black);
+            RenderText(HighScoreStr,HighScore,520,230,Black);
         }
         SDL_RenderPresent( gRenderer );
+        int cur=SDL_GetTicks();
         ofstream out("luugame.txt", ofstream::out | ofstream::trunc);
         HighScore=max(HighScore,Score);
         out << Score << " " << HighScore << " " << CurrentBackground <<" "<< Da1.x << " " << Da2.x << " " << wizard.get_ammo() <<" "<<blood;
-        SDL_Delay(1000/60.0f);
-
-
+        SDL_Delay(max((float)0.0,1000/60.0f-(cur-lastUPD)));
+        lastUPD=cur;
         //////
     }
     close();
-    in.close();
-    out.close();
     return 0;
 }

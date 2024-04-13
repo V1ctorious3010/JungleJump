@@ -403,7 +403,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1711385919 source:e:\doodlejump\game\main.cpp
+1712508151 source:e:\doodlejump\game\main.cpp
 	<bits/stdc++.h>
 	<SDL.h>
 	<SDL_image.h>
@@ -412,12 +412,12 @@
 	<SDL_ttf.h>
 	<SDL_mixer.h>
 
-1710079905 e:\doodlejump\game\ltexture.h
+1712499701 e:\doodlejump\game\ltexture.h
 	<bits/stdc++.h>
 	<SDL.h>
 	<SDL_image.h>
 
-1711386164 e:\doodlejump\game\global.h
+1712595669 e:\doodlejump\game\global.h
 	<bits/stdc++.h>
 	<SDL.h>
 	<SDL_image.h>
@@ -425,13 +425,16 @@
 	"character.h"
 	"button.h"
 	"coin.h"
+	"boss.h"
+	"boss2.h"
+	"boss3.h"
 
 1708868357 e:\doodlejump\game\bar.h
 	<bits/stdc++.h>
 	<SDL.h>
 	<SDL_image.h>
 
-1711376383 e:\doodlejump\game\character.h
+1712503332 e:\doodlejump\game\character.h
 	<bits/stdc++.h>
 	<SDL.h>
 	"SDL_mixer.h"
@@ -448,7 +451,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1711373600 e:\doodlejump\game\button.h
+1712499701 e:\doodlejump\game\button.h
 	<SDL.h>
 	<bits/stdc++.h>
 	"LTexture.h"
@@ -884,20 +887,32 @@
 	"begin_code.h"
 	"close_code.h"
 
-1711384262 e:\doodlejump\game\coin.h
+1712500457 e:\doodlejump\game\coin.h
 	<bits/stdc++.h>
 	<SDL.h>
 
-1712481853 source:d:\c++\junglejump-main2603\junglejump-main\game\main.cpp
+1712508124 e:\doodlejump\game\boss.h
+	<bits/stdc++.h>
+	<SDL.h>
+
+1712499701 e:\doodlejump\game\boss2.h
+	<bits/stdc++.h>
+	<SDL.h>
+
+1712499701 e:\doodlejump\game\boss3.h
+	<bits/stdc++.h>
+	<SDL.h>
+
+1713031346 source:d:\c++\junglejump-main1404\game\main.cpp
 	<bits/stdc++.h>
 	<SDL.h>
 	<SDL_image.h>
 	"global.h"
+	"LTexture.h"
 	<SDL_ttf.h>
 	<SDL_mixer.h>
-	"LTexture.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl.h
 	"SDL_main.h"
 	"SDL_stdinc.h"
 	"SDL_assert.h"
@@ -935,12 +950,12 @@
 	"begin_code.h"
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_main.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_main.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_stdinc.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_stdinc.h
 	"SDL_config.h"
 	<sys/types.h>
 	<stdio.h>
@@ -972,29 +987,29 @@
 	<stdio.h>
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_config.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_config.h
 	"SDL_platform.h"
 	<winsdkver.h>
 	<sdkddkver.h>
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_platform.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_platform.h
 	<AvailabilityMacros.h>
 	<TargetConditionals.h>
 	<winapifamily.h>
 	"begin_code.h"
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\begin_code.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\begin_code.h
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\close_code.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\close_code.h
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_assert.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_assert.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	<signal.h>
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_atomic.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_atomic.h
 	"SDL_stdinc.h"
 	"SDL_platform.h"
 	"begin_code.h"
@@ -1002,7 +1017,7 @@
 	<mbarrier.h>
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_audio.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_audio.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_endian.h"
@@ -1012,12 +1027,12 @@
 	"begin_code.h"
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_error.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_error.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_endian.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_endian.h
 	"SDL_stdinc.h"
 	<intrin.h>
 	<endian.h>
@@ -1026,13 +1041,13 @@
 	"begin_code.h"
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_mutex.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_mutex.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"begin_code.h"
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_thread.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_thread.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_atomic.h"
@@ -1043,18 +1058,18 @@
 	"begin_code.h"
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_rwops.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_rwops.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"begin_code.h"
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_clipboard.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_clipboard.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_cpuinfo.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_cpuinfo.h
 	"SDL_stdinc.h"
 	<intrin.h>
 	<intrin.h>
@@ -1076,7 +1091,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_events.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_events.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_video.h"
@@ -1090,7 +1105,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_video.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_video.h
 	"SDL_stdinc.h"
 	"SDL_pixels.h"
 	"SDL_rect.h"
@@ -1098,13 +1113,13 @@
 	"begin_code.h"
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_pixels.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_pixels.h
 	"SDL_stdinc.h"
 	"SDL_endian.h"
 	"begin_code.h"
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_rect.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_rect.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_pixels.h"
@@ -1112,7 +1127,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_surface.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_surface.h
 	"SDL_stdinc.h"
 	"SDL_pixels.h"
 	"SDL_rect.h"
@@ -1121,11 +1136,11 @@
 	"begin_code.h"
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_blendmode.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_blendmode.h
 	"begin_code.h"
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_keyboard.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_keyboard.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_keycode.h"
@@ -1133,21 +1148,21 @@
 	"begin_code.h"
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_keycode.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_keycode.h
 	"SDL_stdinc.h"
 	"SDL_scancode.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_scancode.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_scancode.h
 	"SDL_stdinc.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_mouse.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_mouse.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_video.h"
 	"begin_code.h"
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_joystick.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_joystick.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_guid.h"
@@ -1155,13 +1170,13 @@
 	"begin_code.h"
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_guid.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_guid.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"begin_code.h"
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_gamecontroller.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_gamecontroller.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_rwops.h"
@@ -1170,17 +1185,17 @@
 	"begin_code.h"
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_sensor.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_sensor.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"begin_code.h"
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_quit.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_quit.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_gesture.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_gesture.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_video.h"
@@ -1188,70 +1203,70 @@
 	"begin_code.h"
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_touch.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_touch.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_video.h"
 	"begin_code.h"
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_filesystem.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_filesystem.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_haptic.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_haptic.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_joystick.h"
 	"begin_code.h"
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_hidapi.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_hidapi.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_hints.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_hints.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_loadso.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_loadso.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"begin_code.h"
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_log.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_log.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_messagebox.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_messagebox.h
 	"SDL_stdinc.h"
 	"SDL_video.h"
 	"begin_code.h"
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_metal.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_metal.h
 	"SDL_video.h"
 	"begin_code.h"
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_power.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_power.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_render.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_render.h
 	"SDL_stdinc.h"
 	"SDL_rect.h"
 	"SDL_video.h"
 	"begin_code.h"
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_shape.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_shape.h
 	"SDL_stdinc.h"
 	"SDL_pixels.h"
 	"SDL_rect.h"
@@ -1260,7 +1275,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_system.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_system.h
 	"SDL_stdinc.h"
 	"SDL_keyboard.h"
 	"SDL_render.h"
@@ -1268,35 +1283,35 @@
 	"begin_code.h"
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_timer.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_timer.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"begin_code.h"
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_version.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_version.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_locale.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_locale.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"begin_code.h"
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_misc.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2-devel-2.30.0-mingw\sdl2-2.30.0\i686-w64-mingw32\include\sdl2\sdl_misc.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2_image-2.8.2\i686-w64-mingw32\include\sdl2\sdl_image.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2_image-2.8.2\i686-w64-mingw32\include\sdl2\sdl_image.h
 	"SDL.h"
 	"SDL_version.h"
 	"begin_code.h"
 	"close_code.h"
 
-1712496474 d:\c++\junglejump-main2603\junglejump-main\game\global.h
+1713031646 d:\c++\junglejump-main1404\game\global.h
 	<bits/stdc++.h>
 	<SDL.h>
 	<SDL_image.h>
@@ -1304,18 +1319,21 @@
 	"character.h"
 	"button.h"
 	"coin.h"
+	"boss.h"
+	"boss2.h"
+	"boss3.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2_ttf-2.22.0\i686-w64-mingw32\include\sdl2\sdl_ttf.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2_ttf-2.22.0\i686-w64-mingw32\include\sdl2\sdl_ttf.h
 	"SDL.h"
 	"begin_code.h"
 	"close_code.h"
 
-1712427298 d:\c++\junglejump-main2603\junglejump-main\game\character.h
+1712615752 d:\c++\junglejump-main1404\game\character.h
 	<bits/stdc++.h>
 	<SDL.h>
 	"SDL_mixer.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\sdl_lib\sdl2_mixer-devel-2.0.1-mingw\sdl2_mixer-2.0.1\i686-w64-mingw32\include\sdl2\sdl_mixer.h
+1712615752 d:\c++\junglejump-main1404\sdl_lib\sdl2_mixer-devel-2.0.1-mingw\sdl2_mixer-2.0.1\i686-w64-mingw32\include\sdl2\sdl_mixer.h
 	"SDL_stdinc.h"
 	"SDL_rwops.h"
 	"SDL_audio.h"
@@ -1324,17 +1342,29 @@
 	"begin_code.h"
 	"close_code.h"
 
-1711561548 d:\c++\junglejump-main2603\junglejump-main\game\button.h
+1712615752 d:\c++\junglejump-main1404\game\button.h
 	<SDL.h>
 	<bits/stdc++.h>
 	"LTexture.h"
 
-1711335842 d:\c++\junglejump-main2603\junglejump-main\game\ltexture.h
+1712615752 d:\c++\junglejump-main1404\game\ltexture.h
 	<bits/stdc++.h>
 	<SDL.h>
 	<SDL_image.h>
 
-1712495842 d:\c++\junglejump-main2603\junglejump-main\game\coin.h
+1713028804 d:\c++\junglejump-main1404\game\coin.h
+	<bits/stdc++.h>
+	<SDL.h>
+
+1712615752 d:\c++\junglejump-main1404\game\boss.h
+	<bits/stdc++.h>
+	<SDL.h>
+
+1712615752 d:\c++\junglejump-main1404\game\boss2.h
+	<bits/stdc++.h>
+	<SDL.h>
+
+1712615752 d:\c++\junglejump-main1404\game\boss3.h
 	<bits/stdc++.h>
 	<SDL.h>
 

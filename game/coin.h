@@ -22,7 +22,7 @@ struct coin
     }
 };
 
-int number_skill[100]={1,2,2,3};
+int number_skill[100]={3,3,3,3};
 // 1 la ki nang bay
 // 2 la ki nang teleport
 // 3 la tia laze bien object to gold

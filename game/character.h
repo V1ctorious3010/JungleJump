@@ -30,7 +30,19 @@ public:
         y=T;
     }
 } FIRE[4];
-
+struct Ulti
+{
+    bool cast;
+    int x=240;
+    int y=530;
+    void render();
+    void move();
+    void reset();
+    SDL_Rect get()
+    {
+        return {x,y,25,25};
+    }
+} R;
 class nhanvat
 {
 public:
@@ -71,6 +83,9 @@ public:
                 break;
             case SDL_SCANCODE_S:
                 GRAVITY=300;
+                break;
+            case SDL_SCANCODE_K:
+                if(ult_cooldown>=100) ult_cooldown=0,R.cast=1,R.reset();
                 break;
             case SDL_SCANCODE_J:
                 if (ammo == 3)
@@ -135,8 +150,13 @@ public:
     {
         return ammo;
     }
-    void update_ammo(int a){
+    void update_ammo(int a)
+    {
         ammo = a;
+    }
+    int getX()
+    {
+        return mPosX;
     }
     void add_ammo()
     {
@@ -156,10 +176,16 @@ public:
         timeskill = 0;
         wait_timeskill=600;
     }
+    int get_cooldownR()
+    {
+        return ult_cooldown;
+    }
 private:
 
     double y_vel;
+    double x_vel;
     bool jump_pressed;
+    SDL_RendererFlip flip=SDL_FLIP_NONE;
     bool tele_pressed;
     bool check_Q;
     bool on_ground;
@@ -167,4 +193,5 @@ private:
     short status;
     bool attack[4]= {0,0,0,0};
     short ammo;
+    int ult_cooldown=1000;
 };
