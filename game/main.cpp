@@ -94,9 +94,11 @@ int main(int argc,char * argv[])
     CucDa Da1(x_Da1);
     CucDa Da2(x_Da2);
     coin COIN;
-    for(int i = 0; i < 9; i++)
+    for(int i = 0; i <= 99; i++)
     {
+        GOLD[i].t=3;
         GOLD[i].change(-100,-100);
+        GOLD[i].score = 100;
     }
     Died=0;
     Play.reconstruct(1,450,293,300,75);
@@ -104,9 +106,9 @@ int main(int argc,char * argv[])
     Tutorial.reconstruct(8,453,493,300,75);
     Exit.reconstruct(0,450,593,300,75);
     Pause.reconstruct(3,1200-60,10,50,50);
-    Resume.reconstruct(6,570,400,50,50);
-    Replay.reconstruct(7,570,400,50,50);
-    Home.reconstruct(9,1200-60,10,50,50);
+    Resume.reconstruct(6,510,400,100,100);
+    Replay.reconstruct(7,510,400,100,100);
+    Home.reconstruct(9,1200-60,10,100,100);
     ///////////////////
     SDL_SetRenderDrawColor(gRenderer,36,121,126,0xFF);
     SDL_RenderClear(gRenderer);
@@ -114,6 +116,7 @@ int main(int argc,char * argv[])
     Mix_PlayMusic(GameMusic,-1);
     while(running)
     {
+        //HighScore=0;
         while(SDL_PollEvent(&EV))
         {
             if(EV.type==SDL_QUIT)
@@ -137,7 +140,7 @@ int main(int argc,char * argv[])
                 Tutorial.render();
                 Exit.render();
                 LoadGame.render();
-
+                LoadGame.HandleEvent(EV);
             }
             if(PauseGame)
             {
@@ -161,7 +164,6 @@ int main(int argc,char * argv[])
             VaoGame=1;
             ScrollSpeed=5;
             scrollingOffset=5;
-            bullet_on_screen=0;
             GRAVITY=18;
             Choitiep=0;
             reload=0;
@@ -174,7 +176,6 @@ int main(int argc,char * argv[])
             VaoGame=1;
             ScrollSpeed=5;
             scrollingOffset=5;
-            bullet_on_screen=0;
             Da1.reset(Width+20),Da2.reset(Width+400);
             wizard.reset();
             wizard.update_ammo(3);
@@ -203,7 +204,7 @@ int main(int argc,char * argv[])
             Pause.render();
             COIN.render();
             SKILL.render();
-            for(int i = 0; i < 9; i++)
+            for(int i = 0; i <= 99; i++)
             {
                 GOLD[i].render();
             }
@@ -212,7 +213,7 @@ int main(int argc,char * argv[])
             wizard.move();
             COIN.move();
             SKILL.move();
-            for(int i = 0; i < 9; i++)
+            for(int i = 0; i <= 99; i++)
             {
                 GOLD[i].move();
             }
@@ -220,10 +221,15 @@ int main(int argc,char * argv[])
             if(wizard.wait_timeskill==1080)
             {
                 SKILL.x = Width +100;
+                if(checkCollision(SKILL.get(),COIN.get()))
+                {
+                    SKILL.x +=100;
+                }
                 wizard.wait_timeskill=0;
             }
             if(wizard.activate_skill==1)
             {
+
                 wizard.timeskill++;
                 if(wizard.timeskill==600)
                 {
@@ -240,7 +246,7 @@ int main(int argc,char * argv[])
             SDL_Rect hitbox= {wizard.getX(),wizard.getY(),1,110};
             bool has_boss=(BOSS.HP>0)||(BOSS2.HP>0)||(BOSS3.HP>0);
             if(!has_boss)  No_Boss_Time++,CURBOSSx=0,CURBOSSy=0;
-            if(No_Boss_Time>=150)
+            if(No_Boss_Time>=300)
             {
                 No_Boss_Time=0;
                 int t=rnd(1,3);
@@ -300,7 +306,7 @@ int main(int argc,char * argv[])
                 wizard.activate_skill=1;
                 SKILL.x = -100;
             }
-            for(int i = 0; i <=9; i++)
+            for(int i = 0; i <= 99; i++)
             {
                 if(checkCollision(hitbox,GOLD[i].get()))
                 {
@@ -313,25 +319,53 @@ int main(int argc,char * argv[])
                 if(checkCollision(tia_laze,Da1.get()))
                 {
                     gold_number++;
-                    if(gold_number == 10) gold_number=0;
+                    if(gold_number == 100) gold_number=0;
                     GOLD[gold_number].change(Da1.x,Da1.y);
-                    Da1.x = -10;
+                    Da1.x = -500;
                 }
                 if(checkCollision(tia_laze,Da2.get()))
                 {
                     gold_number++;
-                    if(gold_number == 10) gold_number=0;
+                    if(gold_number == 100) gold_number=0;
                     GOLD[gold_number].change(Da2.x,Da2.y);
-                    Da2.x = -10;
+                    Da2.x = -500;
                 }
+                if(checkCollision(tia_laze, Dirt.get()))
+                {
+                    gold_number++;
+                    if(gold_number == 100) gold_number=0;
+                    GOLD[gold_number].change(Dirt.x,Dirt.y);
+                    Dirt.x = 800;
+                    BossAt1 = 0;
+                }
+                if(checkCollision(tia_laze, A.get()))
+                {
+                    gold_number++;
+                    if(gold_number == 100) gold_number=0;
+                    GOLD[gold_number].change(A.x,A.y);
+                    A.reset();
+                    BOSS2.attack=0;
+                }
+                for (int i = 0; i <= 9; i++)
+                {
+                    if(checkCollision(tia_laze, FLAME[i].get())&&FLAME[i].exist)
+                    {
+                        gold_number++;
+                        if(gold_number == 100) gold_number=0;
+                        GOLD[gold_number].change(FLAME[i].x,FLAME[i].y);
+                        FLAME[i].reset(i);
+                        FLAME[i].exist=0;
+                    }
+                }
+
             }
             for(int i=0; i<=7; i++)
             {
                 if(FLAME[i].exist)   if(checkCollision(hitbox,FLAME[i].get()))
-                {
-                        blood -= 10;
+                    {
+                        blood -= 1;
                         if (blood < 0) Died=1,blood=246;
-                }
+                    }
             }
             if(checkCollision(A.get(),hitbox))
             {
@@ -354,7 +388,26 @@ int main(int argc,char * argv[])
             BOSS.bot();
             BOSS2.bot();
             BOSS3.bot();
+            if(B.exist)
+            {
+                B.render();
+                B.move();
 
+                if(checkCollision(B.get(),hitbox))
+                {
+                    blood-=10;
+                    if (blood < 0) Died=1,blood=246;
+                }
+            }
+            else if(!has_boss)
+            {
+                B.time++;
+                if(B.time>100)
+                {
+                    B.time=0;
+                    B.exist=1;
+                }
+            }
             for(int i=1; i<=wizard.get_ammo(); i++)    Ammo.render(10+(i-1)*70,55);
             if(wizard.get_cooldownR()>=100)     ULTI.render(10+3*70,55);
             reload++;
@@ -362,7 +415,6 @@ int main(int argc,char * argv[])
             RenderText(ScoreStr,(int)Score,550,20,!CurrentBackground?Black:White);
             scrollingOffset-=ScrollSpeed;
             if( scrollingOffset <- Background_Texture[CurrentBackground].getWidth() )    scrollingOffset = 0;
-            if(ScrollSpeed>12)   ScrollSpeed=16;
         }
         if(PauseGame||Died)
         {
@@ -380,8 +432,8 @@ int main(int argc,char * argv[])
             if(Died)Replay.render();
             else if(PauseGame) Resume.render();
             Home.render();
-            RenderText(ScoreStr,Score,545,300,Black);
-            RenderText(HighScoreStr,HighScore,520,230,Black);
+            RenderText(ScoreStr,Score,550,300,Black);
+            RenderText(HighScoreStr,HighScore,525,230,Black);
         }
         SDL_RenderPresent( gRenderer );
         int cur=SDL_GetTicks();
