@@ -22,7 +22,7 @@ struct coin
     }
 };
 
-int number_skill[100]={2,2,2,2};
+int number_skill[]={1,2,3,3,4,4};
 // 1 la ki nang bay
 // 2 la ki nang teleport
 // 3 la tia laze bien object to gold
@@ -38,6 +38,6 @@ struct skill{
     void reset();
     SDL_Rect get()
     {
-        return {x-5,y-5,100,100};
+        return {x-15,y,100,100};
     }
 };

@@ -40,6 +40,7 @@ public:
     {
         return mHeight;
     }
+    void setAlpha( Uint8 alpha );
     bool LoadImage(string file_path);
     bool loadFromRenderedText( std::string textureText, SDL_Color textColor );
 

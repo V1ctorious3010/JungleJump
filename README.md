@@ -6,7 +6,7 @@ BTL_UET_LTNC
 2. Lương Vũ Thế - 23020159
 
 * Chủ đề Game:
-- Game endless run với nhân vật chính là 1 pháp sư khám phá rừng rậm. Để hoàn thành chuyến đi này, anh ấy phải chống lại các thử thách của rừng rậm.
+- Game endless run với nhân vật chính là 1 pháp sư khám phá rừng rậm. Để hoàn thành chuyến đi này, anh ấy phải vượt qua các thử thách của rừng rậm.
 * Ngưỡng điểm: 8,5
 * Các lý do bảo vệ
 1. Game có thuật toán nằm ngoài chương trình đã học(thuật toán BFS được ứng dụng trong việc tìm đường cho chiêu K)

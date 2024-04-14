@@ -81,6 +81,7 @@ LTexture Gem1;
 LTexture Heart;
 LTexture Skill;
 LTexture Cloud;
+LTexture Aegis;
 LTexture Teleport;
 LTexture Position_teleport;
 LTexture Laze_gun_bottom;
@@ -92,10 +93,16 @@ SDL_Color Black= {0,0,0};
 SDL_Color White= {255,255,255};
 bool Choitiep=0,bird_on_screen=0;
 int PortalY=0;
+bool has_shield = 0;
 bool inside(int x,int y)
 {
     return (x>=0&&x<=20&&y>=0&&y<=40);
 }
+void LTexture::setAlpha( Uint8 alpha )
+{
+	SDL_SetTextureAlphaMod( mTexture, alpha );
+}
+
 void LTexture ::render(int x,int y,SDL_RendererFlip flip)
 {
     SDL_Rect tmp= {x,y,mWidth,mHeight};
@@ -241,6 +248,7 @@ void LoadTexture()
     if(!IdleBoss3.LoadImage("boss3/Idle1.png")) cout<<"A";
     if(!ultimate.LoadImage("Ultimate.png"))  cout<<"ULTI";
     ULTI.LoadImage("Ultimate2.png");
+    Aegis.LoadImage("shield.png");
     SHIELD[0].y=8*40;
     SHIELD[1].y=5*40+20;
     SHIELD[2].y=9*40;
@@ -274,7 +282,7 @@ void nhanvat::move()
 {
     ult_cooldown++;
 
-    if(activate_skill==0||SKILL.t==3)
+    if(activate_skill==0||SKILL.t==3||SKILL.t==4)
     {
         if(mPosX>240)
         {
@@ -379,6 +387,13 @@ void nhanvat::move()
             }
 
         }
+        else if(SKILL.t==4)
+        {
+            has_shield=1;
+            Aegis.render(10,120);
+            for(int i=0;i<=8;i++)     Character_Texture[i].setAlpha(150);
+
+        }
     }
 }
 void nhanvat::render()
@@ -404,6 +419,7 @@ void nhanvat::render()
         {
             if(on_ground)     Character_Texture[status].render(mPosX,mPosY);
             else    Character_Texture[0].render(mPosX,mPosY);
+            for(int i=0;i<=8;i++)     Character_Texture[i].setAlpha(255);
         }
     }
 }
@@ -794,7 +810,7 @@ void boss3::hurt()
 }
 skill::skill()
 {
-    t = number_skill[rnd(0,3)];
+    t = number_skill[rnd(0,5)];
     x = -100;
     y = 500;
     mPosY_skill2 = 500;//vi an skill o vi tri y = 400
@@ -813,7 +829,7 @@ void skill::move()
 }
 void skill::reset()
 {
-    t = number_skill[rnd(0,3)];
+    t = number_skill[rnd(0,5)];
     x = -100;
     y = 500;
     mPosY_skill2 = 500;//vi an skill o vi tri y = 400

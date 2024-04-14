@@ -240,13 +240,13 @@ int main(int argc,char * argv[])
             }
             if(wizard.activate_skill==1)
             {
-
                 wizard.timeskill++;
                 if(wizard.timeskill==600)
                 {
                     wizard.timeskill=0;
                     wizard.activate_skill=0;
                     SKILL.reset();
+                    if(SKILL.t==4)   has_shield=0;
                 }
             }
             BloodBar.render(10, 10);
@@ -295,12 +295,6 @@ int main(int argc,char * argv[])
             {
                 R.render();
                 R.move();
-            }
-            if(checkCollision(hitbox,Da1.get())||checkCollision(hitbox,Da2.get()))
-            {
-                Mix_PlayChannel(-1,LoseSound,0);
-                blood -= 3;
-                if (blood < 0) Died=1,blood=246;
             }
             if(checkCollision(hitbox,COIN.get()))
             {
@@ -380,27 +374,36 @@ int main(int argc,char * argv[])
                 }
 
             }
-            for(int i=0; i<=7; i++)
+            if(!has_shield)
             {
-                if(FLAME[i].exist)   if(checkCollision(hitbox,FLAME[i].get()))
-                    {
+                if(checkCollision(hitbox,Da1.get())||checkCollision(hitbox,Da2.get()))
+                {
+                    Mix_PlayChannel(-1,LoseSound,0);
+                    blood -= 3;
+                    if (blood < 0) Died=1,blood=246;
+                }
+                for(int i=0; i<=7; i++)
+                {
+                    if(FLAME[i].exist)   if(checkCollision(hitbox,FLAME[i].get()))
+                        {
 
-                        Mix_PlayChannel(-1,LoseSound,0);
-                        blood -= 3;
-                        if (blood < 0) Died=1,blood=246;
-                    }
-            }
-            if(checkCollision(A.get(),hitbox))
-            {
-                Mix_PlayChannel(-1,LoseSound,0);
-                blood -= 15;
-                if (blood < 0) Died=1,blood=246;
-            }
-            if(checkCollision(Dirt.get(),hitbox))
-            {
-                blood-=10;
-                if (blood < 0) Died=1,blood=246;
-                Mix_PlayChannel(-1,LoseSound,0);
+                            Mix_PlayChannel(-1,LoseSound,0);
+                            blood -= 3;
+                            if (blood < 0) Died=1,blood=246;
+                        }
+                }
+                if(checkCollision(A.get(),hitbox))
+                {
+                    Mix_PlayChannel(-1,LoseSound,0);
+                    blood -= 15;
+                    if (blood < 0) Died=1,blood=246;
+                }
+                if(checkCollision(Dirt.get(),hitbox))
+                {
+                    blood-=10;
+                    if (blood < 0) Died=1,blood=246;
+                    Mix_PlayChannel(-1,LoseSound,0);
+                }
             }
             for(int i=1; i<=3; i++)
             {
@@ -417,13 +420,17 @@ int main(int argc,char * argv[])
             {
                 B.render();
                 B.move();
-
-                if(checkCollision(B.get(),hitbox))
+                if(!has_shield)
                 {
-                    Mix_PlayChannel(-1,LoseSound,0);
-                    blood-=10;
-                    if (blood < 0) Died=1,blood=246;
+                    if(checkCollision(B.get(),hitbox))
+                    {
+                        Mix_PlayChannel(-1,LoseSound,0);
+                        blood-=10;
+                        if (blood < 0) Died=1,blood=246;
+                    }
+
                 }
+
             }
             else if(!has_boss)
             {
