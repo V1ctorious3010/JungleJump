@@ -427,7 +427,7 @@ int main(int argc,char * argv[])
             if(reload>500)       wizard.add_ammo(),reload=0,CurrentBackground^=1;
             RenderText(ScoreStr,(int)Score,550,20,!CurrentBackground?Black:White);
             scrollingOffset-=ScrollSpeed;
-            if( scrollingOffset <- Background_Texture[CurrentBackground].getWidth()-1 )    scrollingOffset = 0;
+            if( scrollingOffset <- Background_Texture[CurrentBackground].getWidth()+1)    scrollingOffset = 0;
         }
         if(PauseGame||Died)
         {
