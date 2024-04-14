@@ -82,6 +82,7 @@ int main(int argc,char * argv[])
     in.open("luugame.txt");
     int so_lg_dan, x_Da1, x_Da2;
     in >> Score >> HighScore >> CurrentBackground >> x_Da1 >> x_Da2 >> so_lg_dan >> blood;
+    in >> wizard.activate_skill >> SKILL.t >> wizard.timeskill>>wizard.wait_timeskill;
     wizard.update_ammo(so_lg_dan);
     ofstream out;
     out.open("luugame.txt");
@@ -98,7 +99,7 @@ int main(int argc,char * argv[])
     {
         GOLD[i].t=3;
         GOLD[i].change(-100,-100);
-        GOLD[i].score = 100;
+        GOLD[i].score = 15;
     }
     Died=0;
     Play.reconstruct(1,450,293,300,75);
@@ -121,7 +122,7 @@ int main(int argc,char * argv[])
         {
             if(EV.type==SDL_QUIT)
             {
-                return 0;
+                running=0;
             }
             if(HuongDan)
             {
@@ -182,6 +183,13 @@ int main(int argc,char * argv[])
             GRAVITY=18;
             Rep=0;
             reload=0;
+            No_Boss_Time=0;
+            CURBOSSx=0;
+            CURBOSSy=0;
+            BOSS.reset();
+            BOSS2.reset();
+            BOSS3.reset();
+
         }
         if(HuongDan)
         {
@@ -248,10 +256,12 @@ int main(int argc,char * argv[])
             if(!has_boss)  No_Boss_Time++,CURBOSSx=0,CURBOSSy=0;
             if(No_Boss_Time>=300)
             {
+                int R=2;
+                if(Score>=500)      R=3;
                 No_Boss_Time=0;
-                int t=rnd(1,3);
-                if(t==1)  BOSS.heal(),CURBOSSx=BOSS.x/25+7,CURBOSSy=BOSS.y/40+7;
-                if(t==2)  BOSS2.heal(),CURBOSSx=BOSS2.x/25,CURBOSSy=BOSS2.y/40;
+                int t=rnd(1,R);
+                if(t==1)  BOSS.heal();
+                if(t==2)  BOSS2.heal();
                 if(t==3)  BOSS3.heal(),CURBOSSx=40,CURBOSSy=7;
             }
             if(BOSS2.attack)
@@ -433,13 +443,18 @@ int main(int argc,char * argv[])
             else if(PauseGame) Resume.render();
             Home.render();
             RenderText(ScoreStr,Score,550,300,Black);
-            RenderText(HighScoreStr,HighScore,525,230,Black);
+            RenderText(HighScoreStr,HighScore,515,230,Black);
+        }
+        if(Died)
+        {
+            SKILL.x=100;
         }
         SDL_RenderPresent( gRenderer );
         int cur=SDL_GetTicks();
         ofstream out("luugame.txt", ofstream::out | ofstream::trunc);
         HighScore=max(HighScore,Score);
-        out << Score << " " << HighScore << " " << CurrentBackground <<" "<< Da1.x << " " << Da2.x << " " << wizard.get_ammo() <<" "<<blood;
+        out << Score << " " << HighScore << " " << CurrentBackground <<" "<< Da1.x << " " << Da2.x << " " << wizard.get_ammo() <<" "<<blood << " ";
+        out << wizard.activate_skill << " " << SKILL.t << " " << wizard.timeskill <<" "<<wizard.wait_timeskill;
         SDL_Delay(max((float)0.0,1000/60.0f-(cur-lastUPD)));
         lastUPD=cur;
         //////

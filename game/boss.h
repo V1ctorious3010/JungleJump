@@ -68,4 +68,13 @@ struct boss
         action();
     }
     void action();
+    void reset()
+    {
+        stt=0;
+        status=0;
+        add=0;
+        HP=0;
+        Rest=0;
+        BossAt1=0;
+    }
 } BOSS;

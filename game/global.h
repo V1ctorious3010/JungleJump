@@ -90,8 +90,6 @@ LTexture Gold;
 LTexture portal;
 SDL_Color Black= {0,0,0};
 SDL_Color White= {255,255,255};
-int CURBOSSx;
-int CURBOSSy;
 bool Choitiep=0,bird_on_screen=0;
 int PortalY=0;
 bool inside(int x,int y)
@@ -831,7 +829,7 @@ struct bird
     double x_vel=800;
     bool exist=0;
     int time=0;
-    ball()
+    bird()
     {
         x=Width-100;
         y=wizard.getY();

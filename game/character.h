@@ -5,6 +5,8 @@ using namespace std;
 double GRAVITY=18;
 Mix_Chunk *JumpSound=NULL;
 Mix_Chunk *AttackSound=NULL;
+int CURBOSSx;
+int CURBOSSy;
 class fireball
 {
     double x;
@@ -85,7 +87,7 @@ public:
                 GRAVITY=300;
                 break;
             case SDL_SCANCODE_K:
-                if(ult_cooldown>=100) ult_cooldown=0,R.cast=1,R.reset();
+                if(ult_cooldown>=300&&CURBOSSx&&CURBOSSy) ult_cooldown=0,R.cast=1,R.reset();
                 break;
             case SDL_SCANCODE_J:
                 if (ammo == 3)

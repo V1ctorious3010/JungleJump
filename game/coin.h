@@ -2,7 +2,7 @@
 using namespace std;
 #include<SDL.h>
 
-int rate_coin[10]={1,1,1,0,0,0,2,2,2,2};
+int rate_coin[10]={1,1,1,0,0,0,0,1,2,2};
 // 3 la gold
 struct coin
 {
