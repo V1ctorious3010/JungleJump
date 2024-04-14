@@ -34,7 +34,6 @@ struct spirit_shield
 } SHIELD[4];
 struct boss3
 {
-    int xx,yy;
     int x,y;
     int status,HP=0,add=0;
     bool attack=1;

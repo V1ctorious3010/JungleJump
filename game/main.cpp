@@ -254,7 +254,7 @@ int main(int argc,char * argv[])
             SDL_SetRenderDrawColor( gRenderer, 0xFF, 0x00, 0x00, 0xFF );
             SDL_RenderFillRect( gRenderer, &mau);
             SDL_Rect tia_laze= {710,0,20,700};
-            SDL_Rect hitbox= {wizard.getX(),wizard.getY(),1,130};
+            SDL_Rect hitbox= {wizard.getX(),wizard.getY(),1,110};
             bool has_boss=(BOSS.HP>0)||(BOSS2.HP>0)||(BOSS3.HP>0);
             if(!has_boss)  No_Boss_Time++,CURBOSSx=0,CURBOSSy=0;
             if(No_Boss_Time>=300)
