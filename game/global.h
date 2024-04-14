@@ -141,8 +141,8 @@ bool LTexture::loadFromRenderedText( std::string textureText, SDL_Color textColo
 }
 void LoadTexture()
 {
-    if(!Background_Texture[0].LoadImage("bg2.png")) cout<<"can't load bg";
-    if(!Background_Texture[1].LoadImage("bg3.png")) cout<<"can't load bg";
+    if(!Background_Texture[0].LoadImage("test.png")) cout<<"can't load bg";
+    if(!Background_Texture[1].LoadImage("test.png")) cout<<"can't load bg";
     if(!Board.LoadImage("bang.png"))cout<<"can't load bang";
     if(!MenuBackground.LoadImage("background2.png"))cout<<"can't load menu bg";
     if(!FireBall.LoadImage("fire/fire2.png")) cout<<"can't load fire";

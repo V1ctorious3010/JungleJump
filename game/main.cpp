@@ -189,7 +189,10 @@ int main(int argc,char * argv[])
             BOSS.reset();
             BOSS2.reset();
             BOSS3.reset();
-
+            Dirt.reset();
+            A.reset();
+            B.reset();
+            for(int i=1;i<=9;i++)     FLAME[i].reset(i);
         }
         if(HuongDan)
         {
@@ -249,7 +252,7 @@ int main(int argc,char * argv[])
             BloodBar.render(10, 10);
             SDL_Rect mau = {71,24,blood,25};
             SDL_SetRenderDrawColor( gRenderer, 0xFF, 0x00, 0x00, 0xFF );
-            SDL_RenderFillRect( gRenderer, &mau );
+            SDL_RenderFillRect( gRenderer, &mau);
             SDL_Rect tia_laze= {710,0,20,700};
             SDL_Rect hitbox= {wizard.getX(),wizard.getY(),1,110};
             bool has_boss=(BOSS.HP>0)||(BOSS2.HP>0)||(BOSS3.HP>0);
@@ -424,7 +427,7 @@ int main(int argc,char * argv[])
             if(reload>500)       wizard.add_ammo(),reload=0,CurrentBackground^=1;
             RenderText(ScoreStr,(int)Score,550,20,!CurrentBackground?Black:White);
             scrollingOffset-=ScrollSpeed;
-            if( scrollingOffset <- Background_Texture[CurrentBackground].getWidth() )    scrollingOffset = 0;
+            if( scrollingOffset <- Background_Texture[CurrentBackground].getWidth()-1 )    scrollingOffset = 0;
         }
         if(PauseGame||Died)
         {
