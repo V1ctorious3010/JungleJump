@@ -38,6 +38,6 @@ struct skill{
     void reset();
     SDL_Rect get()
     {
-        return {x,y,100,100};
+        return {x-5,y-5,100,100};
     }
 };

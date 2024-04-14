@@ -254,13 +254,13 @@ int main(int argc,char * argv[])
             SDL_SetRenderDrawColor( gRenderer, 0xFF, 0x00, 0x00, 0xFF );
             SDL_RenderFillRect( gRenderer, &mau);
             SDL_Rect tia_laze= {710,0,20,700};
-            SDL_Rect hitbox= {wizard.getX(),wizard.getY(),5,130};
+            SDL_Rect hitbox= {wizard.getX(),wizard.getY(),1,130};
             bool has_boss=(BOSS.HP>0)||(BOSS2.HP>0)||(BOSS3.HP>0);
             if(!has_boss)  No_Boss_Time++,CURBOSSx=0,CURBOSSy=0;
             if(No_Boss_Time>=300)
             {
                 int R=2;
-                if(Score>=500)      R=3;
+                if(Score>=100)      R=3;
                 No_Boss_Time=0;
                 int t=rnd(1,R);
                 if(t==1)  BOSS.heal();
@@ -386,7 +386,7 @@ int main(int argc,char * argv[])
                     {
 
                         Mix_PlayChannel(-1,LoseSound,0);
-                        blood -= 1;
+                        blood -= 3;
                         if (blood < 0) Died=1,blood=246;
                     }
             }
@@ -435,7 +435,7 @@ int main(int argc,char * argv[])
                 }
             }
             for(int i=1; i<=wizard.get_ammo(); i++)    Ammo.render(10+(i-1)*70,55);
-            if(wizard.get_cooldownR()>=100)     ULTI.render(10+3*70,55);
+            if(wizard.get_cooldownR()>=300)     ULTI.render(10+3*70,55);
             reload++;
             if(reload>500)       wizard.add_ammo(),reload=0,CurrentBackground^=1;
             RenderText(ScoreStr,(int)Score,550,20,!CurrentBackground?Black:White);
