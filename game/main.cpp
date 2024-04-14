@@ -298,7 +298,7 @@ int main(int argc,char * argv[])
             }
             if(checkCollision(hitbox,Da1.get())||checkCollision(hitbox,Da2.get()))
             {
-                //Mix_PlayChannel(-1,LoseSound,0);
+                Mix_PlayChannel(-1,LoseSound,0);
                 blood -= 3;
                 if (blood < 0) Died=1,blood=246;
             }
@@ -311,7 +311,7 @@ int main(int argc,char * argv[])
                     if (blood > 246) blood = 246;
                 }
                 else Score+=COIN.score;
-                // Mix_PlayChannel(-1,GainSound,0);
+                Mix_PlayChannel(-1,GainSound,0);
                 COIN.reset();
             }
             if(checkCollision(hitbox,SKILL.get()))
@@ -376,12 +376,15 @@ int main(int argc,char * argv[])
             {
                 if(FLAME[i].exist)   if(checkCollision(hitbox,FLAME[i].get()))
                     {
+
+                        Mix_PlayChannel(-1,LoseSound,0);
                         blood -= 1;
                         if (blood < 0) Died=1,blood=246;
                     }
             }
             if(checkCollision(A.get(),hitbox))
             {
+                Mix_PlayChannel(-1,LoseSound,0);
                 blood -= 15;
                 if (blood < 0) Died=1,blood=246;
             }
@@ -389,6 +392,7 @@ int main(int argc,char * argv[])
             {
                 blood-=10;
                 if (blood < 0) Died=1,blood=246;
+                Mix_PlayChannel(-1,LoseSound,0);
             }
             for(int i=1; i<=3; i++)
             {
@@ -408,6 +412,7 @@ int main(int argc,char * argv[])
 
                 if(checkCollision(B.get(),hitbox))
                 {
+                    Mix_PlayChannel(-1,LoseSound,0);
                     blood-=10;
                     if (blood < 0) Died=1,blood=246;
                 }

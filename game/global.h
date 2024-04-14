@@ -196,7 +196,9 @@ void LoadTexture()
     BlastSound=Mix_LoadWAV("blast.wav");
     Mix_VolumeChunk(ButtonSound,30);
     Mix_VolumeChunk(AttackSound,30);
-    Mix_VolumeChunk(JumpSound,30);
+    Mix_VolumeChunk(JumpSound,20);
+    Mix_VolumeChunk(LoseSound,20);
+    Mix_VolumeChunk(GainSound,20);
     Mix_VolumeMusic(50);
     GainSound=Mix_LoadWAV("gainsound.wav");
     LoseSound=Mix_LoadWAV("losesound.wav");
