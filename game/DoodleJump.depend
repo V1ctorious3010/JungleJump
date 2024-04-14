@@ -403,7 +403,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1713082398 source:e:\doodlejump\game\main.cpp
+1713085078 source:e:\doodlejump\game\main.cpp
 	<bits/stdc++.h>
 	<SDL.h>
 	<SDL_image.h>
@@ -417,7 +417,7 @@
 	<SDL.h>
 	<SDL_image.h>
 
-1713082628 e:\doodlejump\game\global.h
+1713084782 e:\doodlejump\game\global.h
 	<bits/stdc++.h>
 	<SDL.h>
 	<SDL_image.h>
@@ -887,7 +887,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1713082652 e:\doodlejump\game\coin.h
+1713085135 e:\doodlejump\game\coin.h
 	<bits/stdc++.h>
 	<SDL.h>
 

@@ -18,6 +18,10 @@ public:
         x=250;
         y=525;
     }
+    void reset()
+    {
+        x=250;
+    }
     void  move()
     {
         x+=speed/60;
@@ -143,6 +147,7 @@ public:
     void cooldown(int a)
     {
         attack[a]=0;
+        FIRE[a].reset();
     }
     int get_attack(int a)
     {

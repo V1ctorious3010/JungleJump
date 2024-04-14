@@ -141,8 +141,8 @@ bool LTexture::loadFromRenderedText( std::string textureText, SDL_Color textColo
 }
 void LoadTexture()
 {
-    if(!Background_Texture[0].LoadImage("test.png")) cout<<"can't load bg";
-    if(!Background_Texture[1].LoadImage("test.png")) cout<<"can't load bg";
+    if(!Background_Texture[0].LoadImage("bg2.png")) cout<<"can't load bg";
+    if(!Background_Texture[1].LoadImage("bg3.png")) cout<<"can't load bg";
     if(!Board.LoadImage("bang.png"))cout<<"can't load bang";
     if(!MenuBackground.LoadImage("background2.png"))cout<<"can't load menu bg";
     if(!FireBall.LoadImage("fire/fire2.png")) cout<<"can't load fire";
@@ -196,9 +196,7 @@ void LoadTexture()
     BlastSound=Mix_LoadWAV("blast.wav");
     Mix_VolumeChunk(ButtonSound,30);
     Mix_VolumeChunk(AttackSound,30);
-    Mix_VolumeChunk(JumpSound,20);
-    Mix_VolumeChunk(LoseSound,20);
-    Mix_VolumeChunk(GainSound,20);
+
     Mix_VolumeMusic(50);
     GainSound=Mix_LoadWAV("gainsound.wav");
     LoseSound=Mix_LoadWAV("losesound.wav");
@@ -315,7 +313,8 @@ void nhanvat::move()
             }
             if(jump_pressed)
             {
-                mPosY-=15;
+                if(mPosY-15 >= 0) mPosY-=15;
+                else mPosY = 0;
                 on_ground=0;
             }
 
@@ -519,7 +518,7 @@ void coin::change(int a, int b)
 {
     x = a;
     y = b;
-    score = 100;
+    score = 15;
     t = 3;
 }
 coin::coin(int a,int c)
@@ -657,6 +656,7 @@ void spirit_flame::move()
                 Mix_PlayChannel(-1,AttackSound,0);
                 exist=0;
                 wizard.cooldown(i);
+
             }
         }
     }
@@ -796,12 +796,12 @@ skill::skill()
 {
     t = number_skill[rnd(0,3)];
     x = -100;
-    y = 400;
-    mPosY_skill2 = 400;//vi an skill o vi tri y = 400
+    y = 500;
+    mPosY_skill2 = 500;//vi an skill o vi tri y = 400
     mPosX_skill2 = wizard.mPosX+80;
     skill2_vel=7;
-    mPosX_top_skill3 = 700, mPosY_top_skill3 = 363;
-    mPosX_bottom_skill3=700, mPosY_bottom_skill3=400;
+    mPosX_top_skill3 = 700, mPosY_top_skill3 = 326;
+    mPosX_bottom_skill3=700, mPosY_bottom_skill3=363;
 }
 void skill::render()
 {
@@ -815,8 +815,8 @@ void skill::reset()
 {
     t = number_skill[rnd(0,3)];
     x = -100;
-    y = 400;
-    mPosY_skill2 = 400;//vi an skill o vi tri y = 400
+    y = 500;
+    mPosY_skill2 = 500;//vi an skill o vi tri y = 400
     mPosX_skill2 = wizard.mPosX+80;
     skill2_vel=7;
     mPosX_top_skill3=700, mPosY_top_skill3=326;
