@@ -75,6 +75,7 @@ LTexture Board;
 int HighScore=0;
 bool HuongDan=0;
 bool ShowMenu=1;
+bool Silent=0;
 int CurrentBackground;
 LTexture Gem;
 LTexture Gem1;
@@ -100,7 +101,7 @@ bool inside(int x,int y)
 }
 void LTexture::setAlpha( Uint8 alpha )
 {
-	SDL_SetTextureAlphaMod( mTexture, alpha );
+    SDL_SetTextureAlphaMod( mTexture, alpha );
 }
 
 void LTexture ::render(int x,int y,SDL_RendererFlip flip)
@@ -150,7 +151,7 @@ void LoadTexture()
 {
     if(!Background_Texture[0].LoadImage("bg2.png")) cout<<"can't load bg";
     if(!Background_Texture[1].LoadImage("bg3.png")) cout<<"can't load bg";
-    if(!Board.LoadImage("bang.png"))cout<<"can't load bang";
+    if(!Board.LoadImage("bang2.png"))cout<<"can't load bang";
     if(!MenuBackground.LoadImage("background2.png"))cout<<"can't load menu bg";
     if(!FireBall.LoadImage("fire/fire2.png")) cout<<"can't load fire";
     if(!Ammo.LoadImage("ammo.png"))   cout<<"Can't load ammo";
@@ -391,7 +392,7 @@ void nhanvat::move()
         {
             has_shield=1;
             Aegis.render(10,120);
-            for(int i=0;i<=8;i++)     Character_Texture[i].setAlpha(150);
+            for(int i=0; i<=8; i++)     Character_Texture[i].setAlpha(150);
 
         }
     }
@@ -419,7 +420,7 @@ void nhanvat::render()
         {
             if(on_ground)     Character_Texture[status].render(mPosX,mPosY);
             else    Character_Texture[0].render(mPosX,mPosY);
-            for(int i=0;i<=8;i++)     Character_Texture[i].setAlpha(255);
+            for(int i=0; i<=8; i++)     Character_Texture[i].setAlpha(255);
         }
     }
 }
@@ -477,8 +478,17 @@ void fireball::render(int a)
 }
 void Button::render()
 {
-    if(isHovered)     HTexture.render(Rect.x,Rect.y);
-    else nHTexture.render(Rect.x,Rect.y);
+    if(type!=10)
+    {
+        if(isHovered)     HTexture.render(Rect.x,Rect.y);
+        else nHTexture.render(Rect.x,Rect.y);
+    }
+    else
+    {
+        if(Silent)     HTexture.render(Rect.x,Rect.y);
+        else nHTexture.render(Rect.x,Rect.y);
+    }
+
 }
 void Button::Upd()
 {
@@ -490,6 +500,7 @@ void Button::Upd()
     Resume.sink();
     Replay.sink();
     Home.sink();
+    Volume.sink();
     SDL_Delay(125);
     if(type==1)   Rep=1,VaoGame=1,ShowMenu=0,PauseGame=0,Died=0;
     if(type==4)   Choitiep=1,VaoGame=1,ShowMenu=0,PauseGame=0,Died=0;
@@ -499,6 +510,19 @@ void Button::Upd()
     if(type==7)   Died=0,Rep=1;
     if(type==9)   HuongDan=0,ShowMenu=1,VaoGame=0,PauseGame=0,Died=0;
     if(type==8)   HuongDan=1,ShowMenu=0;
+    if(type==10)
+    {
+        int t1=20,t2=40;
+        Silent^=1;
+        if(Silent) t1=t2=0;
+        else t1=20,t2=40;
+        Mix_VolumeMusic(t2);
+        Mix_VolumeChunk(ButtonSound,t1);
+        Mix_VolumeChunk(AttackSound,t1);
+        Mix_VolumeChunk(GainSound,t1);
+        Mix_VolumeChunk(LoseSound,t1);
+        Mix_VolumeChunk(JumpSound,t1);
+    }
 }
 coin::coin()
 {

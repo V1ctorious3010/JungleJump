@@ -46,7 +46,7 @@ bool init()
         cout<< "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError() ;
         return 0;
     }
-    if( Mix_OpenAudio( 22050, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 )
+    if( Mix_OpenAudio( 20050, MIX_DEFAULT_FORMAT,2,2048 ) < 0 )
     {
         printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
         return 0;
@@ -110,6 +110,7 @@ int main(int argc,char * argv[])
     Resume.reconstruct(6,510,400,100,100);
     Replay.reconstruct(7,510,400,100,100);
     Home.reconstruct(9,1200-60,10,100,100);
+    Volume.reconstruct(10,1200-60,10,100,100);
     ///////////////////
     SDL_SetRenderDrawColor(gRenderer,36,121,126,0xFF);
     SDL_RenderClear(gRenderer);
@@ -142,6 +143,9 @@ int main(int argc,char * argv[])
                 Exit.render();
                 LoadGame.render();
                 LoadGame.HandleEvent(EV);
+                Volume.render();
+                Volume.HandleEvent(EV);
+
             }
             if(PauseGame)
             {
@@ -208,7 +212,6 @@ int main(int argc,char * argv[])
             if(Score<100)                 ScrollSpeed=5;
             if(Score>=100&&Score<=200)    ScrollSpeed=6;
             if(Score>200&&Score<=300)     ScrollSpeed=7;
-            if(Score>300&&Score<=400)     ScrollSpeed=8;
 
             SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
             SDL_RenderClear(gRenderer);
@@ -449,7 +452,7 @@ int main(int argc,char * argv[])
             for(int i=1; i<=wizard.get_ammo(); i++)    Ammo.render(10+(i-1)*70,55);
             if(wizard.get_cooldownR()>=300)     ULTI.render(10+3*70,55);
             reload++;
-            if(reload>500)       wizard.add_ammo(),reload=0,CurrentBackground^=1;
+            if(reload>700)       wizard.add_ammo(),reload=0,CurrentBackground^=1;
             RenderText(ScoreStr,(int)Score,550,20,!CurrentBackground?Black:White);
             scrollingOffset-=ScrollSpeed;
             if( scrollingOffset <- Background_Texture[CurrentBackground].getWidth()+1)    scrollingOffset = 0;
@@ -470,8 +473,8 @@ int main(int argc,char * argv[])
             if(Died)Replay.render();
             else if(PauseGame) Resume.render();
             Home.render();
-            RenderText(ScoreStr,Score,550,300,Black);
-            RenderText(HighScoreStr,HighScore,515,230,Black);
+            RenderText(ScoreStr,Score,557,300,Black);
+            RenderText(HighScoreStr,HighScore,522,230,Black);
         }
         if(Died)
         {

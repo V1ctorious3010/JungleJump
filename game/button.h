@@ -102,6 +102,17 @@ public:
                 cout<<"can't load home button";
             }
         }
+        if(type==10)
+        {
+            if(!nHTexture.LoadImage("volume11.png"))
+            {
+                cout<<"Can't load volume button";
+            }
+            if(!HTexture.LoadImage("volume22.png"))
+            {
+                cout<<"can't load volume button";
+            }
+        }
     }
     void HandleEvent(const SDL_Event Event)
     {
@@ -110,9 +121,6 @@ public:
         {
             Mix_PlayChannel(-1,ButtonSound,0);
             press=1;
-        }
-        else if(Event.type == SDL_MOUSEBUTTONUP )
-        {
         }
         if (Event.type==SDL_MOUSEMOTION)
         {
@@ -164,3 +172,4 @@ Button Pause;
 Button Resume;
 Button Replay;
 Button Home;
+Button Volume;
