@@ -498,7 +498,7 @@ void Button::Upd()
     if(type==6)   PauseGame=0;
     if(type==7)   Died=0,Rep=1;
     if(type==9)   HuongDan=0,ShowMenu=1,VaoGame=0,PauseGame=0,Died=0;
-    if(type==8)   HuongDan=1;
+    if(type==8)   HuongDan=1,ShowMenu=0;
 }
 coin::coin()
 {
@@ -562,8 +562,8 @@ void dirtball::render()
 
 void dirtball:: move()
 {
-    x-=15;
-    if(x<0)     x=800,y=500,BossAt1=0;
+    x-=15+ScrollSpeed;
+    if(x<0)     BossAt1=0;
 }
 void boss::action()
 {
@@ -574,7 +574,7 @@ void boss::action()
     if(add>5)   stt++,add=0;
     if(stt==6)
     {
-        if(status==1)     BossAt1=1;
+        if(status==1)     BossAt1=1,Dirt.x=800,Dirt.y=500;
         if(status)  Rest=100;
         stt=0;
         add=0;
@@ -588,7 +588,7 @@ void thunder::render()
 }
 void thunder::move()
 {
-    x-=x_vel/60;
+    x-=(x_vel+ScrollSpeed)/60;
     for (int i = 1; i <= 3; i++)
     {
         if(wizard.get_attack(i))
@@ -602,7 +602,7 @@ void thunder::move()
             }
         }
     }
-    if(x<0)   reset(),BOSS2.attack=0;
+    if(x<0)   BOSS2.attack=0;
 
 }
 void boss2::action()
@@ -616,6 +616,7 @@ void boss2::action()
         A.y=wizard.getY()+40;
         PortalY=wizard.getY()-20;
         BOSS2.attack=1;
+        A.reset();
         Rest=100;
         stt=0;
         add=0;
@@ -662,7 +663,7 @@ void boss3::render_at(int stt)
 }
 void spirit_flame::move()
 {
-    x-=x_vel/60;
+    x-=(x_vel+ScrollSpeed)/60;
     for (int i = 1; i <= 3; i++)
     {
         if(wizard.get_attack(i))
@@ -858,7 +859,7 @@ struct bird
     }
     void move()
     {
-        x-=x_vel/60;
+        x-=(x_vel+ScrollSpeed)/60;
         cnt++;
         if(cnt>=10)  CurState^=1,cnt=0;
         for (int i = 1; i <= 3; i++)

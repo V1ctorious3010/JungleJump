@@ -117,7 +117,7 @@ int main(int argc,char * argv[])
     Mix_PlayMusic(GameMusic,-1);
     while(running)
     {
-        //HighScore=0;
+        HighScore=0;
         while(SDL_PollEvent(&EV))
         {
             if(EV.type==SDL_QUIT)
@@ -198,13 +198,18 @@ int main(int argc,char * argv[])
         {
             SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
             SDL_RenderClear(gRenderer);
-            Home.RePos(Width-60,10);
+            Home.RePos(Width-120,10);
             Background_Texture[CurrentBackground].render(0,0);
             Tutorial_Texture.render(200,90);
             Home.render();
         }
         if(VaoGame&&!PauseGame&&!Died)
         {
+            if(Score<100)                 ScrollSpeed=5;
+            if(Score>=100&&Score<=200)    ScrollSpeed=6;
+            if(Score>200&&Score<=300)     ScrollSpeed=7;
+            if(Score>300&&Score<=400)     ScrollSpeed=8;
+
             SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
             SDL_RenderClear(gRenderer);
             Background_Texture[CurrentBackground].render( scrollingOffset, 0 );
