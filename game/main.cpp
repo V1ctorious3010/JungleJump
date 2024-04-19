@@ -118,7 +118,7 @@ int main(int argc,char * argv[])
     Mix_PlayMusic(GameMusic,-1);
     while(running)
     {
-        HighScore=0;
+        //HighScore=0;
         while(SDL_PollEvent(&EV))
         {
             if(EV.type==SDL_QUIT)
@@ -262,7 +262,8 @@ int main(int argc,char * argv[])
             SDL_SetRenderDrawColor( gRenderer, 0xFF, 0x00, 0x00, 0xFF );
             SDL_RenderFillRect( gRenderer, &mau);
             SDL_Rect tia_laze= {710,0,20,700};
-            SDL_Rect hitbox= {wizard.getX(),wizard.getY(),1,110};
+            SDL_Rect hitbox= {wizard.getX(),wizard.getY()+10,1,110};
+            SDL_Rect hitbox2= {wizard.getX(),wizard.getY(),30,110};
             bool has_boss=(BOSS.HP>0)||(BOSS2.HP>0)||(BOSS3.HP>0);
             if(!has_boss)  No_Boss_Time++,CURBOSSx=0,CURBOSSy=0;
             if(No_Boss_Time>=300)
@@ -304,7 +305,7 @@ int main(int argc,char * argv[])
                 R.render();
                 R.move();
             }
-            if(checkCollision(hitbox,COIN.get()))
+            if(checkCollision(hitbox2,COIN.get()))
             {
 
                 if (COIN.t == 2)
@@ -316,14 +317,14 @@ int main(int argc,char * argv[])
                 Mix_PlayChannel(-1,GainSound,0);
                 COIN.reset();
             }
-            if(checkCollision(hitbox,SKILL.get()))
+            if(checkCollision(hitbox2,SKILL.get()))
             {
                 wizard.activate_skill=1;
                 SKILL.x = -100;
             }
             for(int i = 0; i <= 99; i++)
             {
-                if(checkCollision(hitbox,GOLD[i].get()))
+                if(checkCollision(hitbox2,GOLD[i].get()))
                 {
                     Mix_PlayChannel(-1,GainSound,0);
                     Score+=GOLD[i].score;
@@ -473,8 +474,8 @@ int main(int argc,char * argv[])
             if(Died)Replay.render();
             else if(PauseGame) Resume.render();
             Home.render();
-            RenderText(ScoreStr,Score,557,300,Black);
-            RenderText(HighScoreStr,HighScore,522,230,Black);
+            RenderText(ScoreStr,Score,555,300,Black);
+            RenderText(HighScoreStr,HighScore,520,230,Black);
         }
         if(Died)
         {
