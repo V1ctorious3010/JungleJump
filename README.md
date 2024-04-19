@@ -11,5 +11,5 @@ BTL_UET_LTNC
 * Ngưỡng điểm: 8,5
 * Các lý do bảo vệ
 1. Game có thuật toán nằm ngoài chương trình đã học(thuật toán BFS được ứng dụng trong việc tìm đường cho chiêu K)
-2. Game có đồ họa
+2. Game có đồ họa sinh động, nhân vật chuyển động mượt mà.
 3. Game có thêm nhiều tính năng so với những game endless run thông thường như dinosaur,...(hệ thống boss, các tính năng, kĩ năng nhân vật, vật phẩm đa dạng, tương tác chiến đấu giữa người chơi và NPC)
