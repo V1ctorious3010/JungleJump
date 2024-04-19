@@ -34,7 +34,6 @@ struct spirit_shield
 } SHIELD[4];
 struct boss3
 {
-    int xx,yy;
     int x,y;
     int status,HP=0,add=0;
     bool attack=1;
@@ -81,6 +80,14 @@ struct boss3
     SDL_Rect get()
     {
         return {x+50,y+50,150,150};
+    }
+    void reset()
+    {
+        stt=0;
+        status=0;
+        add=0;
+        HP=0;
+        attack=0;
     }
 } BOSS3;
 

@@ -6,7 +6,7 @@ int rnd(int l,int r)
 {
     return l+rng()%(r-l+1);
 }
-bool BossAt1=0;
+bool BossAt1=0; // kich hoat tan cong cua boss
 struct dirtball
 {
     int x=800;
@@ -30,13 +30,12 @@ struct dirtball
 } Dirt;
 struct boss
 {
-    int xx,yy;
     int x,y;
-    int status;
-    int Rest=0;
-    int HP=0;
-    int stt=0;
-    int add=0;
+    int status; // cac trang thai cua boss tan cong hay nghi
+    int Rest=0; // thoi gian nghi giua 2 lan tan cong
+    int HP=0;   // mau cua boss
+    int stt=0; // render trang thai thu stt cua boss
+    int add=0; // delay chuyen dong cua boss
     boss()
     {
         x=800;
@@ -68,4 +67,13 @@ struct boss
         action();
     }
     void action();
+    void reset()
+    {
+        stt=0;
+        status=0;
+        add=0;
+        HP=0;
+        Rest=0;
+        BossAt1=0;
+    }
 } BOSS;

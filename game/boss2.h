@@ -24,7 +24,6 @@ struct thunder
 } A;
 struct boss2
 {
-    int xx,yy;
     int x,y;
     int status,Rest=0,HP=0,add=0;
     bool attack=0;
@@ -59,4 +58,13 @@ struct boss2
         action();
     }
     void action();
+    void reset()
+    {
+        stt=0;
+        status=0;
+        add=0;
+        HP=0;
+        Rest=0;
+        attack=0;
+    }
 } BOSS2;

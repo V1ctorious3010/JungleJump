@@ -10,10 +10,7 @@ using namespace std;
 #include"boss.h"
 #include"boss2.h"
 #include"boss3.h"
-vector<int>TYPE= {0,0,1};
-int VelX=0;
-int Move_down=0;
-const int deadY=660;
+const int deadY=660; // cai san
 SDL_Rect san= {0,600,800,10};
 int dx[]= {0,-1,1,0,1,-1,1,-1};
 int dy[]= {-1,0,0,1,-1,1,1,-1};
@@ -25,7 +22,6 @@ const int Width=1200;
 const int Height=740;
 SDL_Window *gWindow;
 SDL_Renderer *gRenderer;
-
 vector<int>Order= {0,1,2,3,4,5,6};
 vector<int>boss3_Ulti;
 nhanvat wizard;
@@ -38,7 +34,6 @@ bool PauseGame=0;
 bool Died=0;
 int blood = 246;
 bool Rep;
-///
 LTexture BloodBar;
 LTexture Character_Texture[9];
 LTexture Tutorial_Texture;
@@ -57,15 +52,12 @@ LTexture SPIRIT_SHIELD;
 LTexture ultimate;
 LTexture Ammo;
 LTexture Title;
+LTexture Bird[2];
 Mix_Music *GameMusic=NULL;
 Mix_Chunk *BlastSound=NULL;
 Mix_Chunk *GainSound=NULL;
 Mix_Chunk *LoseSound=NULL;
 LTexture ULTI;
-double down_speed=1.5;
-int VELOCITY=0;
-double SPEED=240;
-const int FPS=60;
 int Score=0;
 int ScrollSpeed=12;
 int scrollingOffset=5;
@@ -74,12 +66,14 @@ LTexture Board;
 int HighScore=0;
 bool HuongDan=0;
 bool ShowMenu=1;
+bool Silent=0; // tat am
 int CurrentBackground;
 LTexture Gem;
 LTexture Gem1;
 LTexture Heart;
 LTexture Skill;
 LTexture Cloud;
+LTexture Aegis;
 LTexture Teleport;
 LTexture Position_teleport;
 LTexture Laze_gun_bottom;
@@ -89,14 +83,18 @@ LTexture Gold;
 LTexture portal;
 SDL_Color Black= {0,0,0};
 SDL_Color White= {255,255,255};
-int CURBOSSx;
-int CURBOSSy;
-bool Choitiep=0,bullet_on_screen=0;
+bool Choitiep=0,bird_on_screen=0;
 int PortalY=0;
+bool has_shield = 0;
 bool inside(int x,int y)
 {
     return (x>=0&&x<=20&&y>=0&&y<=40);
 }
+void LTexture::setAlpha( Uint8 alpha )
+{
+    SDL_SetTextureAlphaMod( mTexture, alpha );
+}
+
 void LTexture ::render(int x,int y,SDL_RendererFlip flip)
 {
     SDL_Rect tmp= {x,y,mWidth,mHeight};
@@ -144,7 +142,7 @@ void LoadTexture()
 {
     if(!Background_Texture[0].LoadImage("bg2.png")) cout<<"can't load bg";
     if(!Background_Texture[1].LoadImage("bg3.png")) cout<<"can't load bg";
-    if(!Board.LoadImage("bang.png"))cout<<"can't load bang";
+    if(!Board.LoadImage("bang2.png"))cout<<"can't load bang";
     if(!MenuBackground.LoadImage("background2.png"))cout<<"can't load menu bg";
     if(!FireBall.LoadImage("fire/fire2.png")) cout<<"can't load fire";
     if(!Ammo.LoadImage("ammo.png"))   cout<<"Can't load ammo";
@@ -170,6 +168,8 @@ void LoadTexture()
         cout<<"can't load cloud";
         return ;
     }
+    Bird[0].LoadImage("bird.png");
+    Bird[1].LoadImage("bird1.png");
     portal.LoadImage("portal.png");
     Teleport.LoadImage("teleport.png");
     Position_teleport.LoadImage("position_teleport.png");
@@ -178,7 +178,7 @@ void LoadTexture()
     Gold.LoadImage("gold.png");
     Laze.LoadImage("laze.png");
 
-     if(!Gem.LoadImage("bronze.png"))    cout<<"Can't load ruby"<<endl;
+    if(!Gem.LoadImage("bronze.png"))    cout<<"Can't load ruby"<<endl;
     if(!Gem1.LoadImage("sliver.png")) cout<<"Can't load diamond"<<endl;
     Character_Texture[1].LoadImage("run/run1.png");
     Character_Texture[2].LoadImage("run/run2.png");
@@ -195,7 +195,7 @@ void LoadTexture()
     BlastSound=Mix_LoadWAV("blast.wav");
     Mix_VolumeChunk(ButtonSound,30);
     Mix_VolumeChunk(AttackSound,30);
-    Mix_VolumeChunk(JumpSound,30);
+
     Mix_VolumeMusic(50);
     GainSound=Mix_LoadWAV("gainsound.wav");
     LoseSound=Mix_LoadWAV("losesound.wav");
@@ -240,6 +240,7 @@ void LoadTexture()
     if(!IdleBoss3.LoadImage("boss3/Idle1.png")) cout<<"A";
     if(!ultimate.LoadImage("Ultimate.png"))  cout<<"ULTI";
     ULTI.LoadImage("Ultimate2.png");
+    Aegis.LoadImage("shield.png");
     SHIELD[0].y=8*40;
     SHIELD[1].y=5*40+20;
     SHIELD[2].y=9*40;
@@ -272,12 +273,14 @@ bool checkCollision( SDL_Rect a, SDL_Rect b )
 void nhanvat::move()
 {
     ult_cooldown++;
-
-    if(activate_skill==0||SKILL.t==3){
-        if(mPosX>240){
+    if(activate_skill==0||SKILL.t==3||SKILL.t==4)
+    {
+        if(mPosX>240)
+        {
             mPosX-=5;
         }
-        if(mPosX<240){
+        if(mPosX<240)
+        {
             mPosX=240;
         }
         SKILL.mPosX_skill2=240+150;
@@ -299,13 +302,18 @@ void nhanvat::move()
         else on_ground=0;
         mPosY+= y_vel/60;
     }
-    if (activate_skill==1){
-        if(SKILL.t==1){
-            if(!on_ground){
+    if (activate_skill==1)
+    {
+        if(SKILL.t==1)
+        {
+            if(!on_ground)
+            {
                 mPosY+=5;
             }
-            if(jump_pressed){
-                mPosY-=15;
+            if(jump_pressed)
+            {
+                if(mPosY-15 >= 0) mPosY-=15;
+                else mPosY = 0;
                 on_ground=0;
             }
 
@@ -316,61 +324,80 @@ void nhanvat::move()
                 mPosY=deadY-character_HEIGHT;
                 on_ground=1;
             }
-            else{
+            else
+            {
                 on_ground=0;
                 Cloud.render(270,mPosY+119);
             }
         }
-        else if(SKILL.t==2){
-            if(tele_pressed==true){
-                if(SKILL.mPosX_skill2<850){
+        else if(SKILL.t==2)
+        {
+            if(tele_pressed==true)
+            {
+                if(SKILL.mPosX_skill2<850)
+                {
                     mPosX=SKILL.mPosX_skill2;
                     mPosY=SKILL.mPosY_skill2-70;//do lech anh
                     SKILL.mPosX_skill2+=150;
                     tele_pressed=false;
                 }
-                else{
+                else
+                {
                     mPosY=SKILL.mPosY_skill2-70;
                     tele_pressed=false;
                 }
             }
-            if(mPosX>240){
+            if(mPosX>240)
+            {
                 mPosX-=5;
                 SKILL.mPosX_skill2-=5;
             }
-            if(mPosX<240){
+            if(mPosX<240)
+            {
                 mPosX=240;
                 SKILL.mPosX_skill2=mPosX+150;
             }
         }
-        else if(SKILL.t==3){
-            if(SKILL.mPosY_top_skill3==0){
+        else if(SKILL.t==3)
+        {
+            if(SKILL.mPosY_top_skill3==0)
+            {
                 Laze.render(710,0);
             }
             Laze_gun_bottom.render(SKILL.mPosX_bottom_skill3,SKILL.mPosY_bottom_skill3);
             Laze_gun_top.render(SKILL.mPosX_top_skill3,SKILL.mPosY_top_skill3);
-            if(SKILL.mPosY_top_skill3 > 0){
+            if(SKILL.mPosY_top_skill3 > 0)
+            {
                 SKILL.mPosY_top_skill3-=15;
                 SKILL.mPosY_bottom_skill3+=15;
             }
-            if(SKILL.mPosY_top_skill3 < 0){
+            if(SKILL.mPosY_top_skill3 < 0)
+            {
                 SKILL.mPosY_top_skill3 = 0;
                 SKILL.mPosY_bottom_skill3 = 690;
             }
 
         }
+        else if(SKILL.t==4)
+        {
+            has_shield=1;
+            Aegis.render(10,120);
+            for(int i=0; i<=8; i++)     Character_Texture[i].setAlpha(150);
+        }
     }
 }
 void nhanvat::render()
 {
-    if(SKILL.t==2 && activate_skill==1){
+    if(SKILL.t==2 && activate_skill==1)
+    {
         Teleport.render(mPosX,mPosY);
         Position_teleport.render(SKILL.mPosX_skill2,SKILL.mPosY_skill2);
         SKILL.mPosY_skill2+=SKILL.skill2_vel;
         if(SKILL.mPosY_skill2+50>=deadY) SKILL.skill2_vel=-7;
         if(SKILL.mPosY_skill2<=0) SKILL.skill2_vel=7;
     }
-    else{
+    else
+    {
         add+=1;
         if(add==5)        add=0,status=(status+1)%8;
         if(!status)       status++;
@@ -382,6 +409,7 @@ void nhanvat::render()
         {
             if(on_ground)     Character_Texture[status].render(mPosX,mPosY);
             else    Character_Texture[0].render(mPosX,mPosY);
+            for(int i=0; i<=8; i++)     Character_Texture[i].setAlpha(255);
         }
     }
 }
@@ -439,8 +467,17 @@ void fireball::render(int a)
 }
 void Button::render()
 {
-    if(isHovered)     HTexture.render(Rect.x,Rect.y);
-    else nHTexture.render(Rect.x,Rect.y);
+    if(type!=10)
+    {
+        if(isHovered)     HTexture.render(Rect.x,Rect.y);
+        else nHTexture.render(Rect.x,Rect.y);
+    }
+    else
+    {
+        if(Silent)     HTexture.render(Rect.x,Rect.y);
+        else nHTexture.render(Rect.x,Rect.y);
+    }
+
 }
 void Button::Upd()
 {
@@ -452,22 +489,37 @@ void Button::Upd()
     Resume.sink();
     Replay.sink();
     Home.sink();
+    Volume.sink();
     SDL_Delay(125);
     if(type==1)   Rep=1,VaoGame=1,ShowMenu=0,PauseGame=0,Died=0;
+    if(type==4)   Choitiep=1,VaoGame=1,ShowMenu=0,PauseGame=0,Died=0;
     if(type==0)   running=0;
     if(type==3)   PauseGame=1;
     if(type==6)   PauseGame=0;
     if(type==7)   Died=0,Rep=1;
     if(type==9)   HuongDan=0,ShowMenu=1,VaoGame=0,PauseGame=0,Died=0;
-    if(type==8)   HuongDan=1;
+    if(type==8)   HuongDan=1,ShowMenu=0;
+    if(type==10)
+    {
+        int t1=20,t2=40;
+        Silent^=1;
+        if(Silent) t1=t2=0;
+        else t1=20,t2=40;
+        Mix_VolumeMusic(t2);
+        Mix_VolumeChunk(ButtonSound,t1);
+        Mix_VolumeChunk(AttackSound,t1);
+        Mix_VolumeChunk(GainSound,t1);
+        Mix_VolumeChunk(LoseSound,t1);
+        Mix_VolumeChunk(JumpSound,t1);
+    }
 }
 coin::coin()
 {
     t=rate_coin[rnd(0,9)];
     x=Width+100;
     y=400;
-    if(t==1)   score=50;
-    if(t==0)   score=25;
+    if(t==1)   score=10;
+    if(t==0)   score=5;
     if(t==2)   upblood = 80;
 }
 void coin::render()
@@ -487,14 +539,15 @@ void coin::reset()
     if (t==3) return;
     x=Width+100;
     t=rate_coin[rnd(0,9)];
-    if(t==1)   score=50;
-    if(t==0)   score=25;
+    if(t==1)   score=10;
+    if(t==0)   score=5;
     if(t==2)   upblood=80;
 }
-void coin::change(int a, int b){
+void coin::change(int a, int b)
+{
     x = a;
     y = b;
-    score = 100;
+    score = 15;
     t = 3;
 }
 coin::coin(int a,int c)
@@ -522,8 +575,8 @@ void dirtball::render()
 
 void dirtball:: move()
 {
-    x-=15;
-    if(x<0)     x=800,y=500,BossAt1=0;
+    x-=15+ScrollSpeed;
+    if(x<0)     BossAt1=0;
 }
 void boss::action()
 {
@@ -534,7 +587,7 @@ void boss::action()
     if(add>5)   stt++,add=0;
     if(stt==6)
     {
-        if(status==1)     BossAt1=1;
+        if(status==1)     BossAt1=1,Dirt.x=800,Dirt.y=500;
         if(status)  Rest=100;
         stt=0;
         add=0;
@@ -548,7 +601,7 @@ void thunder::render()
 }
 void thunder::move()
 {
-    x-=x_vel/60;
+    x-=(x_vel+ScrollSpeed)/60;
     for (int i = 1; i <= 3; i++)
     {
         if(wizard.get_attack(i))
@@ -562,7 +615,7 @@ void thunder::move()
             }
         }
     }
-    if(x<0)   reset(),BOSS2.attack=0;
+    if(x<0)   BOSS2.attack=0;
 
 }
 void boss2::action()
@@ -576,6 +629,7 @@ void boss2::action()
         A.y=wizard.getY()+40;
         PortalY=wizard.getY()-20;
         BOSS2.attack=1;
+        A.reset();
         Rest=100;
         stt=0;
         add=0;
@@ -622,7 +676,7 @@ void boss3::render_at(int stt)
 }
 void spirit_flame::move()
 {
-    x-=x_vel/60;
+    x-=(x_vel+ScrollSpeed)/60;
     for (int i = 1; i <= 3; i++)
     {
         if(wizard.get_attack(i))
@@ -632,6 +686,7 @@ void spirit_flame::move()
                 Mix_PlayChannel(-1,AttackSound,0);
                 exist=0;
                 wizard.cooldown(i);
+
             }
         }
     }
@@ -767,29 +822,82 @@ void boss3::hurt()
     SDL_SetRenderDrawColor(gRenderer,0xFF,0x00,0x00,0xFF);
     SDL_RenderFillRect (gRenderer,&HP_Bar);
 }
-skill::skill(){
-    t = number_skill[rnd(0,3)];
+skill::skill()
+{
+    t = number_skill[rnd(0,5)];
     x = -100;
-    y = 400;
-    mPosY_skill2 = 400;//vi an skill o vi tri y = 400
+    y = 500;
+    mPosY_skill2 = 500;//vi an skill o vi tri y = 400
     mPosX_skill2 = wizard.mPosX+80;
     skill2_vel=7;
-    mPosX_top_skill3 = 700, mPosY_top_skill3 = 363;
-    mPosX_bottom_skill3=700, mPosY_bottom_skill3=400;
+    mPosX_top_skill3 = 700, mPosY_top_skill3 = 326;
+    mPosX_bottom_skill3=700, mPosY_bottom_skill3=363;
 }
-void skill::render(){
+void skill::render()
+{
     Skill.render(x,y);
 }
-void skill::move(){
+void skill::move()
+{
     x-=ScrollSpeed;
 }
-void skill::reset(){
-    t = number_skill[rnd(0,3)];
+void skill::reset()
+{
+    t = number_skill[rnd(0,5)];
     x = -100;
-    y = 400;
-    mPosY_skill2 = 400;//vi an skill o vi tri y = 400
+    y = 500;
+    mPosY_skill2 = 500;//vi an skill o vi tri y = 400
     mPosX_skill2 = wizard.mPosX+80;
     skill2_vel=7;
     mPosX_top_skill3=700, mPosY_top_skill3=326;
     mPosX_bottom_skill3=700, mPosY_bottom_skill3=363;
 }
+struct bird
+{
+    double x;
+    double y;
+    int cnt;
+    int CurState=0;
+    double x_vel=800;
+    bool exist=0;
+    int time=0;
+    bird()
+    {
+        x=Width-100;
+        y=wizard.getY();
+    }
+    void render()
+    {
+        Bird[CurState].render(x,y);
+    }
+    void move()
+    {
+        x-=(x_vel+ScrollSpeed)/60;
+        cnt++;
+        if(cnt>=10)  CurState^=1,cnt=0;
+        for (int i = 1; i <= 3; i++)
+        {
+            if(wizard.get_attack(i))
+            {
+                if (checkCollision(FIRE[i].get(),get()))
+                {
+                    Mix_PlayChannel(-1,AttackSound,0);
+                    reset();
+                    wizard.cooldown(i);
+                }
+            }
+        }
+        if(x<0)   reset();
+    }
+    void reset()
+    {
+        x=Width-100;
+        y=wizard.getY();
+        exist=0;
+    }
+    SDL_Rect get()
+    {
+        return {(int)x,(int)y,50,50};
+    }
+
+} B;

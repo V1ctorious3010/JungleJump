@@ -2,7 +2,10 @@
 using namespace std;
 #include<SDL.h>
 
-int rate_coin[10]={1,1,1,0,0,0,2,2,2,2};
+int rate_coin[10]={1,1,1,0,0,0,0,1,2,2};
+// 0 la xu dong
+// 1 la xu bac
+// 2 la tim hoi mau
 // 3 la gold
 struct coin
 {
@@ -22,10 +25,11 @@ struct coin
     }
 };
 
-int number_skill[100]={3,3,3,3};
+int number_skill[]={1,2,3,3,2,4};
 // 1 la ki nang bay
 // 2 la ki nang teleport
 // 3 la tia laze bien object to gold
+// 4 la mien thuong
 struct skill{
     int x,y,t;
     double mPosY_skill2, mPosX_skill2; // vi tri cua qua cau dich chuyen skill2
@@ -38,6 +42,6 @@ struct skill{
     void reset();
     SDL_Rect get()
     {
-        return {x,y,50,50};
+        return {x-15,y,100,100};
     }
 };

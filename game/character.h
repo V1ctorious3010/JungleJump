@@ -5,6 +5,8 @@ using namespace std;
 double GRAVITY=18;
 Mix_Chunk *JumpSound=NULL;
 Mix_Chunk *AttackSound=NULL;
+int CURBOSSx;
+int CURBOSSy;
 class fireball
 {
     double x;
@@ -15,6 +17,10 @@ public:
     {
         x=250;
         y=525;
+    }
+    void reset()
+    {
+        x=250;
     }
     void  move()
     {
@@ -32,7 +38,7 @@ public:
 } FIRE[4];
 struct Ulti
 {
-    bool cast;
+    bool cast; // cong tac kich hoat
     int x=240;
     int y=530;
     void render();
@@ -46,9 +52,9 @@ struct Ulti
 class nhanvat
 {
 public:
-    bool activate_skill;
-    int timeskill;
-    int wait_timeskill;
+    bool activate_skill; // cong tac kich hoat skill
+    int timeskill; // thoi gian dung skill
+    int wait_timeskill; // thoi gian doi skill
     double mPosY, mPosX;
     const int character_WIDTH = 90;
     const int character_HEIGHT = 130;
@@ -85,7 +91,7 @@ public:
                 GRAVITY=300;
                 break;
             case SDL_SCANCODE_K:
-                if(ult_cooldown>=100) ult_cooldown=0,R.cast=1,R.reset();
+                if(ult_cooldown>=300&&CURBOSSx&&CURBOSSy) ult_cooldown=0,R.cast=1,R.reset();
                 break;
             case SDL_SCANCODE_J:
                 if (ammo == 3)
@@ -141,6 +147,7 @@ public:
     void cooldown(int a)
     {
         attack[a]=0;
+        FIRE[a].reset();
     }
     int get_attack(int a)
     {
@@ -184,14 +191,14 @@ private:
 
     double y_vel;
     double x_vel;
-    bool jump_pressed;
-    SDL_RendererFlip flip=SDL_FLIP_NONE;
-    bool tele_pressed;
-    bool check_Q;
-    bool on_ground;
-    short add,add2;
-    short status;
-    bool attack[4]= {0,0,0,0};
-    short ammo;
-    int ult_cooldown=1000;
+    bool jump_pressed; // kich hoat nhay
+    SDL_RendererFlip flip=SDL_FLIP_NONE; // lat ngc anh
+    bool tele_pressed; // kich hoat teleport
+    bool check_Q; // kiem tra khi bam giu Q thi chi tinh la 1 lan nhan
+    bool on_ground; // kiem tra nhan vat co tren mat dat k
+    short add; // delay chuyen dong cua nhan vat
+    short status; // render trang thai status cua nhan vat
+    bool attack[4]= {0,0,0,0}; // kich hoat ban cau lua
+    short ammo; // so luong cau lua
+    int ult_cooldown=1000; // thoi gian hoi until
 };
