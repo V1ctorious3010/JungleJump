@@ -1,7 +1,7 @@
 Jungle Jump
-BTL_UET_LTNC
+k68-UET
 
-* Họ tên và MSSV:
+* Người phát triển:
 1. Đỗ Đức Thắng - 23020158
 2. Lương Vũ Thế - 23020159
 
