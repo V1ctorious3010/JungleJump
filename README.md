@@ -8,7 +8,6 @@ BTL_UET_LTNC
 * Chủ đề Game:
   Jungle Jump là một trò chơi khám phá đầy mê hoặc, đưa người chơi vào một thế giới kỳ bí đầy ma thuật, phiêu lưu và bí ẩn rừng rậm. Đặt trong một thế giới phong phú với chi tiết hấp dẫn, người chơi sẽ bắt đầu một hành trình huyền diệu để khám phá những bí mật của rừng rậm và tiêu diệt những con quái thú.
 
-* Ngưỡng điểm: 8,5
 * Các lý do bảo vệ
 1. Game có thuật toán nằm ngoài chương trình đã học(thuật toán BFS được ứng dụng trong việc tìm đường cho chiêu K)
 2. Game có đồ họa sinh động, nhân vật chuyển động mượt mà.
